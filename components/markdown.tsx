@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { CodeBlock } from "./code-block";
 import type { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { Button } from "@/components/ui/button";
 
@@ -18,8 +17,6 @@ const components = ({
     append({ content, role: "user" }, {});
   };
   const componentMap: Partial<Components> = {
-    // @ts-expect-error
-    code: CodeBlock,
     pre: ({ children }) => <>{children}</>,
     ol: ({ node, children, ...props }) => {
       return (
