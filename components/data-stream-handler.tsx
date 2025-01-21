@@ -2,7 +2,6 @@
 
 import { useChat } from "ai/react";
 import { useEffect, useRef } from "react";
-import { Suggestion } from "@/lib/db/schema";
 import { useUserMessageId } from "@/hooks/use-user-message-id";
 
 type DataStreamDelta = {
@@ -16,7 +15,7 @@ type DataStreamDelta = {
     | "finish"
     | "user-message-id"
     | "kind";
-  content: string | Suggestion;
+  content: string;
 };
 
 export function DataStreamHandler({ id }: { id: string }) {

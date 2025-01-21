@@ -2,12 +2,10 @@ import type { ChatRequestOptions, Message, CreateMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { memo } from "react";
 import Image from "next/image";
-import type { Vote } from "@/lib/db/schema";
 
 import { Markdown } from "./markdown";
 
 import equal from "fast-deep-equal";
-import { cn } from "@/lib/utils";
 
 const PurePreviewMessage = ({
   message,
@@ -15,7 +13,6 @@ const PurePreviewMessage = ({
 }: {
   chatId: string;
   message: Message;
-  vote: Vote | undefined;
   isLoading: boolean;
   setMessages: (
     messages: Message[] | ((messages: Message[]) => Message[])
@@ -81,7 +78,6 @@ export const PreviewMessage = memo(
       )
     )
       return false;
-    if (!equal(prevProps.vote, nextProps.vote)) return false;
 
     return true;
   }

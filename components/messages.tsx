@@ -2,14 +2,12 @@ import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo } from "react";
-import { Vote } from "@/lib/db/schema";
 import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
 
 interface MessagesProps {
   chatId: string;
   isLoading: boolean;
-  votes: Array<Vote> | undefined;
   messages: Array<Message>;
   setMessages: (
     messages: Message[] | ((messages: Message[]) => Message[])
@@ -27,7 +25,6 @@ interface MessagesProps {
 function PureMessages({
   chatId,
   isLoading,
-  votes,
   messages,
   setMessages,
   reload,
@@ -63,11 +60,6 @@ function PureMessages({
           chatId={chatId}
           message={lastMessage}
           isLoading={isLoading}
-          vote={
-            votes
-              ? votes.find((vote) => vote.messageId === lastMessage.id)
-              : undefined
-          }
           setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
@@ -92,7 +84,6 @@ export const Messages = memo(PureMessages, (prevProps, nextProps) => {
   if (prevProps.isLoading !== nextProps.isLoading) return false;
   if (prevProps.isLoading && nextProps.isLoading) return false;
   if (prevProps.messages.length !== nextProps.messages.length) return false;
-  if (!equal(prevProps.votes, nextProps.votes)) return false;
 
   return true;
 });
