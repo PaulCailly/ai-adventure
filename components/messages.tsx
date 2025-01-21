@@ -1,10 +1,10 @@
-import { ChatRequestOptions, Message } from 'ai';
-import { PreviewMessage, ThinkingMessage } from './message';
-import { useScrollToBottom } from './use-scroll-to-bottom';
-import { Overview } from './overview';
-import { memo } from 'react';
-import { Vote } from '@/lib/db/schema';
-import equal from 'fast-deep-equal';
+import { ChatRequestOptions, CreateMessage, Message } from "ai";
+import { PreviewMessage } from "./message";
+import { useScrollToBottom } from "./use-scroll-to-bottom";
+import { memo } from "react";
+import { Vote } from "@/lib/db/schema";
+import equal from "fast-deep-equal";
+import { Button } from "@/components/ui/button";
 
 interface MessagesProps {
   chatId: string;
@@ -12,13 +12,17 @@ interface MessagesProps {
   votes: Array<Vote> | undefined;
   messages: Array<Message>;
   setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[]),
+    messages: Message[] | ((messages: Message[]) => Message[])
   ) => void;
   reload: (
-    chatRequestOptions?: ChatRequestOptions,
+    chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
+  append: (
+    message: Message | CreateMessage,
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
 }
 
 function PureMessages({
@@ -29,37 +33,53 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
+  append,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
+
+  const lastMessage = messages[messages.length - 1];
+
+  if (!messages.length) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Button
+          variant="outline"
+          onClick={() => append({ role: "user", content: "start" })}
+        >
+          Start
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div
       ref={messagesContainerRef}
       className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
     >
-      {/* {messages.length === 0 && <Overview />} */}
-
-      {messages.map((message, index) => (
+      {lastMessage && (
         <PreviewMessage
-          key={message.id}
+          key={lastMessage.id}
           chatId={chatId}
-          message={message}
-          isLoading={isLoading && messages.length - 1 === index}
+          message={lastMessage}
+          isLoading={isLoading}
           vote={
             votes
-              ? votes.find((vote) => vote.messageId === message.id)
+              ? votes.find((vote) => vote.messageId === lastMessage.id)
               : undefined
           }
           setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
+          append={append}
         />
-      ))}
+      )}
 
       {isLoading &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && <ThinkingMessage />}
+        messages[messages.length - 1].role === "user" &&
+        null}
 
       <div
         ref={messagesEndRef}
