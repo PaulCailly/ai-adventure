@@ -1,14 +1,10 @@
 import {
-  CoreAssistantMessage,
   type Message,
   convertToCoreMessages,
   createDataStreamResponse,
-  streamObject,
   streamText,
-  ToolCallPart,
 } from "ai";
 import { z } from "zod";
-import { NextResponse } from "next/server";
 
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
@@ -141,7 +137,6 @@ export async function POST(request: Request) {
                 attack: stats.attack,
                 defense: stats.defense,
                 speed: stats.speed,
-                userId: "", // fix me
                 chatId: id,
               });
 

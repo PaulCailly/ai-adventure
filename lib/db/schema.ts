@@ -48,9 +48,6 @@ export const character = pgTable("Character", {
   chatId: uuid("chatId")
     .notNull()
     .references(() => chat.id),
-  userId: uuid("userId")
-    .notNull()
-    .references(() => user.id),
   name: text("name").notNull(),
   race: text("race").notNull(),
   class: text("class").notNull(),
