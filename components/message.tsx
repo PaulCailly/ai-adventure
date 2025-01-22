@@ -7,25 +7,20 @@ import { Markdown } from "./markdown";
 
 import equal from "fast-deep-equal";
 
-const PurePreviewMessage = ({
-  message,
-  append,
-}: {
-  chatId: string;
+type PreviewMessageProps = {
   message: Message;
-  isLoading: boolean;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[])
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  isReadonly: boolean;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
-}) => {
+  isLoading: boolean;
+};
+
+const PurePreviewMessage = ({
+  message,
+  append,
+  isLoading,
+}: PreviewMessageProps) => {
   if (message.role === "user") return null;
 
   return (
