@@ -16,7 +16,7 @@ export default async function Page() {
   const mostRecentChat = await getMostRecentChat({ userId: session.user.id });
 
   if (mostRecentChat) {
-    return redirect(`/chat/${mostRecentChat.id}`);
+    return redirect(`/character/${mostRecentChat.id}`);
   }
 
   const id = generateUUID();
