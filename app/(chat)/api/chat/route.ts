@@ -5,6 +5,7 @@ import {
   streamText,
 } from "ai";
 import { z } from "zod";
+import { OpenAI } from "openai";
 
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
@@ -122,6 +123,19 @@ export async function POST(request: Request) {
                 speed: Math.floor(Math.random() * 10) + 5,
               };
 
+              const openai = new OpenAI();
+              const imagePrompt = `A detailed fantasy RPG character portrait. ${race} ${heroClass} named ${name}. They wield a ${weapon} and have ${physicalTraits}. The image should reflect their ${strength} and ${weakness}. Fantasy art style, detailed, professional quality.`;
+
+              const imageResponse = await openai.images.generate({
+                model: "dall-e-3",
+                prompt: imagePrompt,
+                size: "1024x1024",
+                quality: "standard",
+                n: 1,
+              });
+
+              const avatar = imageResponse.data[0].url;
+
               await createCharacter({
                 name,
                 race,
@@ -138,6 +152,7 @@ export async function POST(request: Request) {
                 defense: stats.defense,
                 speed: stats.speed,
                 chatId: id,
+                avatar: avatar || "",
               });
 
               return "ready";

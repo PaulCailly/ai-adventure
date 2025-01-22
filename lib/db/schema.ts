@@ -57,6 +57,7 @@ export const character = pgTable("Character", {
   weakness: text("weakness").notNull(),
   companion: text("companion").notNull(),
   symbol: text("symbol").notNull(),
+  avatar: text("avatar"),
   health: integer("health").notNull(),
   mana: integer("mana").notNull(),
   attack: integer("attack").notNull(),
