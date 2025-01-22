@@ -42,11 +42,11 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <CardHeader className="flex flex-row items-center gap-6">
             {character.avatar && (
               <div className="relative overflow-hidden">
-                <Image
+                <img
                   src={character.avatar}
                   alt={character.name}
-                  width={96}
-                  height={96}
+                  width="96"
+                  height="96"
                   className="size-24 rounded-full object-cover ring-2 ring-primary/20"
                 />
               </div>
