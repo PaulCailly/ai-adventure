@@ -53,7 +53,7 @@ const PurePreviewMessage = ({
             {message.content && (
               <div className="flex flex-row gap-2 items-start">
                 <div className="flex flex-col gap-4 text-xl">
-                  <Markdown append={append}>
+                  <Markdown append={append} isLoading={isLoading}>
                     {message.content as string}
                   </Markdown>
                 </div>
