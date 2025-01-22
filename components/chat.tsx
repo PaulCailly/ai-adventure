@@ -12,13 +12,11 @@ export function Chat({
   id,
   initialMessages,
   selectedModelId,
-  isReadonly,
 }: {
   id: string;
   initialMessages: Array<Message>;
   selectedModelId: string;
   selectedVisibilityType: VisibilityType;
-  isReadonly: boolean;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -35,16 +33,7 @@ export function Chat({
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
         <ChatHeader />
-
-        <Messages
-          chatId={id}
-          isLoading={isLoading}
-          messages={messages}
-          setMessages={setMessages}
-          reload={reload}
-          isReadonly={isReadonly}
-          append={append}
-        />
+        <Messages isLoading={isLoading} messages={messages} append={append} />
       </div>
     </>
   );
