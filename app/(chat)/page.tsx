@@ -3,7 +3,7 @@ import { Chat } from "@/components/chat";
 
 import { generateUUID } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
-import { getMostRecentChat } from "@/lib/db/queries";
+import { getMostRecentChat, getCharactersByChatId } from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
 
 export default async function Page() {
@@ -16,7 +16,12 @@ export default async function Page() {
   const mostRecentChat = await getMostRecentChat({ userId: session.user.id });
 
   if (mostRecentChat) {
-    return redirect(`/character/${mostRecentChat.id}`);
+    const characters = await getCharactersByChatId({
+      chatId: mostRecentChat.id,
+    });
+    if (characters && characters.length > 0) {
+      return redirect(`/character/${mostRecentChat.id}`);
+    }
   }
 
   const id = generateUUID();
