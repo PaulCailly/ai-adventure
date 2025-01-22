@@ -8,7 +8,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const chat = await getChatById({ id });
 
   if (!chat) {
-    notFound();
+    return redirect("/");
   }
 
   const characters = await getCharactersByChatId({ chatId: id });
