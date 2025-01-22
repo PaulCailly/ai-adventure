@@ -40,6 +40,21 @@ export async function createUser(email: string, password: string) {
   }
 }
 
+export async function getMostRecentChat({ userId }: { userId: string }) {
+  try {
+    const [recentChat] = await db
+      .select()
+      .from(chat)
+      .where(eq(chat.userId, userId))
+      .orderBy(desc(chat.createdAt))
+      .limit(1);
+    return recentChat;
+  } catch (error) {
+    console.error("Failed to get most recent chat from database");
+    throw error;
+  }
+}
+
 export async function saveChat({
   id,
   userId,
