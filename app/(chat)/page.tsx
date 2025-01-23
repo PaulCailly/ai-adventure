@@ -28,7 +28,7 @@ export default async function Page() {
   const id = generateUUID();
 
   return (
-    <div className="max-w-[430px] h-screen max-h-[800px] mx-auto overflow-hidden border">
+    <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border">
       <ScrollArea>
         <Chat key={id} id={id} initialMessages={[]} />
         <DataStreamHandler id={id} />

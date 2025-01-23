@@ -32,7 +32,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   });
 
   return (
-    <div className="max-w-[430px] h-screen max-h-[800px] mx-auto overflow-hidden border">
+    <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border">
       <ScrollArea>
         <Chat
           id={chat.id}
