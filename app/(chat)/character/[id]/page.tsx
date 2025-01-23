@@ -3,11 +3,9 @@ import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-
+import { GlareCard } from "@/components/ui/glare-card";
 import { Heart, Sword, Shield, Zap, Sparkle } from "lucide-react";
-
 import { BottomBar } from "@/components/bottom-bar";
-
 import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -31,7 +29,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <div className="relative h-full">
         <ScrollArea className="h-[calc(100%-64px)]">
           <div className="px-4 py-6">
-            <Card className="w-full border bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
+            <GlareCard className="w-full">
               <div className="relative aspect-[3/4] w-full">
                 {character.avatar && (
                   <img
@@ -75,7 +73,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                   </div>
                 </div>
               </div>
-              <CardContent className="p-4 space-y-4">
+              <div className="p-4 space-y-4">
                 <div className="grid grid-cols-3 gap-2">
                   <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
                     <Sword className="size-4 mb-1" />
@@ -97,8 +95,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                     <span className="font-bold">{character.speed}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </GlareCard>
           </div>
         </ScrollArea>
         <BottomBar />
