@@ -6,6 +6,7 @@ import {
 } from "ai";
 import { z } from "zod";
 import { OpenAI } from "openai";
+import { put } from "@vercel/blob";
 
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
@@ -134,28 +135,37 @@ export async function POST(request: Request) {
                 n: 1,
               });
 
-              const avatar = imageResponse.data[0].url;
+              const imageUrl = imageResponse.data[0].url;
+              if (imageUrl) {
+                const imageRes = await fetch(imageUrl);
+                const imageBlob = await imageRes.blob();
 
-              await createCharacter({
-                name,
-                race,
-                class: heroClass,
-                physicalTraits,
-                weapon,
-                strength,
-                weakness,
-                companion,
-                symbol,
-                health: stats.health,
-                mana: stats.mana,
-                attack: stats.attack,
-                defense: stats.defense,
-                speed: stats.speed,
-                chatId: id,
-                avatar: avatar || "",
-              });
+                const blob = await put(`heroes/${name}.png`, imageBlob, {
+                  access: "public",
+                  contentType: "image/png",
+                });
 
-              return "ready";
+                await createCharacter({
+                  name,
+                  race,
+                  class: heroClass,
+                  physicalTraits,
+                  weapon,
+                  strength,
+                  weakness,
+                  companion,
+                  symbol,
+                  health: stats.health,
+                  mana: stats.mana,
+                  attack: stats.attack,
+                  defense: stats.defense,
+                  speed: stats.speed,
+                  chatId: id,
+                  avatar: blob.url,
+                });
+              }
+
+              return "Success";
             },
           },
         },
