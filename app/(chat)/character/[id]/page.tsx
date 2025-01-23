@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+
 import { Heart, Sword, Shield, Zap, Sparkle } from "lucide-react";
 
 import { BottomBar } from "@/components/bottom-bar";
@@ -30,8 +29,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   return (
     <div className="relative h-full">
       <ScrollArea className="h-[calc(100%-64px)]">
-        <div className="container px-4 py-8 mx-auto">
-          <Card className="max-w-[400px] mx-auto border-2 border-primary/20 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
+        <div className="px-4 py-6">
+          <Card className="w-full border-2 border-primary/20 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
             <div className="relative aspect-[3/4] w-full">
               {character.avatar && (
                 <img
