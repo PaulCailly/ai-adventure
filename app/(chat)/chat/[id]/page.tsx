@@ -6,6 +6,7 @@ import { Chat } from "@/components/chat";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { convertToUIMessages } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -31,12 +32,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   });
 
   return (
-    <>
-      <Chat
-        id={chat.id}
-        initialMessages={convertToUIMessages(messagesFromDb)}
-      />
-      <DataStreamHandler id={id} />
-    </>
+    <div className="max-w-[430px] h-[800px] mx-auto overflow-hidden border border-r-2">
+      <ScrollArea>
+        <Chat
+          id={chat.id}
+          initialMessages={convertToUIMessages(messagesFromDb)}
+        />
+        <DataStreamHandler id={id} />
+      </ScrollArea>
+    </div>
   );
 }
