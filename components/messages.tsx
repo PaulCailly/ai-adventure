@@ -1,10 +1,11 @@
 import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
-import { memo } from "react";
+import { memo, useState } from "react";
 import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 interface MessagesProps {
   isLoading: boolean;
@@ -20,15 +21,29 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
+  const [playerName, setPlayerName] = useState("");
 
   const lastMessage = messages[messages.length - 1];
 
   if (!messages.length) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <Input
+          type="text"
+          placeholder="Entrez votre nom"
+          value={playerName}
+          onChange={(e) => setPlayerName(e.target.value)}
+          className="max-w-xs"
+        />
         <Button
           variant="outline"
-          onClick={() => append({ role: "user", content: "start" })}
+          onClick={() =>
+            append({
+              role: "user",
+              content: `name = ${playerName}`,
+            })
+          }
+          disabled={!playerName.trim()}
         >
           Entrer dans la Taverne
         </Button>
