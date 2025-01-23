@@ -6,7 +6,7 @@ import { Chat } from "@/components/chat";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { convertToUIMessages } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -32,7 +32,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   });
 
   return (
-    <div className="max-w-[430px] h-[800px] mx-auto overflow-hidden border">
+    <div className="max-w-[430px] h-screen max-h-[800px] mx-auto overflow-hidden border">
       <ScrollArea>
         <Chat
           id={chat.id}

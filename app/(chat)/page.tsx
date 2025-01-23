@@ -5,6 +5,7 @@ import { generateUUID } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
 import { getMostRecentChat, getCharactersByChatId } from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Page() {
   const session = await auth();
@@ -27,9 +28,11 @@ export default async function Page() {
   const id = generateUUID();
 
   return (
-    <>
-      <Chat key={id} id={id} initialMessages={[]} />
-      <DataStreamHandler id={id} />
-    </>
+    <div className="max-w-[430px] h-screen max-h-[800px] mx-auto overflow-hidden border">
+      <ScrollArea>
+        <Chat key={id} id={id} initialMessages={[]} />
+        <DataStreamHandler id={id} />
+      </ScrollArea>
+    </div>
   );
 }
