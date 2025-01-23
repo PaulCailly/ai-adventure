@@ -10,9 +10,6 @@ import {
   Sword,
   Shield,
   Zap,
-  Axe,
-  Cross,
-  Dog,
   Sparkle,
   Trophy,
   Star,
@@ -29,10 +26,6 @@ import {
 } from "@/components/ui/sheet";
 
 import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
-
-const customImgLoader = ({ src }: { src: string }) => {
-  return `${src}`;
-};
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -165,7 +158,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
               <SheetHeader>
                 <SheetTitle>Friends</SheetTitle>
                 <SheetDescription>
-                  Your character's friends:
+                  Your character&apos;s friends:
                   <ul className="mt-4 space-y-2">
                     <li>Sir Galahad</li>
                     <li>Merlin the Wise</li>
