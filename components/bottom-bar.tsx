@@ -12,7 +12,7 @@ import { Trophy, Star, Users } from "lucide-react";
 
 export function BottomBar() {
   return (
-    <div className="fixed bottom-0 inset-x-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 max-w-[100vw] mx-auto antialiased">
+    <div className="absolute bottom-0 inset-x-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full antialiased">
       <div className="grid h-full grid-cols-3">
         <Sheet>
           <SheetTrigger className="flex flex-col items-center justify-center">
