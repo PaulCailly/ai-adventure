@@ -19,7 +19,10 @@ export function BottomBar() {
             <Trophy className="size-6" />
             <span className="text-xs">Successes</span>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent
+            side="bottom"
+            className="max-w-[430px] mx-auto inset-x-0"
+          >
             <SheetHeader>
               <SheetTitle>Successes</SheetTitle>
               <SheetDescription>
@@ -38,7 +41,10 @@ export function BottomBar() {
             <Star className="size-6" />
             <span className="text-xs">Talents</span>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent
+            side="bottom"
+            className="max-w-[430px] mx-auto inset-x-0"
+          >
             <SheetHeader>
               <SheetTitle>Talents</SheetTitle>
               <SheetDescription>
@@ -57,7 +63,10 @@ export function BottomBar() {
             <Users className="size-6" />
             <span className="text-xs">Friends</span>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent
+            side="bottom"
+            className="max-w-[430px] mx-auto inset-x-0"
+          >
             <SheetHeader>
               <SheetTitle>Friends</SheetTitle>
               <SheetDescription>
