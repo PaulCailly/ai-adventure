@@ -40,19 +40,24 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-              <div className="absolute top-4 inset-x-4 flex flex-wrap gap-2">
-                <Badge
-                  variant="secondary"
-                  className="bg-black/50 backdrop-blur-sm"
-                >
-                  {character.race}
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="bg-black/50 backdrop-blur-sm"
-                >
-                  {character.class}
-                </Badge>
+              <div className="absolute top-4 inset-x-4">
+                <h2 className="text-2xl font-bold text-white mb-3 px-3 py-1.5 bg-black/50 backdrop-blur-md rounded-lg inline-block">
+                  {character.name}
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="bg-black/50 backdrop-blur-sm"
+                  >
+                    {character.race}
+                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-black/50 backdrop-blur-sm"
+                  >
+                    {character.class}
+                  </Badge>
+                </div>
               </div>
               <div className="absolute bottom-4 inset-x-4 flex justify-between">
                 <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
@@ -65,9 +70,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                   <Sparkle className="size-4 text-blue-500" />
                   <span className="text-white font-bold">{character.mana}</span>
                 </div>
-              </div>
-              <div className="absolute bottom-0 inset-x-0 p-4 text-white">
-                <h2 className="text-2xl font-bold">{character.name}</h2>
               </div>
             </div>
             <CardContent className="p-4 space-y-4">
