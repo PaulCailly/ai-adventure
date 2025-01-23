@@ -130,7 +130,7 @@ export async function POST(request: Request) {
               const imageResponse = await openai.images.generate({
                 model: "dall-e-3",
                 prompt: imagePrompt,
-                size: "1024x1024",
+                size: "1024x1792",
                 quality: "standard",
                 n: 1,
               });
