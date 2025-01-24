@@ -28,6 +28,7 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
   if (!messages.length) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
+        <img src="/images/logo.png" alt="Logo" className="w-48 h-48 mb-4" />
         <Input
           type="text"
           placeholder="Entrez votre nom"
