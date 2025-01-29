@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
