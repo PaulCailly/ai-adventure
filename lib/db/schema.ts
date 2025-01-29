@@ -45,6 +45,9 @@ export type Message = InferSelectModel<typeof message>;
 
 export const character = pgTable("Character", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => user.id),
   chatId: uuid("chatId")
     .notNull()
     .references(() => chat.id),

@@ -8,19 +8,18 @@ import { Heart, Sword, Shield, Zap, Sparkle } from "lucide-react";
 
 import { BottomBar } from "@/components/bottom-bar";
 
-import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
+import { getCharacterById } from "@/lib/db/queries";
+import { auth } from "@/app/(auth)/auth";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const { id } = params;
-  const chat = await getChatById({ id });
-
-  if (!chat) {
-    return redirect("/");
+  const session = await auth();
+  if (!session?.user?.id) {
+    return redirect("/login");
   }
 
-  const characters = await getCharactersByChatId({ chatId: id });
-  const character = characters[0];
+  const params = await props.params;
+  const { id } = params;
+  const character = await getCharacterById({ id });
 
   if (!character) {
     return redirect("/");

@@ -25,8 +25,6 @@ import {
   sanitizeResponseMessages,
 } from "@/lib/utils";
 
-import { generateTitleFromUserMessage } from "../../actions";
-
 export const maxDuration = 60;
 
 type AllowedTools = "generateHero";
@@ -65,7 +63,7 @@ export async function POST(request: Request) {
   const chat = await getChatById({ id });
 
   if (!chat) {
-    const title = await generateTitleFromUserMessage({ message: userMessage });
+    const title = "The journey begins...";
     await saveChat({ id, userId: session.user.id, title });
   }
 
@@ -146,6 +144,7 @@ export async function POST(request: Request) {
                 });
 
                 await createCharacter({
+                  userId: session?.user?.id || "none",
                   name,
                   race,
                   class: heroClass,

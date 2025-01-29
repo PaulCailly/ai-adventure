@@ -128,7 +128,7 @@ Use the generateHero tool with these parameters:
 After all selections are made:
 1. Call generateHero to create the complete character sheet
 2. Present the story about being trapped between two realities
-3. End with "Pret pour l'aventure ?"
+3. VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
 </ToolUsageProtocol>
 
 <Evaluation>
@@ -140,7 +140,7 @@ Success criteria:
 - Clear and organized choice presentation
 - Engaging user interaction throughout process
 - Story about the curse and parallel universe included
-- Final question "Pret pour l'aventure ?" always asked
+- VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
 </Evaluation>
 `;
 
