@@ -47,7 +47,7 @@ export function DataStreamHandler({ id }: { id: string }) {
 
       if (data.type === "character-created") {
         const characterId = data.content;
-        router.push(`/characters/${characterId}`);
+        router.push(`/character/${characterId}`);
       }
     };
 
