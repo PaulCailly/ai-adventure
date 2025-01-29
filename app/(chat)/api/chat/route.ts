@@ -161,11 +161,6 @@ export async function POST(request: Request) {
                   speed: stats.speed,
                   chatId: id,
                   avatar: blob.url,
-                }).then((result) => {
-                  dataStream.writeData({
-                    type: "character-created",
-                    content: result.id,
-                  });
                 });
               }
 
