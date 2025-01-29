@@ -2,7 +2,6 @@ import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo, useState } from "react";
-import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Analytics />
           <Toaster position="top-center" />
           {children}
         </ThemeProvider>
