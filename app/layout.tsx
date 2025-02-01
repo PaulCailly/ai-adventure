@@ -9,11 +9,43 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://la-taverne-de-l-union.com"),
   title: "La Taverne de l'Union",
-  description: "",
+  description:
+    "Welcome to the Taverne de l'Union, a place of adventure and camaraderie.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "https://la-taverne-de-l-union.com/manifest",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "La Taverne de l'Union",
+    title: "La Taverne de l'Union",
+    description:
+      "Welcome to the Taverne de l'Union, a place of adventure and camaraderie.",
+    url: "https://la-taverne-de-l-union.com",
+    images: {
+      url: "https://la-taverne-de-l-union.com/og-image",
+      width: 1200,
+      height: 630,
+      alt: "La Taverne de l'Union",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "white" },
+  ],
 };
 
 const LIGHT_THEME_COLOR = "hsl(0 0% 100%)";
