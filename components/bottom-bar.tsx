@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Character } from "@/lib/db/schema";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Trophy,
@@ -23,7 +24,9 @@ import {
   Target,
   Heart,
   Sparkles,
+  ChevronRight,
 } from "lucide-react";
+import Link from "next/link";
 
 const trophees = [
   { id: "lecteur-de-lettre", label: "Lecteur de Lettre", grayscale: false },
@@ -141,7 +144,13 @@ const talents = [
   },
 ];
 
-export function BottomBar() {
+export function BottomBar({
+  character,
+  characters,
+}: {
+  character: Character;
+  characters: Character[];
+}) {
   return (
     <div className="absolute bottom-0 inset-x-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full antialiased">
       <div className="grid h-full grid-cols-3">
@@ -245,23 +254,45 @@ export function BottomBar() {
         <Sheet>
           <SheetTrigger className="flex flex-col items-center justify-center">
             <Users className="size-6" />
-            <span className="text-xs">Friends</span>
+            <span className="text-xs">Amis</span>
           </SheetTrigger>
           <SheetContent
             side="bottom"
-            className="max-w-[430px] mx-auto inset-x-0"
+            className="max-w-[430px] mx-auto inset-x-0 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur-md"
           >
-            <SheetHeader>
-              <SheetTitle>Friends</SheetTitle>
-              <SheetDescription>
-                Vos amis:
-                <ul className="mt-4 space-y-2">
-                  <li>Sir Galahad</li>
-                  <li>Merlin le Sage</li>
-                  <li>Robin des bois</li>
-                </ul>
-              </SheetDescription>
+            <SheetHeader className="border-b border-muted pb-4">
+              <SheetTitle className="text-lg font-bold text-white">
+                Amis
+              </SheetTitle>
             </SheetHeader>
+            <ScrollArea className="h-[400px] mt-4">
+              <ul className="space-y-2">
+                {characters
+                  .filter((c) => c.id !== character.id)
+                  .map((character: Character) => (
+                    <Link
+                      key={character.id}
+                      href={`/character/${character.id}`}
+                      className="w-full text-white font-semibold flex items-center"
+                    >
+                      <li className="w-full flex items-center p-2 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors">
+                        <img
+                          src={character.avatar || "/images/default-avatar.png"}
+                          alt={character.name}
+                          className="w-16 h-16 rounded-full mr-3 object-cover object-top"
+                        />
+                        <div className="flex-1">
+                          {character.name}
+                          <div className="text-xs text-muted-foreground">
+                            {character.race} - {character.class}
+                          </div>
+                        </div>
+                        <ChevronRight className="ml-2 text-white" />
+                      </li>
+                    </Link>
+                  ))}
+              </ul>
+            </ScrollArea>
           </SheetContent>
         </Sheet>
       </div>

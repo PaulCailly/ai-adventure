@@ -4,11 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 
-import { Heart, Sword, Shield, Zap, Sparkle } from "lucide-react";
+import { Heart, Sword, Shield, Zap, Sparkle, ChevronLeft } from "lucide-react";
 
 import { BottomBar } from "@/components/bottom-bar";
 
-import { getCharacterById } from "@/lib/db/queries";
+import {
+  getCharacterById,
+  listCharacters,
+  getCharactersByUserId,
+} from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -25,9 +29,25 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     return redirect("/");
   }
 
+  const allCharacters = await listCharacters();
+  const userCharacters = await getCharactersByUserId({
+    userId: session.user.id,
+  });
+
+  const isMainCharacter = userCharacters.some(
+    (userCharacter) => userCharacter.id === character.id
+  );
+
   return (
     <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border">
       <div className="relative h-full">
+        {!isMainCharacter && (
+          <div className="relative top-4 left-4 z-100 pb-4">
+            <a href={`/character/${session.user.id}`}>
+              <ChevronLeft className="size-6 text-white" />
+            </a>
+          </div>
+        )}
         <ScrollArea className="h-[calc(100%-64px)]">
           <div className="px-4 py-6">
             <Card className="w-full border bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
@@ -79,20 +99,22 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                   <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
                     <Sword className="size-4 mb-1" />
                     <span className="text-xs text-muted-foreground">
-                      Attack
+                      Attaque
                     </span>
                     <span className="font-bold">{character.attack}</span>
                   </div>
                   <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
                     <Shield className="size-4 mb-1" />
                     <span className="text-xs text-muted-foreground">
-                      Defense
+                      Défense
                     </span>
                     <span className="font-bold">{character.defense}</span>
                   </div>
                   <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
                     <Zap className="size-4 mb-1" />
-                    <span className="text-xs text-muted-foreground">Speed</span>
+                    <span className="text-xs text-muted-foreground">
+                      Vitesse
+                    </span>
                     <span className="font-bold">{character.speed}</span>
                   </div>
                 </div>
@@ -100,7 +122,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             </Card>
           </div>
         </ScrollArea>
-        <BottomBar />
+        <BottomBar characters={allCharacters} character={userCharacters[0]} />
       </div>
     </div>
   );
