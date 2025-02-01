@@ -172,7 +172,7 @@ export function BottomBar({
                       <div key={id} className="p-4 border rounded-lg shadow-sm">
                         <div className="flex flex-col items-center">
                           <div
-                            className={`w-20 h-20 bg-center bg-cover rounded-lg ${
+                            className={`h-20 w-20 bg-center bg-cover rounded-lg ${
                               grayscale ? "grayscale" : ""
                             }`}
                             style={{
@@ -180,7 +180,11 @@ export function BottomBar({
                               backgroundSize: "cover",
                             }}
                           />
-                          <span className="mt-2 text-xs text-center">
+                          <span
+                            className={`mt-2 text-xs text-center ${
+                              !grayscale ? "text-white" : ""
+                            }`}
+                          >
                             {label}
                           </span>
                         </div>
