@@ -35,9 +35,9 @@ export function Chat({ id, initialMessages }: ChatProps) {
     }
   }, [audio]);
 
-  // Play/pause audio based on messages existence
+  // Play/pause audio based on first message arrival
   useEffect(() => {
-    if (audio) {
+    if (audio && messages.length === 1) {
       audio.play().catch((e) => console.log("Audio playback failed:", e));
     }
     return () => {
@@ -46,7 +46,7 @@ export function Chat({ id, initialMessages }: ChatProps) {
         audio.currentTime = 0;
       }
     };
-  }, [audio]);
+  }, [audio, messages]);
 
   return (
     <>
