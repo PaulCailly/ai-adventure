@@ -43,7 +43,7 @@ export const viewport = {
   minimumScale: 1,
   maximumScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: light)", color: "dark" },
     { media: "(prefers-color-scheme: dark)", color: "white" },
   ],
 };
@@ -92,8 +92,7 @@ export default async function RootLayout({
       <body className="antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
           disableTransitionOnChange
         >
           <Analytics />
