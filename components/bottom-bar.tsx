@@ -218,7 +218,7 @@ export function BottomBar({
                         <div className="flex flex-row items-center justify-between">
                           <div className="flex flex-col items-center">
                             <img
-                              src={`/images/talents/bronze-${id}.png`}
+                              src={`/images/talents/bronze_${id}.png`}
                               alt={`Bronze ${label}`}
                               className={`w-20 h-20 ${
                                 levels.bronze ? "grayscale" : ""
@@ -228,7 +228,7 @@ export function BottomBar({
                           </div>
                           <div className="flex flex-col items-center">
                             <img
-                              src={`/images/talents/silver-${id}.png`}
+                              src={`/images/talents/silver_${id}.png`}
                               alt={`Silver ${label}`}
                               className={`w-20 h-20 ${
                                 levels.silver ? "grayscale" : ""
@@ -238,7 +238,7 @@ export function BottomBar({
                           </div>
                           <div className="flex flex-col items-center">
                             <img
-                              src={`/images/talents/gold-${id}.png`}
+                              src={`/images/talents/gold_${id}.png`}
                               alt={`Gold ${label}`}
                               className={`w-20 h-20 ${
                                 levels.gold ? "grayscale" : ""
