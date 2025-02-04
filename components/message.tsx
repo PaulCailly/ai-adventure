@@ -37,7 +37,7 @@ const PurePreviewMessage = ({
         setMessageContent(
           "Hmm.. Attends un instant... Je vais chercher dans la réserve... Ah, où ai-je mis ce miroir magique ? Laisse-moi voir..."
         );
-      }, 2000);
+      }, 1500);
     } else {
       setMessageContent(message.content);
     }
