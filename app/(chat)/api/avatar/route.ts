@@ -71,6 +71,7 @@ Focus on specific, visually representable elements.
 Avoid ambiguous language that could be interpreted as including text.
 Do not use any character on image.
 Do not use any User Interface elements on image.
+The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.
   `;
 
   try {
