@@ -1,9 +1,15 @@
+// Start of Selection
 import { z } from "zod";
 import { OpenAI } from "openai";
 import { put } from "@vercel/blob";
 
 import { auth } from "@/app/(auth)/auth";
-import { getChatById, deleteChatById } from "@/lib/db/queries";
+import {
+  getChatById,
+  deleteChatById,
+  getCharactersByUserId,
+  updateCharacter,
+} from "@/lib/db/queries";
 
 export const maxDuration = 60;
 
@@ -93,6 +99,15 @@ Do not use any User Interface elements on image.
       contentType: "image/png",
     });
 
+    // Update the user's main character with the new avatar.
+    const userCharacters = await getCharactersByUserId({
+      userId: session.user.id,
+    });
+    if (userCharacters.length > 0) {
+      const mainCharacter = userCharacters[0];
+      await updateCharacter({ id: mainCharacter.id, avatar: blob.url });
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -148,3 +163,4 @@ export async function DELETE(request: Request) {
     });
   }
 }
+// End of Selectio
