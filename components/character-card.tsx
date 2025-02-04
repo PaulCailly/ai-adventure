@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Sparkle, Sword, Shield, Zap } from "lucide-react";
+import { Heart, Sparkle, Sword, Shield, Zap, Loader2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -12,58 +12,58 @@ function CharacterCard({ character }: { character: any }) {
   const timerRef = useRef<number | null>(null);
 
   const handleCardClick = async () => {
+    console.log("clicked");
     // Increment tap count on each click and reset if tapping slows down
     tapCountRef.current += 1;
     if (timerRef.current) {
-      if (timerRef.current !== null) {
-        clearTimeout(timerRef.current);
-      }
-      timerRef.current = window.setTimeout(() => {
-        tapCountRef.current = 0;
-      }, 600);
-      if (tapCountRef.current >= 3) {
-        tapCountRef.current = 0;
-        if (loading) return;
-        setLoading(true);
-        try {
-          const response = await fetch("/api/avatar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: character.name,
-              race: character.race,
-              class: character.class,
-              physicalTraits: character.physicalTraits,
-              weapon: character.weapon,
-              strength: character.strength,
-              weakness: character.weakness,
-              companion: character.companion,
-              symbol: character.symbol,
-              stats: {
-                health: character.health,
-                mana: character.mana,
-                attack: character.attack,
-                defense: character.defense,
-                speed: character.speed,
-              },
-            }),
-          });
-          if (response.ok) {
-            const data = await response.json();
-            if (data.imageUrl) {
-              setAvatarUrl(data.imageUrl);
-            }
-          } else {
-            console.error("Failed to regenerate avatar");
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = window.setTimeout(() => {
+      tapCountRef.current = 0;
+    }, 600);
+    if (tapCountRef.current >= 3) {
+      tapCountRef.current = 0;
+      if (loading) return;
+      setLoading(true);
+      try {
+        const response = await fetch("/api/avatar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: character.name,
+            race: character.race,
+            class: character.class,
+            physicalTraits: character.physicalTraits,
+            weapon: character.weapon,
+            strength: character.strength,
+            weakness: character.weakness,
+            companion: character.companion,
+            symbol: character.symbol,
+            stats: {
+              health: character.health,
+              mana: character.mana,
+              attack: character.attack,
+              defense: character.defense,
+              speed: character.speed,
+            },
+          }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.imageUrl) {
+            setAvatarUrl(data.imageUrl);
           }
-        } catch (error) {
-          console.error("Error regenerating avatar:", error);
-        } finally {
-          setLoading(false);
+        } else {
+          console.error("Failed to regenerate avatar");
         }
+      } catch (error) {
+        console.error("Error regenerating avatar:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
+
   return (
     <div className="px-4 py-6">
       <Card
@@ -108,6 +108,11 @@ function CharacterCard({ character }: { character: any }) {
               <span className="text-white font-bold">{character.mana}</span>
             </div>
           </div>
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10">
+              <Loader2 className="animate-spin h-8 w-8 text-white" />
+            </div>
+          )}
         </div>
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-3 gap-2">
