@@ -6,6 +6,7 @@ import { DataStreamHandler } from "@/components/data-stream-handler";
 import { getCharactersByUserId, getMostRecentChat } from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { InstallPrompt } from "@/app/components/Install-prompt";
 
 export default async function Page() {
   const session = await auth();
@@ -29,6 +30,7 @@ export default async function Page() {
         <Chat key={id} id={id} initialMessages={[]} />
         <DataStreamHandler id={id} />
       </ScrollArea>
+      <InstallPrompt />
     </div>
   );
 }
