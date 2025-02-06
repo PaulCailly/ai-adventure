@@ -2,8 +2,8 @@ import { type MetadataRoute } from "next";
 
 export default function Manifest(): MetadataRoute.Manifest {
   return {
-    name: "Taverne de l'Union",
-    short_name: "TU",
+    name: "Taverne",
+    short_name: "Taverne",
     description: "Là où l'aventure commence",
     start_url: "/",
     display: "standalone",
