@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  manifest: "https://taverne-de-l-union.com/manifest",
+  manifest: "https://taverne-de-l-union.com/manifest.json",
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -22,12 +22,6 @@ export const metadata: Metadata = {
     title: "La Taverne de l'Union",
     description: "Là où l'aventure commence",
     url: "https://taverne-de-l-union.com",
-    images: {
-      url: "https://taverne-de-l-union.com/og-image",
-      width: 1200,
-      height: 630,
-      alt: "La Taverne de l'Union",
-    },
   },
   robots: {
     index: true,
