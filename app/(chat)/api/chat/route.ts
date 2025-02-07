@@ -123,16 +123,15 @@ export async function POST(request: Request) {
               const openai = new OpenAI();
               const imagePrompt = `
               Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
-              Welding a ${weapon} with confidence.
+              Wielding a ${weapon} with confidence.
               Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
               The scene features an environment characteristic of the ${race} race.
               The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
-              Include subtle arcane symbols and wisps of magical energy surrounding the character.
               Focus on specific, visually representable elements.
               Avoid ambiguous language that could be interpreted as including text.
-              Do not use any character on image.
+              Do not use any text on image.
               Do not use any User Interface elements on image.
-              `;
+              The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.`;
 
               const imageResponse = await openai.images.generate({
                 model: "dall-e-3",
