@@ -125,7 +125,7 @@ export async function POST(request: Request) {
               Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
               Welding a ${weapon} with confidence.
               Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
-              The scene features magical elements and mystical atmosphere, with soft ethereal lighting enhancing the fantasy aesthetic.
+              The scene features an environment characteristic of the ${race} race.
               The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
               Include subtle arcane symbols and wisps of magical energy surrounding the character.
               Focus on specific, visually representable elements.
