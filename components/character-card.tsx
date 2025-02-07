@@ -33,7 +33,6 @@ function CharacterCard({ character }: { character: any }) {
             name: character.name,
             race: character.race,
             class: character.class,
-            physicalTraits: character.physicalTraits,
             weapon: character.weapon,
             strength: character.strength,
             weakness: character.weakness,
