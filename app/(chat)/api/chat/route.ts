@@ -4,7 +4,7 @@ import {
   createDataStreamResponse,
   streamText,
 } from "ai";
-import { z } from "zod";
+import { symbol, z } from "zod";
 import { OpenAI } from "openai";
 import { put } from "@vercel/blob";
 
@@ -114,21 +114,19 @@ export async function POST(request: Request) {
               race,
               class: heroClass,
               weapon,
-              strength,
-              weakness,
               companion,
               symbol,
               stats,
+              strength,
+              weakness,
             }) => {
               const openai = new OpenAI();
               const imagePrompt = generateImagePrompt({
-                name,
                 race,
                 heroClass,
                 weapon,
-                strength,
-                weakness,
                 companion,
+                symbol,
               });
 
               const imageResponse = await openai.images.generate({

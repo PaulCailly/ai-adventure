@@ -151,32 +151,19 @@ Success criteria:
 </Evaluation>
 `;
 export function generateImagePrompt({
-  name,
   race,
   heroClass,
   weapon,
-  strength,
-  weakness,
   companion,
+  symbol,
 }: {
-  name: string;
   race: string;
   heroClass: string;
   weapon: string;
-  strength: string;
-  weakness: string;
   companion: string;
+  symbol: string;
 }) {
   return `
-Create a fantasy portrait in the iconic Studio Ghibli animation style of a ${race} ${heroClass} named ${name}.
-They are accompanied by their loyal companion, a ${companion}.
-Wielding a ${weapon} with confidence.
-Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
-The scene features an environment characteristic of the ${race} race.
-The art style should capture Ghibli's signature soft colors, expressive characters, and whimsical atmosphere.
-Include magical elements and nature details typical of Ghibli films.
-Focus on creating a warm, inviting atmosphere with attention to small environmental details.
-Do not use any text on image.
-Do not use any User Interface elements on image.
-The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.`;
+  Create a full-length vertical portrait of a ${race} ${heroClass}, rendered in a style inspired by Akira anime featuring a vibrant color palette. The character wields a ${weapon} and is accompanied by a loyal ${companion}. Integrate a subtle, almost hidden representation of the symbol "${symbol}"—incorporated discreetly within their attire or the background details—to add an enigmatic layer to the narrative. The background should evoke a mystical, fantastical realm filled with enchanted landscapes, magical lighting, and intricate organic details reminiscent of epic fantasy tales. Ensure the final artwork is entirely free of any text, captions, or UI elements.
+    `;
 }

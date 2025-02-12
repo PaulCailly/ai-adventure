@@ -46,26 +46,14 @@ export async function POST(request: Request) {
     return new Response("Invalid input", { status: 400 });
   }
 
-  const {
-    name,
-    race,
-    class: heroClass,
-    weapon,
-    strength,
-    weakness,
-    companion,
-    symbol,
-    stats,
-  } = payload;
+  const { name, race, class: heroClass, weapon, companion, symbol } = payload;
 
   const imagePrompt = generateImagePrompt({
-    name,
     race,
     heroClass,
     weapon,
     companion,
-    strength,
-    weakness,
+    symbol,
   });
 
   try {
