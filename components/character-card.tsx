@@ -98,25 +98,27 @@ function CharacterCard({
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
           <div className="absolute top-4 inset-x-4 flex justify-between items-start">
-            <div className="flex flex-col gap-2 min-w-0">
-              <Badge className="w-fit text-xs font-bold text-white bg-black/50 backdrop-blur-md rounded-lg inline-block truncate">
+            <div className="flex flex-row gap-2 min-w-0">
+              <Badge
+                variant="secondary"
+                className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
+              >
                 {character.name}
               </Badge>
+              <Badge
+                variant="secondary"
+                className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
+              >
+                {character.race}
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
+              >
+                {character.class}
+              </Badge>
               <div className="flex flex-row gap-2">
-                <div className="h-fit flex-shrink-0 flex flex-row gap-1">
-                  <Badge
-                    variant="secondary"
-                    className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
-                  >
-                    {character.race}
-                  </Badge>
-                  <Badge
-                    variant="secondary"
-                    className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
-                  >
-                    {character.class}
-                  </Badge>
-                </div>
+                <div className="h-fit flex-shrink-0 flex flex-row gap-1"></div>
               </div>
             </div>
             {isSelf && (
