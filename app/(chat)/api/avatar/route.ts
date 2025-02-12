@@ -10,6 +10,7 @@ import {
   getCharactersByUserId,
   updateCharacter,
 } from "@/lib/db/queries";
+import { generateImagePrompt } from "@/lib/ai/prompts";
 
 export const maxDuration = 60;
 
@@ -57,18 +58,15 @@ export async function POST(request: Request) {
     stats,
   } = payload;
 
-  // Construct an image prompt using the provided hero details.
-  const imagePrompt = `
-Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
-Wielding a ${weapon} with confidence.
-Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
-The scene features an environment characteristic of the ${race} race.
-The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
-Focus on specific, visually representable elements.
-Avoid ambiguous language that could be interpreted as including text.
-Do not use any text on image.
-Do not use any User Interface elements on image.
-The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.`;
+  const imagePrompt = generateImagePrompt({
+    name,
+    race,
+    heroClass,
+    weapon,
+    companion,
+    strength,
+    weakness,
+  });
 
   try {
     // Generate the image using OpenAI's DALL-E 3.

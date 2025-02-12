@@ -150,3 +150,33 @@ Success criteria:
 - VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
 </Evaluation>
 `;
+export function generateImagePrompt({
+  name,
+  race,
+  heroClass,
+  weapon,
+  strength,
+  weakness,
+  companion,
+}: {
+  name: string;
+  race: string;
+  heroClass: string;
+  weapon: string;
+  strength: string;
+  weakness: string;
+  companion: string;
+}) {
+  return `
+Create a fantasy portrait in the iconic Studio Ghibli animation style of a ${race} ${heroClass} named ${name}.
+They are accompanied by their loyal companion, a ${companion}.
+Wielding a ${weapon} with confidence.
+Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
+The scene features an environment characteristic of the ${race} race.
+The art style should capture Ghibli's signature soft colors, expressive characters, and whimsical atmosphere.
+Include magical elements and nature details typical of Ghibli films.
+Focus on creating a warm, inviting atmosphere with attention to small environmental details.
+Do not use any text on image.
+Do not use any User Interface elements on image.
+The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.`;
+}

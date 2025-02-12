@@ -11,7 +11,7 @@ import { put } from "@vercel/blob";
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
 import { models } from "@/lib/ai/models";
-import { systemPrompt } from "@/lib/ai/prompts";
+import { generateImagePrompt, systemPrompt } from "@/lib/ai/prompts";
 import {
   deleteChatById,
   getChatById,
@@ -121,17 +121,15 @@ export async function POST(request: Request) {
               stats,
             }) => {
               const openai = new OpenAI();
-              const imagePrompt = `
-              Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
-              Wielding a ${weapon} with confidence.
-              Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
-              The scene features an environment characteristic of the ${race} race.
-              The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
-              Focus on specific, visually representable elements.
-              Avoid ambiguous language that could be interpreted as including text.
-              Do not use any text on image.
-              Do not use any User Interface elements on image.
-              The image must be in a vertical, full-length format that shows the character from head to toe, ensuring a non-landscape view.`;
+              const imagePrompt = generateImagePrompt({
+                name,
+                race,
+                heroClass,
+                weapon,
+                strength,
+                weakness,
+                companion,
+              });
 
               const imageResponse = await openai.images.generate({
                 model: "dall-e-3",
