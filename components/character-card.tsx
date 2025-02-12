@@ -8,6 +8,7 @@ import {
   Zap,
   Loader2,
   MoreVertical,
+  Users,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -131,7 +132,6 @@ function CharacterCard({
             </div>
           )}
         </div>
-        <ExperienceBar />
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-3 gap-2">
             <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
@@ -150,6 +150,19 @@ function CharacterCard({
               <span className="font-bold">{character.speed}</span>
             </div>
           </div>
+
+          <CardContent className="p-4 bg-muted/50 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold">Guilde</h3>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <Users className="size-4" />
+                  <span>4 membres</span>
+                </div>
+              </div>
+            </div>
+            <ExperienceBar />
+          </CardContent>
         </CardContent>
       </Card>
     </div>
