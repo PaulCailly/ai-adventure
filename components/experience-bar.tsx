@@ -4,9 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Progress } from "./ui/progress";
 import { Card, CardContent } from "./ui/card";
 
-// Exponential XP curve: each level requires 50% more XP than the previous
+// Exponential XP curve: each level requires 100% more XP than the previous
+// and has an additional scaling factor based on level
 function getXpForLevel(level: number): number {
-  return Math.floor(1000 * Math.pow(1.5, level));
+  const baseXp = 1500;
+  const multiplier = Math.pow(2, level); // Double XP requirement each level
+  const levelScaling = 1 + level * 0.1; // Additional 10% scaling per level
+  return Math.floor(baseXp * multiplier * levelScaling);
 }
 
 // Calculate level based on total XP
