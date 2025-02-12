@@ -86,7 +86,7 @@ function CharacterCard({
   };
 
   return (
-    <div className="px-4 py-6 flex flex-col gap-4">
+    <div className="px-4 py-6 flex flex-col gap-4 pb-48">
       <Card className="w-full border bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
         <div className="relative aspect-[3/4] w-full max-h-[50vh]">
           {avatarUrl && (
