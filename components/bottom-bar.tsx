@@ -145,13 +145,12 @@ const talents = [
   },
 ];
 
-export function BottomBar({
-  character,
-  characters,
-}: {
-  character: Character;
+interface BottomBarProps {
   characters: Character[];
-}) {
+  character: Character;
+}
+
+export function BottomBar({ characters, character }: BottomBarProps) {
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/register`;
     if (navigator.share) {
@@ -293,32 +292,25 @@ export function BottomBar({
               </SheetTitle>
             </SheetHeader>
             <ScrollArea className="h-[400px] mt-4">
-              <ul className="space-y-2">
-                {characters
-                  .filter((c) => c.id !== character.id)
-                  .map((character: Character) => (
-                    <Link
-                      key={character.id}
-                      href={`/character/${character.id}`}
-                      className="w-full text-white font-semibold flex items-center"
+              <div className="flex flex-row items-center justify-around overflow-x-auto">
+                {characters.map((char) => (
+                  <Link key={char.id} href={`/character/${char.id}`}>
+                    <div
+                      className={`relative w-12 h-12 rounded-full overflow-hidden border-2 ${
+                        char.id === character.id
+                          ? "border-blue-500"
+                          : "border-transparent"
+                      }`}
                     >
-                      <li className="w-full flex items-center p-2 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors">
-                        <img
-                          src={character.avatar || "/images/default-avatar.png"}
-                          alt={character.name}
-                          className="w-16 h-16 rounded-full mr-3 object-cover object-top"
-                        />
-                        <div className="flex-1">
-                          {character.name}
-                          <div className="text-xs text-muted-foreground">
-                            {character.race} - {character.class}
-                          </div>
-                        </div>
-                        <ChevronRight className="ml-2 text-white" />
-                      </li>
-                    </Link>
-                  ))}
-              </ul>
+                      <img
+                        src={char.avatar || ""}
+                        alt={char.name}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </Link>
+                ))}
+              </div>
               <button
                 onClick={handleShare}
                 className="w-full mt-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors flex items-center justify-center gap-2 text-white"

@@ -28,9 +28,11 @@ import { toast } from "sonner";
 function CharacterCard({
   character,
   isSelf = false,
+  guildCount,
 }: {
   character: any;
   isSelf?: boolean;
+  guildCount?: number;
 }) {
   const [avatarUrl, setAvatarUrl] = useState(character.avatar);
   const [loading, setLoading] = useState(false);
@@ -169,7 +171,9 @@ function CharacterCard({
                 <h3 className="font-bold">Guilde</h3>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Users className="size-4" />
-                  <span>4 membres</span>
+                  <span>
+                    {guildCount ?? 1} membre{(guildCount ?? 1) > 1 ? "s" : ""}
+                  </span>
                 </div>
               </div>
             </div>
