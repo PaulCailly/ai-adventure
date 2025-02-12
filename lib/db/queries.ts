@@ -13,6 +13,7 @@ import {
   message,
   character,
   type Character,
+  globalProgress,
 } from "./schema";
 
 // biome-ignore lint: Forbidden non-null assertion.
@@ -251,3 +252,47 @@ export async function deleteCharacter({ id }: { id: string }) {
     throw error;
   }
 }
+
+// Global Progress operations
+export async function getGlobalProgress() {
+  try {
+    const [progress] = await db.select().from(globalProgress).limit(1);
+    return progress;
+  } catch (error) {
+    console.error("Failed to get global progress from database");
+    throw error;
+  }
+}
+
+export async function createGlobalProgress() {
+  try {
+    const now = new Date();
+    return await db
+      .insert(globalProgress)
+      .values({ id: 1, xp: 0, lastUpdated: now })
+      .returning();
+  } catch (error) {
+    console.error("Failed to create global progress in database");
+    throw error;
+  }
+}
+
+export async function updateGlobalProgress({
+  xp,
+  lastUpdated,
+}: {
+  xp: number;
+  lastUpdated: Date;
+}) {
+  try {
+    return await db
+      .update(globalProgress)
+      .set({ xp, lastUpdated })
+      .where(eq(globalProgress.id, 1));
+  } catch (error) {
+    console.error("Failed to update global progress in database");
+    throw error;
+  }
+}
+
+export { db };

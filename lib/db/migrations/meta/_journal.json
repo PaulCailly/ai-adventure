@@ -8,6 +8,13 @@
       "when": 1738961931866,
       "tag": "0000_cheerful_preak",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739384668450,
+      "tag": "0001_fantastic_speedball",
+      "breakpoints": true
     }
   ]
 }
