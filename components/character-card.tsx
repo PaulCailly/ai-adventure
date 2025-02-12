@@ -20,7 +20,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-function CharacterCard({ character }: { character: any }) {
+function CharacterCard({
+  character,
+  isSelf = false,
+}: {
+  character: any;
+  isSelf?: boolean;
+}) {
   const [avatarUrl, setAvatarUrl] = useState(character.avatar);
   const [loading, setLoading] = useState(false);
 
@@ -96,16 +102,18 @@ function CharacterCard({ character }: { character: any }) {
                 </Badge>
               </div>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="bg-black/50 backdrop-blur-sm p-2 rounded-lg">
-                <MoreVertical className="size-5 text-white" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={handleReforgeAvatar}>
-                  Reforge Avatar
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {isSelf && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="bg-black/50 backdrop-blur-sm p-2 rounded-lg">
+                  <MoreVertical className="size-5 text-white" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={handleReforgeAvatar}>
+                    Reforge Avatar
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
           <div className="absolute bottom-4 inset-x-4 flex justify-between">
             <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">

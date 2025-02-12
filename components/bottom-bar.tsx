@@ -25,6 +25,7 @@ import {
   Heart,
   Sparkles,
   ChevronRight,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -151,6 +152,28 @@ export function BottomBar({
   character: Character;
   characters: Character[];
 }) {
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/register`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Aide-moi dans ma quête !",
+          text: "Aide-moi à progresser dans ma quête en rejoignant l'aventure !",
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.error("Erreur lors du partage :", error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert(`Lien copié dans le presse-papier : ${shareUrl}`);
+      } catch (err) {
+        prompt("Copiez ce lien :", shareUrl);
+      }
+    }
+  };
+
   return (
     <div className="absolute bottom-0 inset-x-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full antialiased">
       <div className="grid h-full grid-cols-3">
@@ -296,6 +319,13 @@ export function BottomBar({
                     </Link>
                   ))}
               </ul>
+              <button
+                onClick={handleShare}
+                className="w-full mt-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors flex items-center justify-center gap-2 text-white"
+              >
+                <Share2 className="size-5" />
+                <span>Inviter des amis</span>
+              </button>
             </ScrollArea>
           </SheetContent>
         </Sheet>

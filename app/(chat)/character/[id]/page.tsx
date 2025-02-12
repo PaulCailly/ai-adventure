@@ -51,7 +51,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           </div>
         )}
         <ScrollArea className="h-[calc(100%-64px)]">
-          <CharacterCard character={character} />
+          <CharacterCard character={character} isSelf={isMainCharacter} />
         </ScrollArea>
         <BottomBar characters={allCharacters} character={userCharacters[0]} />
       </div>
