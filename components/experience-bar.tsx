@@ -86,7 +86,7 @@ export default function ExperienceBar() {
       if (pending > 0) {
         flushPending();
       }
-    }, 5000);
+    }, 60000);
     return () => clearInterval(flushInterval);
   }, [pending]);
 

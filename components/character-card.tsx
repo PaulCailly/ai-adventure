@@ -9,6 +9,8 @@ import {
   Loader2,
   MoreVertical,
   Users,
+  SwordIcon,
+  Swords,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -20,6 +22,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import Link from "next/link";
+import { toast } from "sonner";
 
 function CharacterCard({
   character,
@@ -71,10 +75,18 @@ function CharacterCard({
     }
   };
 
+  const handleForestClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast.error(
+      "Vous devez être niveau 11 minimum pour accéder à cette zone.",
+      { position: "bottom-center" }
+    );
+  };
+
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 flex flex-col gap-4">
       <Card className="w-full border bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
-        <div className="relative aspect-[3/4] w-full">
+        <div className="relative aspect-[3/4] w-full max-h-[50vh]">
           {avatarUrl && (
             <img
               src={avatarUrl}
@@ -165,6 +177,25 @@ function CharacterCard({
           </CardContent>
         </CardContent>
       </Card>
+      <Link href="#" onClick={handleForestClick} className="w-full">
+        <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardContent className="py-4 px-5">
+            <div className="flex justify-between items-center gap-3">
+              <div className="flex flex-row gap-2">
+                <Swords className="h-5 w-5 text-primary" />
+                <div className="flex flex-row gap-2">
+                  <h3 className="text-sm font-medium text-foreground">
+                    Forêt des Murmures Anciens
+                  </h3>
+                </div>
+              </div>
+              <Badge variant="outline" className="text-xs font-normal">
+                Niveaux 11-15
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 }
