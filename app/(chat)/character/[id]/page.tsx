@@ -77,7 +77,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                     className="bg-black/50 backdrop-blur-sm text-white border-white/20 hover:bg-black/60 hover:text-white hover:border-white/30"
                   >
                     <BadgeSwissFranc className="text-yellow-500 h-4 w-4" />
-                    <span>20</span>
+                    <span>{character.gold}</span>
                   </Button>
                 </div>
               </div>

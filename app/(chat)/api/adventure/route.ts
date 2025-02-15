@@ -15,14 +15,15 @@ import {
   saveMessages,
   getCharacterById,
   updateHero,
+  addInventoryItem,
 } from "@/lib/db/queries";
 import {
   generateUUID,
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/utils";
-import { object, number, string } from "zod";
-import { AISDKExporter } from "langsmith/vercel";
+import { object, number, string, boolean as zBoolean } from "zod";
+import chalk from "chalk";
 
 export async function POST(request: Request) {
   const {
@@ -108,6 +109,7 @@ export async function POST(request: Request) {
           "rollDice",
           "combatCalculation",
           "updateHero",
+          "addInventoryItem",
         ],
         tools: {
           rollDice: {
@@ -117,7 +119,11 @@ export async function POST(request: Request) {
               sides: number().min(2).max(20),
             }),
             execute: async ({ sides }) => {
+              console.log(
+                chalk.cyanBright(`🎲 rollDice invoked with sides: ${sides}`)
+              );
               const roll = Math.floor(Math.random() * sides) + 1;
+              console.log(chalk.greenBright(`🎲 rollDice result: ${roll}`));
               return roll;
             },
           },
@@ -130,27 +136,75 @@ export async function POST(request: Request) {
               sides: number().min(2).max(20),
             }),
             execute: async ({ attackerAttack, defenderDefense, sides }) => {
+              console.log(
+                chalk.yellowBright(
+                  `🔥 combatCalculation invoked with attackerAttack: ${attackerAttack}, defenderDefense: ${defenderDefense}, sides: ${sides}`
+                )
+              );
               const diceRoll = Math.floor(Math.random() * sides) + 1;
               const damage = Math.max(
                 0,
                 attackerAttack + diceRoll - defenderDefense
+              );
+              console.log(
+                chalk.greenBright(
+                  `🔥 combatCalculation result: dice rolled ${diceRoll} and calculated damage ${damage}`
+                )
               );
               return damage;
             },
           },
           updateHero: {
             description:
-              "Updates the hero's Health and Mana based on the outcome of combat. If the hero's health reaches 0, the adventure should immediately end.",
+              "Updates the hero's stats by adding the provided values (can be positive for healing/loot or negative for damage/mana cost). If the hero's health reaches 0 or below, the adventure ends.",
             parameters: object({
-              heroId: string(),
               health: number(),
               mana: number(),
+              gold: number(),
             }),
-            execute: async ({ heroId, health, mana }) => {
-              await updateHero({ heroId, health, mana });
-              return health <= 0
-                ? "Hero defeated, adventure ends immediately"
-                : "Hero updated successfully";
+            execute: async ({ health, mana, gold }) => {
+              console.log(
+                `🛡 updateHero invoked for heroId: ${characterId} with changes: Health=${health}, Mana=${mana}, Gold=${gold}`
+              );
+              const resultMessage = await updateHero({
+                heroId: characterId,
+                health,
+                mana,
+                gold,
+              });
+              console.log(`🛡 updateHero result: ${resultMessage}`);
+              return resultMessage;
+            },
+          },
+          addInventoryItem: {
+            description:
+              "Adds an item to the hero's inventory with the provided properties.",
+            parameters: object({
+              name: string(),
+              identified: zBoolean(),
+              rarity: string(),
+              description: string(),
+              effect: string(),
+            }),
+            execute: async ({
+              name,
+              identified,
+              rarity,
+              description,
+              effect,
+            }) => {
+              console.log(
+                `🛡 addInventoryItem invoked for heroId: ${characterId} with item: ${name}`
+              );
+              await addInventoryItem({
+                heroId: characterId,
+                name,
+                identified,
+                rarity,
+                description,
+                effect,
+              });
+              return "Item added successfully";
             },
           },
         },
@@ -172,9 +226,6 @@ export async function POST(request: Request) {
             console.error("Failed to save chat:", error);
           }
         },
-        experimental_telemetry: AISDKExporter.getSettings({
-          runName: "adventure-stream-text",
-        }),
       });
 
       result.mergeIntoDataStream(dataStream);

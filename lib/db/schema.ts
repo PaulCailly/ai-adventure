@@ -7,6 +7,7 @@ import {
   uuid,
   text,
   integer,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("User", {
@@ -62,6 +63,7 @@ export const character = pgTable("Character", {
   avatar: text("avatar"),
   health: integer("health").notNull(),
   mana: integer("mana").notNull(),
+  gold: integer("gold").notNull().default(20),
   attack: integer("attack").notNull(),
   defense: integer("defense").notNull(),
   speed: integer("speed").notNull(),
@@ -69,6 +71,21 @@ export const character = pgTable("Character", {
 });
 
 export type Character = InferSelectModel<typeof character>;
+
+export const inventoryItem = pgTable("InventoryItem", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  characterId: uuid("characterId")
+    .notNull()
+    .references(() => character.id),
+  name: text("name").notNull(),
+  identified: boolean("identified").notNull().default(false),
+  rarity: text("rarity").notNull(),
+  description: text("description").notNull(),
+  effect: text("effect").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type InventoryItem = InferSelectModel<typeof inventoryItem>;
 
 export const globalProgress = pgTable("GlobalProgress", {
   id: integer("id").primaryKey().notNull().default(1),

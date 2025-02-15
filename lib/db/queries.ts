@@ -14,6 +14,7 @@ import {
   character,
   type Character,
   globalProgress,
+  inventoryItem,
 } from "./schema";
 
 // biome-ignore lint: Forbidden non-null assertion.
@@ -322,20 +323,76 @@ export async function updateCharacterStats({
 
 export async function updateHero({
   heroId,
-  health,
-  mana,
+  health = 0,
+  mana = 0,
+  gold = 0,
 }: {
   heroId: string;
-  health: number;
-  mana: number;
+  health?: number;
+  mana?: number;
+  gold?: number;
 }) {
   try {
+    const hero = await getCharacterById({ id: heroId });
+    if (!hero) {
+      throw new Error("Hero not found");
+    }
+    console.log(
+      `Current stats for hero ${heroId}: Health=${hero.health}, Mana=${hero.mana}, Gold=${hero.gold}`
+    );
+    const newHealth = hero.health + health;
+    const newMana = hero.mana + mana;
+    const newGold = hero.gold + gold;
+    console.log(
+      `Calculated new stats: Health=${newHealth}, Mana=${newMana}, Gold=${newGold}`
+    );
+
     await db
       .update(character)
-      .set({ health, mana })
+      .set({
+        health: newHealth,
+        mana: newMana,
+        gold: newGold,
+      })
       .where(eq(character.id, heroId));
+
+    if (newHealth <= 0) {
+      return "Vous avez été vaincu. Votre quête se termine ici";
+    } else {
+      return "Hero updated successfully";
+    }
   } catch (error) {
     console.error("Failed to update hero in database", error);
+    throw error;
+  }
+}
+
+export async function addInventoryItem({
+  heroId,
+  name,
+  identified,
+  rarity,
+  description,
+  effect,
+}: {
+  heroId: string;
+  name: string;
+  identified: boolean;
+  rarity: string;
+  description: string;
+  effect: string;
+}) {
+  try {
+    return await db.insert(inventoryItem).values({
+      characterId: heroId,
+      name,
+      identified,
+      rarity,
+      description,
+      effect,
+    });
+  } catch (error) {
+    console.error("Failed to add inventory item", error);
     throw error;
   }
 }
