@@ -14,13 +14,14 @@ import {
   saveChat,
   saveMessages,
   getCharacterById,
+  updateHero,
 } from "@/lib/db/queries";
 import {
   generateUUID,
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/utils";
-import { object, number } from "zod";
+import { object, number, string } from "zod";
 
 export async function POST(request: Request) {
   const {
@@ -102,7 +103,11 @@ export async function POST(request: Request) {
         }),
         messages: coreMessages,
         maxSteps: 5,
-        experimental_activeTools: ["rollDice", "combatCalculation"],
+        experimental_activeTools: [
+          "rollDice",
+          "combatCalculation",
+          "updateHero",
+        ],
         tools: {
           rollDice: {
             description:
@@ -130,6 +135,21 @@ export async function POST(request: Request) {
                 attackerAttack + diceRoll - defenderDefense
               );
               return damage;
+            },
+          },
+          updateHero: {
+            description:
+              "Updates the hero's Health and Mana based on the outcome of combat. If the hero's health reaches 0, the adventure should immediately end.",
+            parameters: object({
+              heroId: string(),
+              health: number(),
+              mana: number(),
+            }),
+            execute: async ({ heroId, health, mana }) => {
+              await updateHero({ heroId, health, mana });
+              return health <= 0
+                ? "Hero defeated, adventure ends immediately"
+                : "Hero updated successfully";
             },
           },
         },

@@ -320,4 +320,24 @@ export async function updateCharacterStats({
     .where(eq(character.id, heroId));
 }
 
+export async function updateHero({
+  heroId,
+  health,
+  mana,
+}: {
+  heroId: string;
+  health: number;
+  mana: number;
+}) {
+  try {
+    await db
+      .update(character)
+      .set({ health, mana })
+      .where(eq(character.id, heroId));
+  } catch (error) {
+    console.error("Failed to update hero in database", error);
+    throw error;
+  }
+}
+
 export { db };
