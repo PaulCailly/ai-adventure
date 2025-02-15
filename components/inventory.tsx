@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import React from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Loader2, Box, X } from "lucide-react";
-import TooltipPortal from "./tooltip-portal";
+import { Loader2, Box, Trash2, DollarSign, CheckCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -31,12 +29,7 @@ interface InventoryProps {
 export default function Inventory({ characterId }: InventoryProps) {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [hoveredTooltip, setHoveredTooltip] = useState<{
-    item: InventoryItem;
-    rect: DOMRect;
-  } | null>(null);
 
-  // WoW-inspired color scales
   const rarityColors: Record<string, string> = {
     common: "text-white",
     uncommon: "text-green-500",
@@ -118,6 +111,25 @@ export default function Inventory({ characterId }: InventoryProps) {
     }
   }
 
+  async function handleSell(itemId: string) {
+    try {
+      const res = await fetch("/api/inventory/sell", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemId }),
+      });
+      if (res.ok) {
+        setItems((current) => current.filter((item) => item.id !== itemId));
+      } else {
+        console.error("Failed to sell inventory item");
+      }
+    } catch (error) {
+      console.error("Error selling inventory item:", error);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center p-4">
@@ -126,24 +138,16 @@ export default function Inventory({ characterId }: InventoryProps) {
     );
   }
 
-  // Define inventory capacity
   const totalSlots = 20;
   const emptySlots = totalSlots - items.length;
 
   return (
     <div className="p-4">
-      {/* Inventory grid */}
       <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
         {items.map((item) => (
           <DropdownMenu key={item.id}>
             <DropdownMenuTrigger asChild>
-              <div
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setHoveredTooltip({ item, rect });
-                }}
-                onMouseLeave={() => setHoveredTooltip(null)}
-              >
+              <div>
                 <Card
                   className={`cursor-pointer hover:bg-muted transition aspect-square flex items-center justify-center border ${getRarityBorderColor(
                     item.rarity
@@ -157,18 +161,40 @@ export default function Inventory({ characterId }: InventoryProps) {
                 </Card>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="w-64">
+              <div className="p-4 border-b flex flex-col gap-4">
+                <div className="flex items-center space-x-4">
+                  <Box className="h-12 w-12 text-muted-foreground flex-shrink-0" />
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-semibold">{item.name}</h3>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs w-fit ${getRarityColor(item.rarity)}`}
+                    >
+                      {item.rarity}
+                    </Badge>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
+                <p className="text-sm text-muted-foreground">{item.effect}</p>
+              </div>
               <DropdownMenuItem onClick={() => handleUse(item.id)}>
+                <CheckCircle className="mr-2 h-4 w-4" />
                 Use
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDiscard(item.id)}>
+                <Trash2 className="mr-2 h-4 w-4" />
                 Discard
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSell(item.id)}>
+                <DollarSign className="mr-2 h-4 w-4" />
+                Sell
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ))}
-
-        {/* Render empty slots */}
         {Array.from({ length: emptySlots }).map((_, index) => (
           <Card
             key={`empty-${index}`}
@@ -180,37 +206,6 @@ export default function Inventory({ characterId }: InventoryProps) {
           </Card>
         ))}
       </div>
-
-      {/* Render the portal-based tooltip if an item is hovered */}
-      {hoveredTooltip && (
-        <TooltipPortal targetRect={hoveredTooltip.rect}>
-          <div className="bg-background text-foreground shadow-lg rounded p-2 border border-neutral-700">
-            <div className="flex items-center space-x-2">
-              <div className="border-neutral-700 border p-2 rounded-md">
-                <Box className="h-8 w-8 text-muted-foreground flex-shrink-0" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="flex gap-2">
-                  <h3 className="text-md font-semibold">
-                    {hoveredTooltip.item.name}
-                  </h3>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs ${getRarityColor(
-                      hoveredTooltip.item.rarity
-                    )}`}
-                  >
-                    {hoveredTooltip.item.rarity}
-                  </Badge>
-                </span>
-                <p className="text-xs text-muted-foreground">
-                  {hoveredTooltip.item.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        </TooltipPortal>
-      )}
     </div>
   );
 }
