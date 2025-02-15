@@ -82,7 +82,6 @@ export async function saveChat({
 export async function deleteChatById({ id }: { id: string }) {
   try {
     await db.delete(message).where(eq(message.chatId, id));
-
     return await db.delete(chat).where(eq(chat.id, id));
   } catch (error) {
     console.error("Failed to delete chat by id from database");
@@ -393,6 +392,23 @@ export async function addInventoryItem({
     });
   } catch (error) {
     console.error("Failed to add inventory item", error);
+    throw error;
+  }
+}
+
+export async function getInventoryItemsByCharacterId({
+  characterId,
+}: {
+  characterId: string;
+}) {
+  try {
+    return await db
+      .select()
+      .from(inventoryItem)
+      .where(eq(inventoryItem.characterId, characterId))
+      .orderBy(asc(inventoryItem.createdAt));
+  } catch (error) {
+    console.error("Failed to get inventory items for character", error);
     throw error;
   }
 }
