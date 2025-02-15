@@ -139,12 +139,17 @@ export async function POST(request: Request) {
               sides: number().min(2).max(20),
             }),
             execute: async ({ sides }) => {
-              console.log(
-                chalk.cyanBright(`🎲 rollDice invoked with sides: ${sides}`)
-              );
-              const roll = Math.floor(Math.random() * sides) + 1;
-              console.log(chalk.greenBright(`🎲 rollDice result: ${roll}`));
-              return roll;
+              try {
+                console.log(
+                  chalk.cyanBright(`🎲 rollDice invoked with sides: ${sides}`)
+                );
+                const roll = Math.floor(Math.random() * sides) + 1;
+                console.log(chalk.greenBright(`🎲 rollDice result: ${roll}`));
+                return roll;
+              } catch (error) {
+                console.error("Error in rollDice:", error);
+                throw new Error("Failed to execute rollDice");
+              }
             },
           },
           combatCalculation: {
@@ -156,22 +161,27 @@ export async function POST(request: Request) {
               sides: number().min(2).max(20),
             }),
             execute: async ({ attackerAttack, defenderDefense, sides }) => {
-              console.log(
-                chalk.yellowBright(
-                  `🔥 combatCalculation invoked with attackerAttack: ${attackerAttack}, defenderDefense: ${defenderDefense}, sides: ${sides}`
-                )
-              );
-              const diceRoll = Math.floor(Math.random() * sides) + 1;
-              const damage = Math.max(
-                0,
-                attackerAttack + diceRoll - defenderDefense
-              );
-              console.log(
-                chalk.greenBright(
-                  `🔥 combatCalculation result: dice rolled ${diceRoll} and calculated damage ${damage}`
-                )
-              );
-              return damage;
+              try {
+                console.log(
+                  chalk.yellowBright(
+                    `🔥 combatCalculation invoked with attackerAttack: ${attackerAttack}, defenderDefense: ${defenderDefense}, sides: ${sides}`
+                  )
+                );
+                const diceRoll = Math.floor(Math.random() * sides) + 1;
+                const damage = Math.max(
+                  0,
+                  attackerAttack + diceRoll - defenderDefense
+                );
+                console.log(
+                  chalk.greenBright(
+                    `🔥 combatCalculation result: dice rolled ${diceRoll} and calculated damage ${damage}`
+                  )
+                );
+                return damage;
+              } catch (error) {
+                console.error("Error in combatCalculation:", error);
+                throw new Error("Failed to execute combatCalculation");
+              }
             },
           },
           updateHero: {
@@ -183,17 +193,22 @@ export async function POST(request: Request) {
               gold: number(),
             }),
             execute: async ({ health, mana, gold }) => {
-              console.log(
-                `🛡 updateHero invoked for heroId: ${characterId} with changes: Health=${health}, Mana=${mana}, Gold=${gold}`
-              );
-              const resultMessage = await updateHero({
-                heroId: characterId,
-                health,
-                mana,
-                gold,
-              });
-              console.log(`🛡 updateHero result: ${resultMessage}`);
-              return resultMessage;
+              try {
+                console.log(
+                  `🛡 updateHero invoked for heroId: ${characterId} with changes: Health=${health}, Mana=${mana}, Gold=${gold}`
+                );
+                const resultMessage = await updateHero({
+                  heroId: characterId,
+                  health,
+                  mana,
+                  gold,
+                });
+                console.log(`🛡 updateHero result: ${resultMessage}`);
+                return resultMessage;
+              } catch (error) {
+                console.error("Error in updateHero:", error);
+                throw new Error("Failed to execute updateHero");
+              }
             },
           },
           addInventoryItem: {
@@ -222,17 +237,22 @@ export async function POST(request: Request) {
               itemType,
               buffs,
             }) => {
-              console.log(`🛡 addInventoryItem invoked for item: ${name}`);
-              await addInventoryItem({
-                heroId: characterId,
-                name,
-                identified,
-                rarity,
-                description,
-                itemType,
-                buffs: buffs || {},
-              });
-              return "Item added successfully";
+              try {
+                console.log(`🛡 addInventoryItem invoked for item: ${name}`);
+                await addInventoryItem({
+                  heroId: characterId,
+                  name,
+                  identified,
+                  rarity,
+                  description,
+                  itemType,
+                  buffs: buffs || {},
+                });
+                return "Item added successfully";
+              } catch (error) {
+                console.error("Error in addInventoryItem:", error);
+                throw new Error("Failed to execute addInventoryItem");
+              }
             },
           },
           generateLoot: {
@@ -242,51 +262,56 @@ export async function POST(request: Request) {
               zone: string(),
             }),
             execute: async ({ zone }) => {
-              const zoneData = zones[zone];
-              if (!zoneData) {
-                throw new Error(`Zone ${zone} not found.`);
+              try {
+                const zoneData = zones[zone];
+                if (!zoneData) {
+                  throw new Error(`Zone ${zone} not found.`);
+                }
+
+                // Define drop rates based on rarity.
+                const lootChances: { [key: string]: number } = {
+                  legendary: 0.01, // 1% chance for legendary items
+                  epic: 0.05, // 5% chance for epic items
+                  rare: 0.2, // 20% chance for rare items
+                  common: 0.74, // 74% chance for common items
+                };
+
+                const items = zoneData.items;
+                // Filter items that pass their individual loot chance.
+                const droppedItems = items.filter((item) => {
+                  const chance = lootChances[item.rarity.toLowerCase()] ?? 0.5;
+                  const roll = Math.random();
+                  console.log(
+                    `Loot chance check for item "${item.name}" (${
+                      item.rarity
+                    }): required <= ${chance}, rolled ${roll.toFixed(2)}`
+                  );
+                  return roll <= chance;
+                });
+
+                if (droppedItems.length === 0) {
+                  return "No loot dropped this time.";
+                }
+
+                // Randomly select one dropped item.
+                const selectedItem =
+                  droppedItems[Math.floor(Math.random() * droppedItems.length)];
+
+                // Return the loot item (excluding properties that are irrelevant for insertion).
+                const loot = {
+                  name: selectedItem.name,
+                  identified: selectedItem.rarity === "common" ? true : false,
+                  rarity: selectedItem.rarity,
+                  description: selectedItem.description,
+                  itemType: selectedItem.itemType,
+                  buffs: selectedItem.buffs,
+                };
+
+                return loot;
+              } catch (error) {
+                console.error("Error in generateLoot:", error);
+                throw new Error("Failed to execute generateLoot");
               }
-
-              // Define drop rates based on rarity.
-              const lootChances: { [key: string]: number } = {
-                legendary: 0.1, // 10% chance for legendary items
-                epic: 0.25, // 25% chance for epic items
-                rare: 0.5, // 50% chance for rare items
-                common: 0.8, // 80% chance for common items
-              };
-
-              const items = zoneData.items;
-              // Filter items that pass their individual loot chance.
-              const droppedItems = items.filter((item) => {
-                const chance = lootChances[item.rarity.toLowerCase()] ?? 0.5;
-                const roll = Math.random();
-                console.log(
-                  `Loot chance check for item "${item.name}" (${
-                    item.rarity
-                  }): required <= ${chance}, rolled ${roll.toFixed(2)}`
-                );
-                return roll <= chance;
-              });
-
-              if (droppedItems.length === 0) {
-                return "No loot dropped this time.";
-              }
-
-              // Randomly select one dropped item.
-              const selectedItem =
-                droppedItems[Math.floor(Math.random() * droppedItems.length)];
-
-              // Return the loot item (excluding properties that are irrelevant for insertion).
-              const loot = {
-                name: selectedItem.name,
-                identified: selectedItem.rarity === "common" ? true : false,
-                rarity: selectedItem.rarity,
-                description: selectedItem.description,
-                itemType: selectedItem.itemType,
-                buffs: selectedItem.buffs,
-              };
-
-              return loot;
             },
           },
         },

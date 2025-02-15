@@ -359,7 +359,7 @@ export async function updateHero({
     if (newHealth <= 0) {
       return "Vous avez été vaincu. Votre quête se termine ici";
     } else {
-      return "Hero updated successfully";
+      return "Vous avez survécu à l'attaque, continuez votre quête";
     }
   } catch (error) {
     console.error("Failed to update hero in database", error);
