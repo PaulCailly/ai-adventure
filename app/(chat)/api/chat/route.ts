@@ -164,6 +164,7 @@ export async function POST(request: Request) {
                   speed: stats.speed,
                   chatId: id,
                   avatar: blob.url,
+                  gold: 20,
                 });
               }
 
