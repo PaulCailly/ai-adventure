@@ -373,14 +373,16 @@ export async function addInventoryItem({
   identified,
   rarity,
   description,
-  effect,
+  itemType,
+  buffs,
 }: {
   heroId: string;
   name: string;
   identified: boolean;
   rarity: string;
   description: string;
-  effect: string;
+  itemType: "consumable" | "equipable" | "passive";
+  buffs: { [key: string]: number };
 }) {
   try {
     return await db.insert(inventoryItem).values({
@@ -389,7 +391,8 @@ export async function addInventoryItem({
       identified,
       rarity,
       description,
-      effect,
+      itemType,
+      buffs,
     });
   } catch (error) {
     console.error("Failed to add inventory item", error);

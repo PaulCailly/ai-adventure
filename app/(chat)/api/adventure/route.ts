@@ -25,6 +25,7 @@ import {
 } from "@/lib/utils";
 import { object, number, string, boolean as zBoolean } from "zod";
 import chalk from "chalk";
+import { zones } from "@/lib/ai/zones";
 
 export async function POST(request: Request) {
   const {
@@ -71,17 +72,21 @@ export async function POST(request: Request) {
     return new Response("Character not found", { status: 404 });
   }
 
-  // Prevent launching the adventure if the character's health is below 0
-  if (character.health < 0) {
-    return new Response("Votre santé est insuffisante pour l'aventure", {
-      status: 400,
-    });
-  }
-
   // Retrieve the hero's current inventory.
   const inventoryItems = await getInventoryItemsByCharacterId({
     characterId,
   });
+
+  // Map the DB items to the expected inventory item shape.
+  // This strips out extra fields (like id, createdAt) and asserts that itemType is one of the allowed values.
+  const formattedInventoryItems = inventoryItems.map((item) => ({
+    name: item.name,
+    identified: item.identified,
+    rarity: item.rarity,
+    description: item.description,
+    itemType: item.itemType as "consumable" | "equipable" | "passive",
+    buffs: item.buffs as { [key: string]: number },
+  }));
 
   // Save the incoming user message to associate it with this chat.
   const userMessageId = generateUUID();
@@ -115,7 +120,7 @@ export async function POST(request: Request) {
           companion: character.companion,
           symbol: character.symbol,
           zone: "forest", // Default zone for now
-          inventoryItems,
+          inventoryItems: formattedInventoryItems,
         }),
         messages: coreMessages,
         maxSteps: 5,
@@ -124,6 +129,7 @@ export async function POST(request: Request) {
           "combatCalculation",
           "updateHero",
           "addInventoryItem",
+          "generateLoot",
         ],
         tools: {
           rollDice: {
@@ -192,33 +198,95 @@ export async function POST(request: Request) {
           },
           addInventoryItem: {
             description:
-              "Adds an item to the hero's inventory with the provided properties.",
+              "Adds an item directly to the hero's inventory without performing a loot chance roll.",
             parameters: object({
               name: string(),
               identified: zBoolean(),
               rarity: string(),
               description: string(),
-              effect: string(),
+              itemType: string(),
+              buffs: object({
+                health: number().optional(),
+                mana: number().optional(),
+                attack: number().optional(),
+                defense: number().optional(),
+                speed: number().optional(),
+                xpGain: number().optional(),
+              }).optional(),
             }),
             execute: async ({
               name,
               identified,
               rarity,
               description,
-              effect,
+              itemType,
+              buffs,
             }) => {
-              console.log(
-                `🛡 addInventoryItem invoked for heroId: ${characterId} with item: ${name}`
-              );
+              console.log(`🛡 addInventoryItem invoked for item: ${name}`);
               await addInventoryItem({
                 heroId: characterId,
                 name,
                 identified,
                 rarity,
                 description,
-                effect,
+                itemType,
+                buffs: buffs || {},
               });
               return "Item added successfully";
+            },
+          },
+          generateLoot: {
+            description:
+              "Generates a loot item based on the specified zone's available items and rarity drop rates. If an item passes its drop chance roll, it is returned as loot.",
+            parameters: object({
+              zone: string(),
+            }),
+            execute: async ({ zone }) => {
+              const zoneData = zones[zone];
+              if (!zoneData) {
+                throw new Error(`Zone ${zone} not found.`);
+              }
+
+              // Define drop rates based on rarity.
+              const lootChances: { [key: string]: number } = {
+                legendary: 0.1, // 10% chance for legendary items
+                epic: 0.25, // 25% chance for epic items
+                rare: 0.5, // 50% chance for rare items
+                common: 0.8, // 80% chance for common items
+              };
+
+              const items = zoneData.items;
+              // Filter items that pass their individual loot chance.
+              const droppedItems = items.filter((item) => {
+                const chance = lootChances[item.rarity.toLowerCase()] ?? 0.5;
+                const roll = Math.random();
+                console.log(
+                  `Loot chance check for item "${item.name}" (${
+                    item.rarity
+                  }): required <= ${chance}, rolled ${roll.toFixed(2)}`
+                );
+                return roll <= chance;
+              });
+
+              if (droppedItems.length === 0) {
+                return "No loot dropped this time.";
+              }
+
+              // Randomly select one dropped item.
+              const selectedItem =
+                droppedItems[Math.floor(Math.random() * droppedItems.length)];
+
+              // Return the loot item (excluding properties that are irrelevant for insertion).
+              const loot = {
+                name: selectedItem.name,
+                identified: selectedItem.rarity === "common" ? true : false,
+                rarity: selectedItem.rarity,
+                description: selectedItem.description,
+                itemType: selectedItem.itemType,
+                buffs: selectedItem.buffs,
+              };
+
+              return loot;
             },
           },
         },

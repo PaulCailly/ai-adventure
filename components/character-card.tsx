@@ -26,6 +26,93 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+// Types for the buff breakdown
+interface BuffDetail {
+  name: string;
+  value: number;
+}
+
+interface StatBuffs {
+  health: number;
+  mana: number;
+  attack: number;
+  defense: number;
+  speed: number;
+}
+
+interface StatBuffDetails {
+  health: BuffDetail[];
+  mana: BuffDetail[];
+  attack: BuffDetail[];
+  defense: BuffDetail[];
+  speed: BuffDetail[];
+}
+
+interface StatDropdownProps {
+  label: string;
+  base: number;
+  buffTotal: number;
+  buffDetails: BuffDetail[];
+  icon: React.ReactNode;
+  variant?: "inline" | "grid";
+}
+
+// A small helper that wraps a stat value with a dropdown.
+// In variant "inline" it is rendered as an inline row (e.g. for health/mana overlay),
+// while in variant "grid" it shows the icon above the value and label.
+const StatDropdown = ({
+  label,
+  base,
+  buffTotal,
+  buffDetails,
+  icon,
+  variant = "inline",
+}: StatDropdownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {variant === "grid" ? (
+          <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg cursor-pointer">
+            {icon}
+            <span className="font-bold">{base + buffTotal}</span>
+            <span className="text-xs text-muted-foreground">{label}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 cursor-pointer">
+            {icon}
+            <span className="text-white font-bold">{base + buffTotal}</span>
+          </div>
+        )}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-4">
+        <div className="text-sm">
+          <div>
+            <strong>{label}</strong>
+          </div>
+          <div>Base: {base}</div>
+          <div>Bonus: {buffTotal}</div>
+          <div>Total: {base + buffTotal}</div>
+          {buffDetails.length > 0 && (
+            <>
+              <div className="mt-2">
+                <strong>Équipements</strong>
+              </div>
+              <ul className="list-disc list-inside">
+                {buffDetails.map((detail, index) => (
+                  <li key={index}>
+                    {detail.name}:{" "}
+                    {detail.value > 0 ? `+${detail.value}` : detail.value}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 function CharacterCard({
   character,
   isSelf = false,
@@ -39,12 +126,29 @@ function CharacterCard({
   const [avatarUrl, setAvatarUrl] = useState(character.avatar);
   const [loading, setLoading] = useState(false);
 
-  // Local state for heal button cooldown (in seconds) and current health
+  // Local state for heal button cooldown and current health
   const [healLoading, setHealLoading] = useState(false);
   const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
   const [currentHealth, setCurrentHealth] = useState<number>(character.health);
 
-  // Helper function to format seconds into Hh Mm Ss
+  // States for buff totals and breakdowns sourced from the inventory items
+  const [buffTotals, setBuffTotals] = useState<StatBuffs>({
+    health: 0,
+    mana: 0,
+    attack: 0,
+    defense: 0,
+    speed: 0,
+  });
+
+  const [buffDetails, setBuffDetails] = useState<StatBuffDetails>({
+    health: [],
+    mana: [],
+    attack: [],
+    defense: [],
+    speed: [],
+  });
+
+  // Utility to convert seconds into a formatted string.
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -52,7 +156,7 @@ function CharacterCard({
     return `${h}h ${m}m ${s}s`;
   };
 
-  // Fetch the current heal cooldown from the server
+  // Fetch the current heal cooldown from the server.
   async function fetchCooldown() {
     try {
       const res = await fetch(`/api/heal/status?characterId=${character.id}`);
@@ -65,18 +169,67 @@ function CharacterCard({
     }
   }
 
-  // Initial fetch of the cooldown when the component mounts
+  // Initial cooldown fetch.
   useEffect(() => {
     fetchCooldown();
   }, [character.id]);
 
-  // Set up an interval to update the countdown every second
+  // Tick-down cooldown every second.
   useEffect(() => {
     const timer = setInterval(() => {
       setCooldownRemaining((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Fetch the inventory items for this character and calculate the buffs.
+  useEffect(() => {
+    async function fetchInventoryBuffs() {
+      try {
+        const res = await fetch(`/api/inventory?characterId=${character.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          const totals: StatBuffs = {
+            health: 0,
+            mana: 0,
+            attack: 0,
+            defense: 0,
+            speed: 0,
+          };
+          const details: StatBuffDetails = {
+            health: [],
+            mana: [],
+            attack: [],
+            defense: [],
+            speed: [],
+          };
+          data.items.forEach((item: any) => {
+            if (item.buffs) {
+              Object.entries(item.buffs).forEach(([key, value]) => {
+                if (
+                  ["health", "mana", "attack", "defense", "speed"].includes(key)
+                ) {
+                  const numericValue = Number(value) || 0;
+                  totals[key as keyof StatBuffs] += numericValue;
+                  details[key as keyof StatBuffDetails].push({
+                    name: item.name,
+                    value: numericValue,
+                  });
+                }
+              });
+            }
+          });
+          setBuffTotals(totals);
+          setBuffDetails(details);
+        } else {
+          console.error("Failed to fetch inventory buffs");
+        }
+      } catch (error) {
+        console.error("Error fetching inventory buffs", error);
+      }
+    }
+    fetchInventoryBuffs();
+  }, [character.id]);
 
   const handleReforgeAvatar = async () => {
     if (loading) return;
@@ -120,9 +273,6 @@ function CharacterCard({
 
   const handleHeal = async (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Client-side check: if healing is already in progress or on cooldown.
-    // Also check if health is already 100.
     if (healLoading) return;
     if (currentHealth >= 100) {
       toast.error("Votre santé est déjà à 100.");
@@ -146,9 +296,7 @@ function CharacterCard({
       const data = await response.json();
       if (response.ok && data.success) {
         toast.success(data.message || "Vous avez été soigné !");
-        // Update the current health with the capped value from the server
         setCurrentHealth(data.newHealth);
-        // Refetch the cooldown (which should now be set to 24 hours)
         fetchCooldown();
       } else {
         toast.error(
@@ -165,19 +313,18 @@ function CharacterCard({
 
   const handleForestClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Block the adventure if health is below 0.
     if (currentHealth < 0) {
       toast.error("Votre santé est insuffisante pour l'aventure.", {
         position: "bottom-center",
       });
       return;
     }
-
     if (character.name === "Lucas") {
       toast.error(
         "Vous devez être niveau 11 minimum pour accéder à cette zone.",
-        { position: "bottom-center" }
+        {
+          position: "bottom-center",
+        }
       );
       return;
     }
@@ -231,14 +378,22 @@ function CharacterCard({
             )}
           </div>
           <div className="absolute bottom-4 inset-x-4 flex justify-between">
-            <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-              <Heart className="size-4 text-red-500" />
-              <span className="text-white font-bold">{currentHealth}</span>
-            </div>
-            <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-              <Sparkle className="size-4 text-blue-500" />
-              <span className="text-white font-bold">{character.mana}</span>
-            </div>
+            <StatDropdown
+              variant="inline"
+              label="Santé"
+              base={currentHealth}
+              buffTotal={buffTotals.health}
+              buffDetails={buffDetails.health}
+              icon={<Heart className="size-4 text-red-500" />}
+            />
+            <StatDropdown
+              variant="inline"
+              label="Mana"
+              base={character.mana}
+              buffTotal={buffTotals.mana}
+              buffDetails={buffDetails.mana}
+              icon={<Sparkle className="size-4 text-blue-500" />}
+            />
           </div>
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10">
@@ -248,21 +403,30 @@ function CharacterCard({
         </div>
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-3 gap-2">
-            <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
-              <Sword className="size-4 mb-1" />
-              <span className="text-xs text-muted-foreground">Attaque</span>
-              <span className="font-bold">{character.attack}</span>
-            </div>
-            <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
-              <Shield className="size-4 mb-1" />
-              <span className="text-xs text-muted-foreground">Défense</span>
-              <span className="font-bold">{character.defense}</span>
-            </div>
-            <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
-              <Zap className="size-4 mb-1" />
-              <span className="text-xs text-muted-foreground">Vitesse</span>
-              <span className="font-bold">{character.speed}</span>
-            </div>
+            <StatDropdown
+              variant="grid"
+              label="Attaque"
+              base={character.attack}
+              buffTotal={buffTotals.attack}
+              buffDetails={buffDetails.attack}
+              icon={<Sword className="size-4" />}
+            />
+            <StatDropdown
+              variant="grid"
+              label="Défense"
+              base={character.defense}
+              buffTotal={buffTotals.defense}
+              buffDetails={buffDetails.defense}
+              icon={<Shield className="size-4" />}
+            />
+            <StatDropdown
+              variant="grid"
+              label="Vitesse"
+              base={character.speed}
+              buffTotal={buffTotals.speed}
+              buffDetails={buffDetails.speed}
+              icon={<Zap className="size-4" />}
+            />
           </div>
 
           <CardContent className="p-4 bg-muted/50 rounded-lg">
@@ -282,7 +446,7 @@ function CharacterCard({
         </CardContent>
       </Card>
 
-      {/* Heal button as part of the Taverne mechanism */}
+      {/* Heal button */}
       <Link href="#" onClick={handleHeal} className="w-full">
         <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
           <CardContent className="py-4 px-5">
@@ -308,12 +472,12 @@ function CharacterCard({
         </Card>
       </Link>
 
-      {/* Forest button (existing) */}
+      {/* Forest button */}
       <Link href="#" onClick={handleForestClick} className="w-full">
         <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
           <CardContent className="py-4 px-5">
             <div className="flex justify-between items-center gap-3 min-w-0">
-              <div className="flex flex-row gap-2 min-w-0">
+              <div className="flex flex-row gap-2 min-w-0 items-center">
                 <Swords className="h-5 w-5 text-primary flex-shrink-0" />
                 <div className="min-w-0">
                   <h3 className="text-sm font-medium text-foreground truncate">

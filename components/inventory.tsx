@@ -3,24 +3,20 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Loader2, Box, Trash2, DollarSign, CheckCircle } from "lucide-react";
+import {
+  Loader2,
+  Box,
+  Trash2,
+  CheckCircle,
+  BadgeSwissFranc,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-
-interface InventoryItem {
-  id: string;
-  characterId: string;
-  name: string;
-  identified: boolean;
-  rarity: string;
-  description: string;
-  effect: string;
-  createdAt: string;
-}
+import { InventoryItem } from "@/lib/db/schema";
 
 interface InventoryProps {
   characterId: string;
@@ -178,19 +174,27 @@ export default function Inventory({ characterId }: InventoryProps) {
                 <p className="text-sm text-muted-foreground">
                   {item.description}
                 </p>
-                <p className="text-sm text-muted-foreground">{item.effect}</p>
+                <p className="text-sm text-muted-foreground">
+                  {Object.entries(item.buffs as Record<string, any>).map(
+                    ([key, value]) => (
+                      <span key={key}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                        {typeof value === "number" && value > 0
+                          ? `+${value}`
+                          : String(value)}
+                        <br />
+                      </span>
+                    )
+                  )}
+                </p>
               </div>
-              <DropdownMenuItem onClick={() => handleUse(item.id)}>
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Use
+              <DropdownMenuItem onClick={() => handleSell(item.id)}>
+                <BadgeSwissFranc className="mr-2 h-4 w-4" />
+                Sell
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDiscard(item.id)}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Discard
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSell(item.id)}>
-                <DollarSign className="mr-2 h-4 w-4" />
-                Sell
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

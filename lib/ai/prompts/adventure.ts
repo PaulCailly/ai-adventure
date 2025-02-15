@@ -15,7 +15,8 @@ export function generateAdventurePrompt(params: {
     identified: boolean;
     rarity: string;
     description: string;
-    effect: string;
+    itemType: "consumable" | "equipable" | "passive";
+    buffs: { [key: string]: number };
   }>;
 }): string {
   const currentZone = params.zone
@@ -25,12 +26,19 @@ export function generateAdventurePrompt(params: {
   const inventorySection =
     params.inventoryItems && params.inventoryItems.length > 0
       ? params.inventoryItems
-          .map(
-            (item) =>
-              `- ${item.name} [${item.rarity}]: ${item.description} ${
-                item.effect ? "— " + item.effect : ""
-              }`
-          )
+          .map((item) => {
+            const buffsText = item.buffs
+              ? Object.entries(item.buffs)
+                  .map(
+                    ([stat, value]) =>
+                      `${stat}: ${value > 0 ? "+" : ""}${value}`
+                  )
+                  .join(", ")
+              : "Aucun bonus";
+            return `- ${item.name} (${item.itemType}) [${item.rarity}]
+  Description: ${item.description}
+  Buffs: ${buffsText}`;
+          })
           .join("\n")
       : "Aucun objet n'est actuellement présent dans l'inventaire.";
 
@@ -56,47 +64,24 @@ Dangers:
 ${currentZone.dangers
   .map(
     (danger) => `
-  - ${danger.name} (Health: ${danger.stats.health}, Attack: ${
-      danger.stats.attack
-    }, Defense: ${danger.stats.defense})
-    Effects: ${danger.effects
-      .map(
-        (effect) =>
-          effect.name +
-          " (Potency: " +
-          effect.potency +
-          ", Duration: " +
-          effect.duration +
-          ", Chance: " +
-          effect.chance +
-          ")"
-      )
-      .join(", ")}
+  - ${danger.name} (Health: ${danger.health}, Attack: ${danger.attack}, Defense: ${danger.defense}, Speed: ${danger.speed})
 `
   )
   .join("\n")}
 
-Treasures:
-${currentZone.treasures
+Items:
+${currentZone.items
   .map(
-    (treasure) => `
-  - ${treasure.name} (Value: ${treasure.value})
-    Stats: ${Object.entries(treasure.stats)
-      .map(([key, value]) => key + ": " + value)
-      .join(", ")}
-    Effects: ${treasure.effects
-      .map(
-        (effect) =>
-          effect.name +
-          " (Potency: " +
-          effect.potency +
-          ", Duration: " +
-          effect.duration +
-          ", Chance: " +
-          effect.chance +
-          ")"
-      )
-      .join(", ")}
+    (item) => `
+  - ${item.name} (Rarity: ${item.rarity})
+    Description: ${item.description}
+    Buffs: ${
+      item.buffs
+        ? Object.entries(item.buffs)
+            .map(([key, value]) => key + ": " + value)
+            .join(", ")
+        : "None"
+    }
 `
   )
   .join("\n")}
@@ -110,18 +95,18 @@ ${inventorySection}
 <Instructions>
 These instructions and tool descriptions are in English.
 
-1. Guide the adventure over multiple turns (up to 8 maximum). Do not reveal the exact number of turns to the player.
-2. Each segment should reflect previous choices and combat outcomes.
-3. In combat scenarios and during rest:
+1. Guide the adventure over multiple turns with a maximum of 8 turns, each segment should reflect previous choices and combat outcomes.
+2. In combat scenarios and during rest:
    - Calculate primary damage using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).
    - After you attack, implement a reciprocal damage mechanic where the hero suffers counter damage from the opponent.
    - Use the "rollDice" tool to generate randomness for both the primary and counter damage calculations.
-   - Use the "combatCalculation" tool to compute the numerical values.
+   - Use the "combatCalculation" tool to compute the numerical values. 
    - Use the "updateHero" tool to update the hero's stats. Provide changes (which can be positive for healing or loot, or negative for damage or mana cost) for Health, Mana, and Gold.
-   - When an enemy is defeated, you may also call the "addInventoryItem" tool to add loot to the hero's inventory.
+   - Use the "generateLoot" tool to generate a loot item based on the specified zone's available items and rarity drop rates.
+   - When an enemy is defeated, you may also call the "generateLoot" with the "addInventoryItem" tools to add loot to the hero's inventory.
    - After any tool call, display the result of what happened to the player.
 4. All narrative dialogue must be exclusively in French.
-5. On the final turn, conclude the adventure without presenting any further choices by ending with: "Votre quête se termine ici".
+5. If the hero's health reaches 0 or below, conclude the adventure without presenting any further choices by ending with: "Votre quête se termine ici".
 </Instructions>
 
 <ToolUsageProtocol>
@@ -134,13 +119,33 @@ Available tools:
   
   The calculation is: damage = max(0, attackerAttack + diceRoll - defenderDefense).
 - updateHero: Updates the hero's stats (Health, Mana, and Gold) by adding the provided values.
-- addInventoryItem: Adds an item to the hero's inventory with properties such as name, identified (bool), rarity, description, and effect.
+- generateLoot: Generates a loot item based on the specified zone's available items and rarity drop rates.
+- addInventoryItem: Adds an item to the hero's inventory with properties such as name, identified (bool), rarity, itemType, description, and buffs.
 </ToolUsageProtocol>
 
 <OutputFormat>
 - Begin each turn by summarizing the current situation and outlining the effects from previous calculations.
 - Provide at least one numbered option for the next action (ideally three).
 - Ensure that all narrative responses are in French.
+- You must always end your response with a text that is not a tool call or a tool call result because it will break the conversation.
 </OutputFormat>
+
+
+<Evaluation>
+Ensure the following instructions are followed:
+1. The adventure should span multiple turns (up to 8 maximum) without revealing the exact number of turns to the player.
+2. Each segment should reflect previous choices and combat outcomes.
+3. In combat scenarios and during rest:
+   - Primary damage should be calculated using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).
+   - After the hero attacks, implement a reciprocal damage mechanic where the hero suffers counter damage from the opponent.
+   - The "rollDice" tool should be used to generate randomness for both the primary and counter damage calculations.
+   - The "combatCalculation" tool should be used to compute the numerical values.
+   - The "updateHero" tool should be used to update the hero's stats with changes (positive for healing or loot, negative for damage or mana cost) for Health, Mana, and Gold.
+   - When an enemy is defeated, the "generateLoot" and "addInventoryItem" tools may be called to add loot to the hero's inventory.
+   - The "generateLoot" tool should be used to generate a loot item based on the specified zone's available items and rarity drop rates.
+   - After any tool call, the result of what happened should be displayed to the player.
+4. All narrative dialogue must be exclusively in French.
+5. If the hero's health reaches 0 or below, the adventure should conclude without presenting any further choices by ending with: "Votre quête se termine ici".
+</Evaluation>
   `;
 }
