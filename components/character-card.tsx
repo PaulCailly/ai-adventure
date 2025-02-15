@@ -9,10 +9,9 @@ import {
   Loader2,
   MoreVertical,
   Users,
-  SwordIcon,
   Swords,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import ExperienceBar from "./experience-bar";
@@ -24,6 +23,8 @@ import {
 } from "./ui/dropdown-menu";
 import Link from "next/link";
 import { toast } from "sonner";
+import { generateUUID } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 function CharacterCard({
   character,
@@ -34,6 +35,7 @@ function CharacterCard({
   isSelf?: boolean;
   guildCount?: number;
 }) {
+  const router = useRouter();
   const [avatarUrl, setAvatarUrl] = useState(character.avatar);
   const [loading, setLoading] = useState(false);
 
@@ -79,10 +81,14 @@ function CharacterCard({
 
   const handleForestClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast.error(
-      "Vous devez être niveau 11 minimum pour accéder à cette zone.",
-      { position: "bottom-center" }
-    );
+    if (character.name === "Lucas") {
+      toast.error(
+        "Vous devez être niveau 11 minimum pour accéder à cette zone.",
+        { position: "bottom-center" }
+      );
+      return;
+    }
+    router.push(`/adventure`);
   };
 
   return (

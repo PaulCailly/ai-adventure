@@ -38,7 +38,7 @@ const components = ({
             handleClick(children as string)
           }
           disabled={isLoading}
-          className="py-1 w-full justify-start"
+          className="py-1 h-auto min-h-[40px] w-full justify-start whitespace-normal text-left break-words"
           {...props}
         >
           {children}
@@ -55,13 +55,7 @@ const components = ({
         </ul>
       );
     },
-    strong: ({ node, children, ...props }) => {
-      return (
-        <span className="font-semibold" {...props}>
-          {children}
-        </span>
-      );
-    },
+
     a: ({ node, children, ...props }) => {
       return (
         // @ts-expect-error
