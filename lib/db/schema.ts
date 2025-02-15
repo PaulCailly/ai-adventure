@@ -94,3 +94,12 @@ export const globalProgress = pgTable("GlobalProgress", {
 });
 
 export type GlobalProgress = InferSelectModel<typeof globalProgress>;
+
+export const healTimestamp = pgTable("HealTimestamp", {
+  characterId: uuid("characterId")
+    .notNull()
+    .references(() => character.id),
+  lastHeal: timestamp("lastHeal").notNull(),
+});
+
+export type HealTimestamp = InferSelectModel<typeof healTimestamp>;

@@ -15,6 +15,7 @@ import {
   type Character,
   globalProgress,
   inventoryItem,
+  healTimestamp,
 } from "./schema";
 
 // biome-ignore lint: Forbidden non-null assertion.
@@ -409,6 +410,51 @@ export async function getInventoryItemsByCharacterId({
       .orderBy(asc(inventoryItem.createdAt));
   } catch (error) {
     console.error("Failed to get inventory items for character", error);
+    throw error;
+  }
+}
+
+// Retrieves the heal timestamp for a character
+export async function getHealTimestamp({
+  characterId,
+}: {
+  characterId: string;
+}) {
+  try {
+    const [record] = await db
+      .select()
+      .from(healTimestamp)
+      .where(eq(healTimestamp.characterId, characterId));
+    return record;
+  } catch (error) {
+    console.error("Failed to get heal timestamp", error);
+    throw error;
+  }
+}
+
+// Inserts or updates the heal timestamp for a character
+export async function upsertHealTimestamp({
+  characterId,
+  lastHeal,
+}: {
+  characterId: string;
+  lastHeal: Date;
+}) {
+  try {
+    const existing = await getHealTimestamp({ characterId });
+    if (existing) {
+      return await db
+        .update(healTimestamp)
+        .set({ lastHeal })
+        .where(eq(healTimestamp.characterId, characterId));
+    } else {
+      return await db.insert(healTimestamp).values({
+        characterId,
+        lastHeal,
+      });
+    }
+  } catch (error) {
+    console.error("Failed to update heal timestamp", error);
     throw error;
   }
 }

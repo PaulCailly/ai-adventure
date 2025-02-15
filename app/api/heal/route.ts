@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/app/(auth)/auth";
-import { getCharacterById, updateHero } from "@/lib/db/queries";
-// Use a global in-memory store for heal timestamps across endpoints.
-interface GlobalThisWithHealTimestamps extends NodeJS.Global {
-  healTimestamps: { [characterId: string]: number };
-}
-
-declare const global: GlobalThisWithHealTimestamps;
-
-global.healTimestamps = global.healTimestamps || {};
-const healTimestamps: { [characterId: string]: number } = global.healTimestamps;
+import {
+  getCharacterById,
+  updateHero,
+  getHealTimestamp,
+  upsertHealTimestamp,
+} from "@/lib/db/queries";
 
 export async function POST(request: Request) {
   try {
@@ -36,9 +32,14 @@ export async function POST(request: Request) {
     const desiredHeal = 50;
     const healAmount = Math.min(desiredHeal, 100 - character.health);
 
-    const cooldown = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    // Compute cooldown (24 hours in milliseconds)
+    const cooldown = 24 * 60 * 60 * 1000;
     const now = Date.now();
-    const lastHeal = healTimestamps[characterId] || 0;
+
+    // Get stored heal timestamp from the database
+    const healRecord = await getHealTimestamp({ characterId });
+    const lastHeal = healRecord ? new Date(healRecord.lastHeal).getTime() : 0;
+
     if (now - lastHeal < cooldown) {
       const remainingMinutes = Math.ceil(
         (cooldown - (now - lastHeal)) / (60 * 1000)
@@ -52,8 +53,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update heal timestamp
-    healTimestamps[characterId] = now;
+    // Update heal timestamp in the database
+    await upsertHealTimestamp({ characterId, lastHeal: new Date() });
 
     // Heal the character using updateHero
     const resultMessage = await updateHero({
