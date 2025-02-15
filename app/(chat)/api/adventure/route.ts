@@ -20,8 +20,7 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/utils";
-import { object } from "zod";
-import { number } from "zod";
+import { object, number } from "zod";
 
 export async function POST(request: Request) {
   const {
@@ -68,7 +67,7 @@ export async function POST(request: Request) {
     return new Response("Character not found", { status: 404 });
   }
 
-  // Save the incoming user message to associate with this chat.
+  // Save the incoming user message to associate it with this chat.
   const userMessageId = generateUUID();
   await saveMessages({
     messages: [
@@ -103,17 +102,34 @@ export async function POST(request: Request) {
         }),
         messages: coreMessages,
         maxSteps: 5,
-        experimental_activeTools: ["rollDice"],
+        experimental_activeTools: ["rollDice", "combatCalculation"],
         tools: {
           rollDice: {
             description:
-              "Roll a dice to influence the story positively or negatively",
+              "Used to generate a random number to introduce chance into combat.",
             parameters: object({
               sides: number().min(2).max(20),
             }),
             execute: async ({ sides }) => {
               const roll = Math.floor(Math.random() * sides) + 1;
-              return roll > sides / 2 ? "Positive outcome" : "Negative outcome";
+              return roll;
+            },
+          },
+          combatCalculation: {
+            description:
+              "Calculates actual damage in combat using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).",
+            parameters: object({
+              attackerAttack: number(),
+              defenderDefense: number(),
+              sides: number().min(2).max(20),
+            }),
+            execute: async ({ attackerAttack, defenderDefense, sides }) => {
+              const diceRoll = Math.floor(Math.random() * sides) + 1;
+              const damage = Math.max(
+                0,
+                attackerAttack + diceRoll - defenderDefense
+              );
+              return damage;
             },
           },
         },
