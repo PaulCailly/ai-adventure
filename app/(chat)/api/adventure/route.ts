@@ -71,6 +71,13 @@ export async function POST(request: Request) {
     return new Response("Character not found", { status: 404 });
   }
 
+  // Prevent launching the adventure if the character's health is below 0
+  if (character.health < 0) {
+    return new Response("Votre santé est insuffisante pour l'aventure", {
+      status: 400,
+    });
+  }
+
   // Retrieve the hero's current inventory.
   const inventoryItems = await getInventoryItemsByCharacterId({
     characterId,

@@ -165,6 +165,15 @@ function CharacterCard({
 
   const handleForestClick = (e: React.MouseEvent) => {
     e.preventDefault();
+
+    // Block the adventure if health is below 0.
+    if (currentHealth < 0) {
+      toast.error("Votre santé est insuffisante pour l'aventure.", {
+        position: "bottom-center",
+      });
+      return;
+    }
+
     if (character.name === "Lucas") {
       toast.error(
         "Vous devez être niveau 11 minimum pour accéder à cette zone.",
