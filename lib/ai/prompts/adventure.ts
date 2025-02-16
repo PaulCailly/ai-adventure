@@ -7,8 +7,11 @@ export function generateAdventurePrompt(params: {
   weapon: string;
   strength: string;
   weakness: string;
+  attack: number;
+  defense: number;
   companion: string;
   symbol: string;
+  speed: number;
   zone?: string;
   inventoryItems?: Array<{
     name: string;
@@ -22,6 +25,34 @@ export function generateAdventurePrompt(params: {
   const currentZone = params.zone
     ? zones[params.zone as keyof typeof zones]
     : zones["forest"];
+
+  // Calculate total buffs from inventory items
+  const buffTotals = {
+    health: 0,
+    mana: 0,
+    attack: 0,
+    defense: 0,
+    speed: 0,
+  };
+
+  if (params.inventoryItems) {
+    params.inventoryItems.forEach((item) => {
+      if (item.buffs) {
+        Object.entries(item.buffs).forEach(([stat, value]) => {
+          if (stat in buffTotals) {
+            buffTotals[stat as keyof typeof buffTotals] += value;
+          }
+        });
+      }
+    });
+  }
+
+  // Calculate effective stats with buffs
+  const effectiveStats = {
+    attack: Math.round(params.attack * (1 + buffTotals.attack / 100)),
+    defense: Math.round(params.defense * (1 + buffTotals.defense / 100)),
+    speed: Math.round(params.speed * (1 + buffTotals.speed / 100)),
+  };
 
   const inventorySection =
     params.inventoryItems && params.inventoryItems.length > 0
@@ -54,6 +85,17 @@ Language for Dialogue: French
 - Weakness: ${params.weakness}
 - Companion: ${params.companion}
 - Symbol: ${params.symbol}
+
+Stats (Base → Effective with Equipment):
+- Attaque: ${params.attack} → ${effectiveStats.attack} (${
+    buffTotals.attack > 0 ? "+" : ""
+  }${buffTotals.attack}% from items)
+- Défense: ${params.defense} → ${effectiveStats.defense} (${
+    buffTotals.defense > 0 ? "+" : ""
+  }${buffTotals.defense}% from items)
+- Vitesse: ${params.speed} → ${effectiveStats.speed} (${
+    buffTotals.speed > 0 ? "+" : ""
+  }${buffTotals.speed}% from items)
 </Hero>
 
 <ZoneDetails>
@@ -95,69 +137,49 @@ ${inventorySection}
 <Instructions>
 These instructions and tool descriptions are in English.
 
-1. Guide the adventure over multiple turns and only end when the hero is not alive anymore.
+1. Guide the adventure over multiple turns and only end when the hero is no longer alive.
 2. In combat scenarios and during rest:
-   - Calculate primary damage using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).
-   - After you attack, implement a reciprocal damage mechanic where the hero suffers counter damage from the opponent.
-   - Use the "rollDice" tool to generate randomness for both the primary and counter damage calculations.
-   - Use the "combatCalculation" tool to compute the numerical values.
-   - Use the "updateHero" tool to update the hero's stats. Provide changes (which can be positive for healing/loot or negative for damage/mana cost) for Health, Mana, and Gold.
-   - Use the "generateLoot" tool to generate a loot item based on the specified zone's available items and rarity drop rates.
-   - When an enemy is defeated, you may also call the "generateLoot" in combination with the "addInventoryItem" tool to add loot to the hero's inventory.
-   - After any tool call, display the result of what happened to the player.
-3. **Ensure Continuation Check:**
-   - Use the "shouldContinue" tool at the end of each turn to evaluate the hero's current health.
-   - The "shouldContinue" tool returns true if the hero is still alive (health > 0) and false otherwise.
-   - Do not conclude the adventure solely because of fight damage; only end the narrative if the tool indicates that the hero is no longer alive.
-4. All narrative dialogue must be exclusively in French.
-5. If the hero's health reaches 0, conclude the adventure without presenting any further choices by ending with: "Votre quête se termine ici" and a short text that summary how to character ended his journey.
-6. If the player chooses the 4th option "Quitter l'aventure", respond with "Votre quête se termine ici" and a short text that summary how to character ended his journey.
+   - Compute the primary damage using the following steps:
+        a. Calculate baseDamage = max(1, attackerAttack - defenderDefense).
+        b. Determine a random factor using a dice roll.
+   - Use the "combatCalculation" tool with parameters: 
+         attackerAttack, attackerDefense, defenderAttack, defenderDefense, and sides.
+     This tool automatically rolls dice if not provided, and returns both combat damage and the dice results.
+   - The dice outcome determines the attack result:
+         * If the dice roll is 1: Critical failure (no damage is dealt).
+         * If the dice roll is less than or equal to half of the maximum dice value: Reduced damage.
+         * If the dice roll equals the maximum value: Critical success (damage is doubled).
+         * Otherwise: A normal hit with proportionally scaled damage.
+   - After the hero attacks, implement a reciprocal damage mechanic where the hero suffers counter damage from the opponent.
+   - Update the hero's stats with the "updateHero" tool (Health, Mana, Gold).
+   - When an enemy is defeated, consider generating loot using the "generateLoot" and "addInventoryItem" tools.
+   - Use the "shouldContinue" tool to evaluate if the hero is still alive (health > 0).
+3. All narrative dialogue must be exclusively in French.
+4. If the hero's health reaches 0, conclude the adventure immediately with: "Votre quête se termine ici" along with a summary of the hero's fate.
+5. If the player chooses the 4th option "Quitter l'aventure", respond with a smart exit text ending with "Votre quête se termine ici".
 </Instructions>
 
 <ToolUsageProtocol>
 Available tools:
-- rollDice: Generates a random number (parameter: sides, range: 2 to 20) to produce chance in combat.
-- combatCalculation: Computes actual damage during combat. It requires:
-  * attackerAttack (number): The attacking entity's attack value.
-  * defenderDefense (number): The defending entity's defense value.
-  * sides (number): The dice's number of sides (from 2 to 20).
-  
-  The calculation is: damage = max(0, attackerAttack + diceRoll - defenderDefense).
-- updateHero: Updates the hero's stats (Health, Mana, and Gold) by adding the provided values.
-- generateLoot: Generates a loot item based on the specified zone's available items and rarity drop rates.
-- addInventoryItem: Adds an item to the hero's inventory with properties such as name, identified (bool), rarity, itemType, description, and buffs.
-- shouldContinue: Evaluates the hero's current health. Returns true if the hero is still alive (health > 0), otherwise returns false. Use this tool at the end of each turn to decide if the adventure should continue. Do not display the result of the tool call in the response.
+- combatCalculation: Computes damage based on attackerAttack, attackerDefense, defenderAttack, defenderDefense, and a dice roll. Automatically rolls dice if not provided.
+- updateHero: Updates the hero's stats (Health, Mana, Gold) based on combat outcomes.
+- generateLoot: Generates an item based on the zone's available loot and rarity drop rates.
+- addInventoryItem: Adds an item to the hero's inventory.
+- shouldContinue: Determines if the adventure continues based on the hero's current health.
+
+IMPORTANT: You should never end your messages with a tool call. You should always end your messages with a non-tool text to continue the adventure.
 </ToolUsageProtocol>
 
-<OutputFormat>
-- At the start of each turn, provide a summary of the current situation as the small summary of the events that happened in the previous turn, do not display the result of the shouldContinue tool call.
-- Do not display stats of the hero or the enemy in the response.
-- Begin each turn by summarizing the current situation and outlining the effects from previous calculations.
-- Provide at least one numbered option for the next action (ideally three).
-- Provide an extra 4th option to exit the adventure.
-- By varying these options every turn and  appropriately choosen for the current situation and presenting them from the player's perspective, you can create a dynamic and engaging experience that keeps players intrigued.
-- Ensure that all narrative responses are in French.
-- You must always end your response with a text that is not a tool call or a tool call result because it will break the conversation.
-- If the player chooses the 4th option "Quitter l'aventure", respond with a smart exit text containing the phrase "Votre aventure se termine ici".
-</OutputFormat>
-
-
 <Evaluation>
-Ensure the following instructions are followed:
-1. The adventure should only end when the hero is no longer alive. Use the "shouldContinue" tool to evaluate this.
-2. Each segment should reflect previous choices and combat outcomes.
-3. In combat scenarios and during rest:
-   - Primary damage should be calculated using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).
-   - After the hero attacks, implement a reciprocal damage mechanic where the hero suffers counter damage from the opponent.
-   - The "rollDice" tool should be used to generate randomness for both the primary and counter damage calculations.
-   - The "combatCalculation" tool should be used to compute the numerical values.
-   - The "updateHero" tool should be used to update the hero's stats with changes (positive for healing or loot, negative for damage or mana cost) for Health, Mana, and Gold.
-   - When an enemy is defeated, the "generateLoot" and "addInventoryItem" tools may be called to add loot to the hero's inventory.
-   - The "generateLoot" tool should be used to generate a loot item based on the specified zone's available items and rarity drop rates.
-   - Use the "shouldContinue" tool to determine if the hero is still alive at the end of each turn. Only conclude the story if the tool indicates that the hero is no longer alive.
-4. All narrative dialogue must be exclusively in French.
-5. If the hero's health reaches 0, the adventure should conclude without presenting further choices by ending with: "Votre quête se termine ici".
-6. If the player chooses the 4th option "Quitter l'aventure", respond with a smart exit text containing the phrase "Votre aventure se termine ici".
+1. The adventure should only end when the hero is no longer alive (use the "shouldContinue" tool for this).
+2. Each segment must build on previous choices and combat outcomes.
+3. In combat:
+   - Compute damage as described above.
+   - Implement a mutual damage mechanic (hero receives counter damage after attacking).
+   - Use the tools "combatCalculation" and "updateHero" accordingly.
+4. All narrative dialogue must be in French.
+5. If the hero's health reaches 0, immediately end the adventure with "Votre quête se termine ici".
+6. If "Quitter l'aventure" is chosen, provide a smart exit ending with "Votre quête se termine ici".
 </Evaluation>
-  `;
+`;
 }

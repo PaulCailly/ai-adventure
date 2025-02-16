@@ -130,6 +130,9 @@ export async function POST(request: Request) {
           weapon: character.weapon,
           strength: character.strength,
           weakness: character.weakness,
+          attack: character.attack,
+          defense: character.defense,
+          speed: character.speed,
           companion: character.companion,
           symbol: character.symbol,
           zone: "forest", // Default zone for now
@@ -138,63 +141,123 @@ export async function POST(request: Request) {
         messages: coreMessages,
         maxSteps: 5,
         experimental_activeTools: [
-          "rollDice",
           "combatCalculation",
           "updateHero",
           "addInventoryItem",
           "generateLoot",
         ],
         tools: {
-          rollDice: {
-            description:
-              "Used to generate a random number to introduce chance into combat.",
-            parameters: object({
-              sides: number().min(2).max(20),
-            }),
-            execute: async ({ sides }) => {
-              try {
-                console.log(
-                  chalk.cyanBright(`🎲 rollDice invoked with sides: ${sides}`)
-                );
-                const roll = Math.floor(Math.random() * sides) + 1;
-                console.log(chalk.greenBright(`🎲 rollDice result: ${roll}`));
-                return roll;
-              } catch (error) {
-                console.error("Error in rollDice:", error);
-                throw new Error("Failed to execute rollDice");
-              }
-            },
-          },
           combatCalculation: {
             description:
-              "Calculates actual damage in combat using the formula: damage = max(0, attackerAttack + diceRoll - defenderDefense).",
+              "Calculates combat damage for both attacker and defender and rolls dice if needed.",
             parameters: object({
               attackerAttack: number(),
+              attackerDefense: number(),
+              defenderAttack: number(),
               defenderDefense: number(),
               sides: number().min(2).max(20),
+              attackerDice: number().optional(),
+              defenderDice: number().optional(),
             }),
-            execute: async ({ attackerAttack, defenderDefense, sides }) => {
-              try {
-                console.log(
-                  chalk.yellowBright(
-                    `🔥 combatCalculation invoked with attackerAttack: ${attackerAttack}, defenderDefense: ${defenderDefense}, sides: ${sides}`
-                  )
-                );
-                const diceRoll = Math.floor(Math.random() * sides) + 1;
-                const damage = Math.max(
-                  0,
-                  attackerAttack + diceRoll - defenderDefense
-                );
-                console.log(
-                  chalk.greenBright(
-                    `🔥 combatCalculation result: dice rolled ${diceRoll} and calculated damage ${damage}`
-                  )
-                );
-                return damage;
-              } catch (error) {
-                console.error("Error in combatCalculation:", error);
-                throw new Error("Failed to execute combatCalculation");
+            execute: async ({
+              attackerAttack,
+              attackerDefense,
+              defenderAttack,
+              defenderDefense,
+              sides,
+              attackerDice,
+              defenderDice,
+            }) => {
+              if (attackerDice === undefined) {
+                attackerDice = Math.floor(Math.random() * sides) + 1;
               }
+              if (defenderDice === undefined) {
+                defenderDice = Math.floor(Math.random() * sides) + 1;
+              }
+
+              console.log(`⚔️ Combat calculation started with:
+                Attacker: Attack=${attackerAttack}, Defense=${attackerDefense}
+                Defender: Attack=${defenderAttack}, Defense=${defenderDefense}
+                Dice sides=${sides}
+                Provided dice rolls: Attacker=${attackerDice}, Defender=${defenderDice}`);
+
+              const calcDamage = (
+                attack: number,
+                defense: number,
+                diceRoll: number,
+                role: string
+              ) => {
+                console.log(`🎲 ${role} dice roll: ${diceRoll}`);
+                const randomFactor = ((diceRoll - 1) / (sides - 1)) * 0.4 + 0.8;
+                console.log(
+                  `📊 ${role} random factor: ${randomFactor.toFixed(2)}`
+                );
+                let baseDamage = attack * randomFactor;
+                console.log(
+                  `💥 ${role} base damage before defense: ${baseDamage.toFixed(
+                    2
+                  )}`
+                );
+                baseDamage = baseDamage * (1 - defense / 100);
+                console.log(
+                  `🛡️ ${role} damage after ${defense}% defense: ${baseDamage.toFixed(
+                    2
+                  )}`
+                );
+                let outcome = "";
+                let damageValue = 0;
+
+                if (diceRoll === 1) {
+                  outcome = "critical failure";
+                  damageValue = 0;
+                } else if (diceRoll === sides) {
+                  outcome = "critical success";
+                  damageValue = baseDamage * 2;
+                } else if (diceRoll <= Math.floor(sides / 2)) {
+                  outcome = "failure";
+                  damageValue = baseDamage * 0.5;
+                } else {
+                  outcome = "success";
+                  damageValue = baseDamage;
+                }
+
+                const finalDamage = Math.round(damageValue);
+                console.log(`✨ ${role} final result:
+                  Outcome: ${outcome}
+                  Final damage: ${finalDamage}`);
+
+                return {
+                  diceRoll,
+                  randomFactor,
+                  outcome,
+                  damage: finalDamage,
+                };
+              };
+
+              const attackerResult = calcDamage(
+                attackerAttack,
+                defenderDefense,
+                attackerDice,
+                "Attacker"
+              );
+              const defenderResult = calcDamage(
+                defenderAttack,
+                attackerDefense,
+                defenderDice,
+                "Defender"
+              );
+
+              console.log(`🏁 Combat calculation complete:
+                Attacker dealt ${attackerResult.damage} damage (${attackerResult.outcome})
+                Defender dealt ${defenderResult.damage} damage (${defenderResult.outcome})`);
+
+              return {
+                attacker: attackerResult,
+                defender: defenderResult,
+                roll1: attackerDice,
+                roll2: defenderDice,
+                total: attackerDice + defenderDice,
+              };
             },
           },
           updateHero: {
@@ -283,14 +346,13 @@ export async function POST(request: Request) {
 
                 // Define drop rates based on rarity.
                 const lootChances: { [key: string]: number } = {
-                  legendary: 0.01, // 1% chance for legendary items
-                  epic: 0.05, // 5% chance for epic items
-                  rare: 0.2, // 20% chance for rare items
-                  common: 0.74, // 74% chance for common items
+                  legendary: 0.01,
+                  epic: 0.05,
+                  rare: 0.2,
+                  common: 0.74,
                 };
 
                 const items = zoneData.items;
-                // Filter items that pass their individual loot chance.
                 const droppedItems = items.filter((item) => {
                   const chance = lootChances[item.rarity.toLowerCase()] ?? 0.5;
                   const roll = Math.random();
@@ -306,11 +368,9 @@ export async function POST(request: Request) {
                   return "No loot dropped this time.";
                 }
 
-                // Randomly select one dropped item.
                 const selectedItem =
                   droppedItems[Math.floor(Math.random() * droppedItems.length)];
 
-                // Return the loot item (excluding properties that are irrelevant for insertion).
                 const loot = {
                   name: selectedItem.name,
                   identified: selectedItem.rarity === "common" ? true : false,
