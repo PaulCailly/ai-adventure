@@ -52,7 +52,8 @@ const PurePreviewMessage = ({
   if (message.role === "user") return null;
 
   const containsList = /(\n\s*[-*]|\d+\.)/.test(messageContent);
-  const isNotEnd = messageContent.includes("se termine ici");
+  const isEnd = messageContent.includes("pour l'aventure");
+
   return (
     <AnimatePresence>
       <motion.div
@@ -67,8 +68,8 @@ const PurePreviewMessage = ({
               <Image
                 src="/images/innkeeper.png"
                 alt="Innkeeper"
-                width={40}
-                height={40}
+                width={32}
+                height={32}
                 className="size-full object-cover"
               />
             </div>
@@ -77,11 +78,11 @@ const PurePreviewMessage = ({
           <div className="flex flex-col gap-2 w-full">
             {messageContent && (
               <div className="flex flex-row gap-2 items-start">
-                <div className="flex flex-col gap-4 text-xl">
+                <div className="flex flex-col gap-4 text-lg">
                   <Markdown append={append} isLoading={isLoading}>
                     {messageContent}
                   </Markdown>
-                  {!containsList && !isLoading && !isNotEnd && (
+                  {!containsList && !isLoading && !isEnd && (
                     <Button
                       variant="outline"
                       onClick={() =>

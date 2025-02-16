@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { Chat } from "@/components/chat";
+import { Chat } from "@/components/intro-chat";
 
 import { generateUUID } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
-import { getCharactersByUserId, getMostRecentChat } from "@/lib/db/queries";
+import { getCharactersByUserId } from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

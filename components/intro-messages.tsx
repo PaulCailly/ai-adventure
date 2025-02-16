@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChatRequestOptions, CreateMessage, Message } from "ai";
-import { PreviewMessage } from "./message";
+import { PreviewMessage } from "./intro-message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo, useState } from "react";
 import { Button } from "@/components/ui/button";

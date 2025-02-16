@@ -3,7 +3,7 @@ import { memo, useState, useEffect } from "react";
 import type { ChatRequestOptions, Message, CreateMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-
+import { DiceDisplay } from "./dice-display";
 import equal from "fast-deep-equal";
 import { Markdown } from "./markdown";
 import { Button } from "./ui/button";
@@ -15,22 +15,24 @@ type PreviewMessageProps = {
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
   isLoading: boolean;
+  isLastMessage: boolean;
+  hasNextTextContent: boolean;
 };
 
 const PurePreviewMessage = ({
   message,
   append,
   isLoading,
+  isLastMessage,
+  hasNextTextContent,
 }: PreviewMessageProps) => {
-  // For handling potential "thinking" content after 2 seconds
   const [messageContent, setMessageContent] = useState<string>(message.content);
+
   useEffect(() => {
-    // Only applies if the speaker is the assistant
     if (message.role !== "assistant") return;
 
     let timer: NodeJS.Timeout | null = null;
 
-    // If no content is immediately available, wait 2 seconds, then show a placeholder
     if (!message.content || !message.content.trim()) {
       timer = setTimeout(() => {
         setMessageContent("...");
@@ -47,10 +49,66 @@ const PurePreviewMessage = ({
   }, [message]);
 
   if (message.role === "user") return null;
+
+  const showContinueButton =
+    isLastMessage &&
+    !hasNextTextContent &&
+    !isLoading &&
+    !messageContent.includes("se termine ici");
+
+  // Handle tool invocations (dice rolls, combat calculations, etc.)
+  if (message.toolInvocations?.length > 0) {
+    const hasDiceRolls = message.toolInvocations.some(
+      (invocation) =>
+        invocation.toolName === "rollDice" && invocation.state === "result"
+    );
+
+    if (hasDiceRolls) {
+      return (
+        <div className="flex flex-col items-center gap-4">
+          <DiceDisplay message={message} />
+          {showContinueButton && (
+            <Button
+              variant="default"
+              onClick={() =>
+                append({
+                  role: "user",
+                  content: "continuer",
+                })
+              }
+            >
+              Continuer
+            </Button>
+          )}
+        </div>
+      );
+    }
+
+    // You can add more tool-specific displays here
+    if (showContinueButton) {
+      return (
+        <div className="flex justify-center">
+          <Button
+            variant="default"
+            onClick={() =>
+              append({
+                role: "user",
+                content: "continuer",
+              })
+            }
+          >
+            Continuer
+          </Button>
+        </div>
+      );
+    }
+    return null;
+  }
+
   if (messageContent === "..." || messageContent === "") return null;
 
   const containsList = /(\n\s*[-*]|\d+\.)/.test(messageContent);
-  const isNotEnd = messageContent.includes("se termine ici");
+
   return (
     <AnimatePresence>
       <motion.div
@@ -61,7 +119,7 @@ const PurePreviewMessage = ({
       >
         <div className="flex items-start gap-4 w-full">
           {message.role === "assistant" && (
-            <div className="size-16 flex items-center rounded-full justify-center shrink-0 overflow-hidden">
+            <div className="size-12 flex items-center rounded-full justify-center shrink-0 overflow-hidden">
               <Image
                 src="/images/innkeeper.png"
                 alt="Innkeeper"
@@ -75,11 +133,11 @@ const PurePreviewMessage = ({
           <div className="flex flex-col gap-2 w-full">
             {messageContent && (
               <div className="flex flex-row gap-2 items-start">
-                <div className="flex flex-col gap-4 text-xl">
+                <div className="flex flex-col gap-4 text-lg">
                   <Markdown append={append} isLoading={isLoading}>
                     {messageContent}
                   </Markdown>
-                  {!containsList && !isLoading && !isNotEnd && (
+                  {!containsList && showContinueButton && (
                     <Button
                       variant="outline"
                       onClick={() =>
@@ -105,6 +163,9 @@ export const PreviewMessage = memo(
   (prevProps, nextProps) => {
     if (prevProps.isLoading !== nextProps.isLoading) return false;
     if (prevProps.message.content !== nextProps.message.content) return false;
+    if (prevProps.isLastMessage !== nextProps.isLastMessage) return false;
+    if (prevProps.hasNextTextContent !== nextProps.hasNextTextContent)
+      return false;
     if (
       !equal(
         prevProps.message.toolInvocations,

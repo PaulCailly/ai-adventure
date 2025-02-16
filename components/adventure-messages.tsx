@@ -21,12 +21,12 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
 
-  // If there are no messages, display the start button
   if (!messages.length) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
+      <div className="py-8 h-screen flex flex-col items-center justify-between gap-4">
+        <div />
         <Button
-          variant="outline"
+          variant="default"
           onClick={() =>
             append({
               role: "user",
@@ -36,28 +36,20 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
         >
           Commencer l&apos;aventure
         </Button>
-        <Button variant="outline" onClick={() => router.push("/")}>
+        <Button variant="ghost" onClick={() => router.push("/")}>
           Retour à la Taverne
         </Button>
       </div>
     );
   }
 
-  // Locate the index of the last user message
-  let lastUserIndex = -1;
-  for (let i = messages.length - 1; i >= 0; i--) {
-    if (messages[i].role === "user") {
-      lastUserIndex = i;
-      break;
-    }
-  }
-
-  // Filter for all assistant messages that have been added after the last user message
+  const lastUserIndex = messages.findLastIndex(
+    (message) => message.role === "user"
+  );
   const assistantMessages = messages
     .slice(lastUserIndex + 1)
     .filter((message) => message.role === "assistant");
 
-  // Check if the last assistant message includes a keyword to show a navigation button
   const lastAssistantMessage = assistantMessages[assistantMessages.length - 1];
   const showCharacterButton = lastAssistantMessage?.content
     ?.toLowerCase()
@@ -68,14 +60,22 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
       ref={messagesContainerRef}
       className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
     >
-      {assistantMessages.map((message) => (
-        <PreviewMessage
-          key={message.id}
-          message={message}
-          isLoading={isLoading}
-          append={append}
-        />
-      ))}
+      {assistantMessages.map((message, index) => {
+        const hasNextTextContent = assistantMessages
+          .slice(index + 1)
+          .some((msg) => msg.content && msg.content.trim() !== "");
+
+        return (
+          <PreviewMessage
+            key={message.id}
+            message={message}
+            isLoading={isLoading}
+            append={append}
+            isLastMessage={index === assistantMessages.length - 1}
+            hasNextTextContent={hasNextTextContent}
+          />
+        );
+      })}
 
       {showCharacterButton && (
         <div className="flex justify-center mb-4">
@@ -84,11 +84,6 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
           </Button>
         </div>
       )}
-
-      {isLoading &&
-        messages.length > 0 &&
-        messages[messages.length - 1].role === "user" &&
-        null}
 
       <div
         ref={messagesEndRef}
