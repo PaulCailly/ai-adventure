@@ -17,7 +17,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const cooldownMs = 2 * 60 * 60 * 1000;
+  // Cooldown of 10 minutes in milliseconds
+  const cooldownMs = 10 * 60 * 1000;
   const healRecord = await getHealTimestamp({ characterId });
   const lastHeal = healRecord ? new Date(healRecord.lastHeal).getTime() : 0;
   const now = Date.now();

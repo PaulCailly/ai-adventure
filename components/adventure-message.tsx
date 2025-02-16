@@ -55,9 +55,8 @@ const PurePreviewMessage = ({
     !hasNextTextContent &&
     !isLoading &&
     !messageContent.includes("se termine ici");
-
   // Handle tool invocations (dice rolls, combat calculations, etc.)
-  if (message.toolInvocations?.length > 0) {
+  if (message.toolInvocations && message.toolInvocations.length > 0) {
     const hasDiceRolls = message.toolInvocations.some(
       (invocation) =>
         invocation.toolName === "rollDice" && invocation.state === "result"
