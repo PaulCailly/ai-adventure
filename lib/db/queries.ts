@@ -464,4 +464,138 @@ export async function upsertHealTimestamp({
   }
 }
 
+// Function to buy an item from the market.
+export async function buyItem(params: {
+  character: Character;
+  cost: number;
+  item: {
+    name: string;
+    rarity: string;
+    description: string;
+    itemType:
+      | "consumable"
+      | "equipable"
+      | "passive"
+      | "weapon"
+      | "armor"
+      | "accessory";
+    buffs?: { [key: string]: number };
+  };
+}) {
+  const { character, cost, item } = params;
+
+  if (character.gold < cost) {
+    throw new Error("Not enough gold to purchase the item");
+  }
+
+  // Deduct the gold from the hero.
+  await updateHero({
+    heroId: character.id,
+    gold: -cost,
+    health: 0,
+    mana: 0,
+  });
+
+  // Create a new inventory item.
+  const newItem = {
+    characterId: character.id,
+    name: item.name,
+    identified: true,
+    rarity: item.rarity,
+    description: item.description,
+    itemType: item.itemType,
+    buffs: item.buffs || {},
+  };
+
+  await db.insert(inventoryItem).values(newItem);
+  return {
+    message: `Item purchased successfully for ${cost} gold`,
+    item: newItem,
+  };
+}
+
+// Function to sell an item.
+export async function sellItem(itemId: string) {
+  const [item] = await db
+    .select()
+    .from(inventoryItem)
+    .where(eq(inventoryItem.id, itemId));
+
+  if (!item) {
+    throw new Error("Item not found");
+  }
+
+  const sellValues: Record<string, number> = {
+    common: 10,
+    uncommon: 25,
+    rare: 50,
+    epic: 100,
+    legendary: 200,
+  };
+
+  const sellValue = sellValues[item.rarity.toLowerCase()] || 0;
+
+  await db.delete(inventoryItem).where(eq(inventoryItem.id, itemId));
+
+  await updateHero({
+    heroId: item.characterId,
+    gold: sellValue,
+    health: 0,
+    mana: 0,
+  });
+
+  return {
+    message: `Item sold successfully. You received ${sellValue} gold.`,
+    gold: sellValue,
+  };
+}
+
+// Function to improve an inventory item.
+export async function improveItem(params: {
+  itemId: string;
+  improvementPercentage: number;
+  character: Character;
+}) {
+  const { itemId, improvementPercentage, character } = params;
+
+  const [item] = await db
+    .select()
+    .from(inventoryItem)
+    .where(eq(inventoryItem.id, itemId));
+
+  if (!item) {
+    throw new Error("Item not found");
+  }
+
+  if (!["equipable", "weapon", "armor", "accessory"].includes(item.itemType)) {
+    throw new Error("This item type cannot be improved");
+  }
+
+  const improvementCost = improvementPercentage * 5;
+
+  if (character.gold < improvementCost) {
+    throw new Error("Not enough gold to improve the item");
+  }
+
+  await updateHero({
+    heroId: character.id,
+    gold: -improvementCost,
+    health: 0,
+    mana: 0,
+  });
+
+  const newDescription = `${item.description} (Amélioré de ${improvementPercentage}%)`;
+
+  await db
+    .update(inventoryItem)
+    .set({ description: newDescription })
+    .where(eq(inventoryItem.id, itemId));
+
+  return {
+    message: `Item improved successfully for ${improvementCost} gold`,
+    newDescription,
+    cost: improvementCost,
+  };
+}
+
 export { db };
