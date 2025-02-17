@@ -27,7 +27,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
     },
   });
 
-  const [audio] = useState(
+  /* const [audio] = useState(
     typeof Audio !== "undefined" ? new Audio("/market.mp3") : null
   );
 
@@ -73,7 +73,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
         isPlayingRef.current = false;
       }
     };
-  }, [audio]);
+  }, [audio]); */
 
   return (
     <div className="flex flex-col min-w-0 h-dvh bg-background">

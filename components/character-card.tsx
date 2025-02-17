@@ -343,18 +343,9 @@ function CharacterCard({
     router.push(`/adventure`);
   };
 
-  // New handler for the Market button with opening hours check
+  // New handler for the Market button without opening hours check
   const handleMarketClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const currentHour = new Date().getHours();
-    const marketOpenHour = 9; // Market opens at 9 AM
-    const marketCloseHour = 23; // Market closes at 5 PM
-
-    if (currentHour < marketOpenHour || currentHour >= marketCloseHour) {
-      toast.error(`Le marché est fermé. Revenez plus tard !`);
-      return;
-    }
-
     router.push(`/market`);
   };
 
@@ -517,7 +508,7 @@ function CharacterCard({
                   variant="outline"
                   className="text-xs font-normal flex-shrink-0"
                 >
-                  Ouvert de 9h à 23h
+                  Ouvert
                 </Badge>
               </div>
             </CardContent>
