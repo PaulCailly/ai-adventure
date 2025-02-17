@@ -76,6 +76,7 @@ export default function Inventory({ characterId }: InventoryProps) {
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({ itemId }),
       });
       if (res.ok) {
@@ -175,27 +176,29 @@ export default function Inventory({ characterId }: InventoryProps) {
                 <p className="text-sm text-muted-foreground">
                   {item.description}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  {Object.entries(item.buffs as Record<string, any>).map(
-                    ([key, value]) => (
-                      <span key={key}>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                        {typeof value === "number" && value > 0
-                          ? `+${value}`
-                          : String(value)}
-                        <br />
-                      </span>
-                    )
-                  )}
-                </p>
+                {item.identified && (
+                  <p className="text-sm text-muted-foreground">
+                    {Object.entries(item.buffs as Record<string, any>)
+                      .filter(([_, value]) => Number(value) !== 0)
+                      .map(([key, value]) => (
+                        <span key={key}>
+                          {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                          {typeof value === "number" && value > 0
+                            ? `+${value}`
+                            : String(value)}
+                          <br />
+                        </span>
+                      ))}
+                  </p>
+                )}
               </div>
               <DropdownMenuItem onClick={() => handleSell(item.id)}>
                 <BadgeSwissFranc className="mr-2 h-4 w-4" />
-                Sell
+                Vendre
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDiscard(item.id)}>
                 <Trash2 className="mr-2 h-4 w-4" />
-                Discard
+                Jeter
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

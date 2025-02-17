@@ -23,9 +23,16 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/utils";
-import { object, number, string, boolean as zBoolean } from "zod";
+import {
+  object,
+  number,
+  string,
+  boolean as zBoolean,
+  union,
+  literal,
+} from "zod";
 import chalk from "chalk";
-import { zones } from "@/lib/ai/zones";
+import { generateAndAddLootItem, ItemSlot } from "@/lib/loot";
 
 export async function POST(request: Request) {
   const {
@@ -130,6 +137,8 @@ export async function POST(request: Request) {
           weapon: character.weapon,
           strength: character.strength,
           weakness: character.weakness,
+          health: character.health,
+          mana: character.mana,
           attack: character.attack,
           defense: character.defense,
           speed: character.speed,
@@ -143,8 +152,7 @@ export async function POST(request: Request) {
         experimental_activeTools: [
           "combatCalculation",
           "updateHero",
-          "addInventoryItem",
-          "generateLoot",
+          "generateAndAddLoot",
         ],
         tools: {
           combatCalculation: {
@@ -287,103 +295,42 @@ export async function POST(request: Request) {
               }
             },
           },
-          addInventoryItem: {
+          generateAndAddLoot: {
             description:
-              "Adds an item directly to the hero's inventory without performing a loot chance roll.",
-            parameters: object({
-              name: string(),
-              identified: zBoolean(),
-              rarity: string(),
-              description: string(),
-              itemType: string(),
-              buffs: object({
-                health: number().optional(),
-                mana: number().optional(),
-                attack: number().optional(),
-                defense: number().optional(),
-                speed: number().optional(),
-                xpGain: number().optional(),
-              }).optional(),
-            }),
-            execute: async ({
-              name,
-              identified,
-              rarity,
-              description,
-              itemType,
-              buffs,
-            }) => {
-              try {
-                console.log(`🛡 addInventoryItem invoked for item: ${name}`);
-                await addInventoryItem({
-                  heroId: characterId,
-                  name,
-                  identified,
-                  rarity,
-                  description,
-                  itemType,
-                  buffs: buffs || {},
-                });
-                return "Item added successfully";
-              } catch (error) {
-                console.error("Error in addInventoryItem:", error);
-                throw new Error("Failed to execute addInventoryItem");
-              }
-            },
-          },
-          generateLoot: {
-            description:
-              "Generates a loot item based on the specified zone's available items and rarity drop rates. If an item passes its drop chance roll, it is returned as loot.",
+              "Dynamically generates a loot item using an LLM for its name and description, then adds it to the hero's inventory. The slot parameter determines the type of item (weapon, armor, or accessory) and affects its stats and description.",
             parameters: object({
               zone: string(),
             }),
-            execute: async ({ zone }) => {
+            execute: async ({ zone, slot }) => {
+              const slots = ["weapon", "armor", "accessory"];
+              const validSlot = slots[
+                Math.floor(Math.random() * slots.length)
+              ] as ItemSlot;
+              const lootItem = await generateAndAddLootItem({
+                itemLevel: 1,
+                slot: validSlot,
+                characterId: characterId,
+              });
               try {
-                const zoneData = zones[zone];
-                if (!zoneData) {
-                  throw new Error(`Zone ${zone} not found.`);
-                }
-
-                // Define drop rates based on rarity.
-                const lootChances: { [key: string]: number } = {
-                  legendary: 0.01,
-                  epic: 0.05,
-                  rare: 0.2,
-                  common: 0.74,
-                };
-
-                const items = zoneData.items;
-                const droppedItems = items.filter((item) => {
-                  const chance = lootChances[item.rarity.toLowerCase()] ?? 0.5;
-                  const roll = Math.random();
-                  console.log(
-                    `Loot chance check for item "${item.name}" (${
-                      item.rarity
-                    }): required <= ${chance}, rolled ${roll.toFixed(2)}`
-                  );
-                  return roll <= chance;
+                await addInventoryItem({
+                  heroId: characterId,
+                  name: lootItem.name,
+                  identified: lootItem.identified,
+                  rarity: lootItem.rarity,
+                  description: lootItem.description,
+                  itemType: lootItem.itemType as
+                    | "consumable"
+                    | "equipable"
+                    | "passive"
+                    | "weapon"
+                    | "armor"
+                    | "accessory",
+                  buffs: lootItem.buffs as { [key: string]: number },
                 });
-
-                if (droppedItems.length === 0) {
-                  return "No loot dropped this time.";
-                }
-
-                const selectedItem =
-                  droppedItems[Math.floor(Math.random() * droppedItems.length)];
-
-                const loot = {
-                  name: selectedItem.name,
-                  identified: selectedItem.rarity === "common" ? true : false,
-                  rarity: selectedItem.rarity,
-                  description: selectedItem.description,
-                  itemType: selectedItem.itemType,
-                  buffs: selectedItem.buffs,
-                };
-
-                return loot;
+                return `Loot generated and added to your inventory: ${lootItem.name}`;
               } catch (error) {
-                console.error("Error in generateLoot:", error);
-                throw new Error("Failed to execute generateLoot");
+                console.error("Error in generateAndAddLoot tool:", error);
+                throw new Error("Failed to add loot item to inventory.");
               }
             },
           },

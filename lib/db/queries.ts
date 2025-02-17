@@ -337,32 +337,28 @@ export async function updateHero({
     if (!hero) {
       throw new Error("Hero not found");
     }
-    console.log(
-      `Current stats for hero ${heroId}: Health=${hero.health}, Mana=${hero.mana}, Gold=${hero.gold}`
-    );
-    const newHealth = hero.health + health;
-    const newMana = hero.mana + mana;
-    const newGold = hero.gold + gold;
-    console.log(
-      `Calculated new stats: Health=${newHealth}, Mana=${newMana}, Gold=${newGold}`
-    );
 
+    // Calculate the new health, ensuring it does not drop below 0.
+    const updatedHealth = Math.max(0, hero.health + health);
+    const updatedMana = Math.max(0, hero.mana + mana);
+    const updatedGold = hero.gold + gold;
+
+    // Update the hero's stats in the database.
     await db
       .update(character)
       .set({
-        health: newHealth,
-        mana: newMana,
-        gold: newGold,
+        health: updatedHealth,
+        mana: updatedMana,
+        gold: updatedGold,
       })
       .where(eq(character.id, heroId));
 
-    if (newHealth <= 0) {
-      return "Vous avez été vaincu. Votre quête se termine ici";
-    } else {
-      return "Vous avez survécu à l'attaque, continuez votre quête";
-    }
+    console.log(
+      `Updated stats for hero ${heroId}: Health=${updatedHealth}, Mana=${updatedMana}, Gold=${updatedGold}`
+    );
+    return `Stats updated successfully.`;
   } catch (error) {
-    console.error("Failed to update hero in database", error);
+    console.error("Error updating hero", error);
     throw error;
   }
 }
@@ -381,7 +377,13 @@ export async function addInventoryItem({
   identified: boolean;
   rarity: string;
   description: string;
-  itemType: "consumable" | "equipable" | "passive";
+  itemType:
+    | "consumable"
+    | "equipable"
+    | "passive"
+    | "weapon"
+    | "armor"
+    | "accessory";
   buffs: { [key: string]: number };
 }) {
   try {

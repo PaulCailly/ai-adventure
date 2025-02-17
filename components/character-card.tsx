@@ -73,6 +73,10 @@ const StatDropdown = ({
   variant = "inline",
 }: StatDropdownProps) => {
   const effectiveStat = computeEffectiveStat(base, buffTotal);
+  // Filter out bonuses that are 0 before rendering equipment details.
+  const filteredBuffDetails = buffDetails.filter(
+    (detail) => detail.value !== 0
+  );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -97,13 +101,13 @@ const StatDropdown = ({
           <div>Base: {base}</div>
           <div>Bonus: {buffTotal}%</div>
           <div>Total: {effectiveStat}</div>
-          {buffDetails.length > 0 && (
+          {filteredBuffDetails.length > 0 && (
             <>
               <div className="mt-2">
                 <strong>Équipements</strong>
               </div>
               <ul className="list-disc list-inside">
-                {buffDetails.map((detail, index) => (
+                {filteredBuffDetails.map((detail, index) => (
                   <li key={index}>
                     {detail.name}:{" "}
                     {detail.value > 0
@@ -211,7 +215,7 @@ function CharacterCard({
             speed: [],
           };
           data.items.forEach((item: any) => {
-            if (item.buffs) {
+            if (item.identified && item.buffs) {
               Object.entries(item.buffs).forEach(([key, value]) => {
                 if (
                   ["health", "mana", "attack", "defense", "speed"].includes(key)

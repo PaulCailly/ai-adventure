@@ -9,6 +9,8 @@ export function generateAdventurePrompt(params: {
   weakness: string;
   attack: number;
   defense: number;
+  health: number;
+  mana: number;
   companion: string;
   symbol: string;
   speed: number;
@@ -18,7 +20,13 @@ export function generateAdventurePrompt(params: {
     identified: boolean;
     rarity: string;
     description: string;
-    itemType: "consumable" | "equipable" | "passive";
+    itemType:
+      | "consumable"
+      | "equipable"
+      | "passive"
+      | "weapon"
+      | "armor"
+      | "accessory";
     buffs: { [key: string]: number };
   }>;
 }): string {
@@ -47,8 +55,10 @@ export function generateAdventurePrompt(params: {
     });
   }
 
-  // Calculate effective stats with buffs
+  // Calculate effective stats with buffs for all five attributes
   const effectiveStats = {
+    health: Math.round(params.health * (1 + buffTotals.health / 100)),
+    mana: Math.round(params.mana * (1 + buffTotals.mana / 100)),
     attack: Math.round(params.attack * (1 + buffTotals.attack / 100)),
     defense: Math.round(params.defense * (1 + buffTotals.defense / 100)),
     speed: Math.round(params.speed * (1 + buffTotals.speed / 100)),
@@ -87,6 +97,12 @@ Language for Dialogue: French
 - Symbol: ${params.symbol}
 
 Stats (Base → Effective with Equipment):
+- Santé: ${params.health} → ${effectiveStats.health} (${
+    buffTotals.health > 0 ? "+" : ""
+  }${buffTotals.health}% from items)
+- Mana: ${params.mana} → ${effectiveStats.mana} (${
+    buffTotals.mana > 0 ? "+" : ""
+  }${buffTotals.mana}% from items)
 - Attaque: ${params.attack} → ${effectiveStats.attack} (${
     buffTotals.attack > 0 ? "+" : ""
   }${buffTotals.attack}% from items)
@@ -111,22 +127,7 @@ ${currentZone.dangers
   )
   .join("\n")}
 
-Items:
-${currentZone.items
-  .map(
-    (item) => `
-  - ${item.name} (Rarity: ${item.rarity})
-    Description: ${item.description}
-    Buffs: ${
-      item.buffs
-        ? Object.entries(item.buffs)
-            .map(([key, value]) => key + ": " + value)
-            .join(", ")
-        : "None"
-    }
-`
-  )
-  .join("\n")}
+
 Lore: ${currentZone.lore}
 </ZoneDetails>
 
