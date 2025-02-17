@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import {
-  Loader2,
-  Box,
-  Trash2,
-  BadgeSwissFranc,
-} from "lucide-react";
+import { Loader2, Box, Trash2, BadgeSwissFranc } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -194,7 +189,7 @@ export default function Inventory({ characterId }: InventoryProps) {
                         <span key={key}>
                           {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
                           {typeof value === "number" && value > 0
-                            ? `+${value}`
+                            ? `+${value}%`
                             : String(value)}
                           <br />
                         </span>
