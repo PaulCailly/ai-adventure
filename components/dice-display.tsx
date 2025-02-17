@@ -102,8 +102,6 @@ export function DiceDisplay({ message }: DiceDisplayProps) {
       invocation.state === "result"
   );
 
-  console.log(diceRolls);
-
   if (!diceRolls?.length) return null;
 
   return (
@@ -112,7 +110,6 @@ export function DiceDisplay({ message }: DiceDisplayProps) {
         <div className="dice-rolls flex gap-4 justify-center">
           {diceRolls.map((dice, index) => {
             const result = (dice as any).result;
-            console.log(diceRolls);
             if (
               result &&
               typeof result === "object" &&

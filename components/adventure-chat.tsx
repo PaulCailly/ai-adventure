@@ -3,7 +3,7 @@
 import type { Message } from "ai";
 import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Messages } from "./adventure-messages";
 
@@ -19,7 +19,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
   const { messages, append, isLoading } = useChat({
     id,
     api: "/api/adventure",
-    body: { id, modelId: "gpt-4o", characterId: characterId },
+    body: { id, modelId: "gpt-4o", characterId },
     initialMessages,
 
     onFinish: () => {
@@ -31,52 +31,58 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
     typeof Audio !== "undefined" ? new Audio("/forest.mp3") : null
   );
 
-  console.log(messages);
+  // Use a ref to persist the playing state across renders.
+  const isPlayingRef = useRef(false);
 
-  // Separate useEffect for initial audio setup
+  // Initial audio setup (loop and volume).
   useEffect(() => {
     if (audio) {
       audio.loop = true;
       audio.volume = 0.5; // Adjust volume as needed
+      console.log("Audio is setup with loop and volume.");
     }
   }, [audio]);
 
-  // Separate useEffect for audio playback
+  // Manage audio playback
   useEffect(() => {
-    let isPlaying = false;
-
-    if (audio && messages.length === 1 && !isPlaying) {
-      const playAttempt = async () => {
-        try {
-          await audio.play();
-          isPlaying = true;
-        } catch (e) {
-          console.log("Audio playback failed:", e);
-        }
-      };
-      playAttempt();
+    console.log(
+      "Adventure audio effect triggered, messages length:",
+      messages.length
+    );
+    if (audio && messages.length > 0 && !isPlayingRef.current) {
+      console.log("Attempting to start audio playback for adventure chat.");
+      audio
+        .play()
+        .then(() => {
+          isPlayingRef.current = true;
+          console.log("Adventure audio playback started successfully.");
+        })
+        .catch((e) => {
+          console.error("Adventure audio playback failed:", e);
+        });
     }
-
-    // Only stop audio when component unmounts, not on every message update
-    return () => {
-      if (audio && !messages.length) {
-        // Only cleanup when there are no messages
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    };
   }, [audio, messages.length]);
 
+  // When the component unmounts, stop the audio.
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        console.log("Adventure component unmounting, pausing audio.");
+        audio.pause();
+        audio.currentTime = 0;
+        isPlayingRef.current = false;
+      }
+    };
+  }, [audio]);
+
   return (
-    <>
-      <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <Messages
-          id={id}
-          isLoading={isLoading}
-          messages={messages}
-          append={append}
-        />
-      </div>
-    </>
+    <div className="flex flex-col min-w-0 h-dvh bg-background">
+      <Messages
+        id={id}
+        isLoading={isLoading}
+        messages={messages}
+        append={append}
+      />
+    </div>
   );
 }

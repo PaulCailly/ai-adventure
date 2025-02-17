@@ -18,6 +18,7 @@ import {
   buyItem,
   sellItem,
   improveItem,
+  identifyItem,
 } from "@/lib/db/queries";
 import {
   generateUUID,
@@ -25,8 +26,6 @@ import {
   sanitizeResponseMessages,
 } from "@/lib/utils";
 import { object, number, string } from "zod";
-
-import { POST as identifyItem } from "@/app/api/inventory/identify/route";
 
 export async function POST(request: Request) {
   const {
@@ -242,17 +241,12 @@ export async function POST(request: Request) {
               itemId: string(),
             }),
             execute: async ({ itemId }: { itemId: string }) => {
-              const identifyRequest = new Request(request.url, {
-                method: "POST",
-                headers: request.headers,
-                body: JSON.stringify({ itemId }),
-              });
-              const identifyResponse = await identifyItem(identifyRequest);
-              const identifyData = await identifyResponse.json();
-              if (identifyResponse.status !== 200) {
-                return { error: identifyData.error };
+              try {
+                const result = await identifyItem({ itemId });
+                return result;
+              } catch (error: any) {
+                return { error: error.message };
               }
-              return identifyData;
             },
           },
           ameliorerEquipement: {
