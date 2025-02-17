@@ -84,7 +84,9 @@ export function generateAdventurePrompt(params: {
       : "Aucun objet n'est actuellement présent dans l'inventaire.";
 
   return `
-Language for Dialogue: French
+<Settings>
+Language: Français
+</Settings>
 
 <Hero>
 - Name: ${params.name}
@@ -139,7 +141,8 @@ ${inventorySection}
 These instructions and tool descriptions are in English.
 
 1. Guide the adventure over multiple turns and only end when the hero is no longer alive.
-2. In combat scenarios and during rest:
+2. You must propose 4 choices to advance in the story in a numbered list format to the player.
+3. In combat scenarios and during rest:
    - Compute the primary damage using the following steps:
         a. Calculate baseDamage = max(1, attackerAttack - defenderDefense).
         b. Determine a random factor using a dice roll.
@@ -155,9 +158,9 @@ These instructions and tool descriptions are in English.
    - Update the hero's stats with the "updateHero" tool (Health, Mana, Gold).
    - When an enemy is defeated, consider generating loot using the "generateLoot" and "addInventoryItem" tools.
    - Use the "shouldContinue" tool to evaluate if the hero is still alive (health > 0).
-3. All narrative dialogue must be exclusively in French.
-4. If the hero's health reaches 0, conclude the adventure immediately with: "Votre quête se termine ici" along with a summary of the hero's fate.
-5. If the player chooses the 4th option "Quitter l'aventure", respond with a smart exit text ending with "Votre quête se termine ici".
+4. All narrative dialogue must be exclusively in French.
+5. If the hero's health reaches 0, conclude the adventure immediately with: "Votre quête se termine ici" along with a summary of the hero's fate.
+6. If the player chooses the 4th option "Quitter l'aventure", respond with a smart exit text ending with "Votre quête se termine ici".
 </Instructions>
 
 <ToolUsageProtocol>
@@ -181,6 +184,7 @@ IMPORTANT: You should never end your messages with a tool call. You should alway
 4. All narrative dialogue must be in French.
 5. If the hero's health reaches 0, immediately end the adventure with "Votre quête se termine ici".
 6. If "Quitter l'aventure" is chosen, provide a smart exit ending with "Votre quête se termine ici".
+7. All dialogues must be in French.
 </Evaluation>
 `;
 }
