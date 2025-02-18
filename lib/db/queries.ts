@@ -660,33 +660,40 @@ The player presents you with an unidentified item of rarity "${item.rarity}".
 Item characteristics: ${item.name}, Buffs - ${JSON.stringify(
     item.buffs
   )}, Quality - ${item.rarity}
-Item types and their base names:
-- Weapon: ["Épée", "Hache", "Dague", "Lance", "Arc", "Masse", "Faux", "Bâton", "Fléau", "Glaive", "Sabre", "Katana", "Trident", "Couteau", "Marteau", "Pique", "Rapière", "Épieu", "Gourdin", "Fronde", "Arbalète", "Cimeterre", "Claymore", "Estoc", "Javelot"]
-- Armor: ["Plastron", "Heaume", "Grèves", "Cuirasse", "Casque", "Jambières", "Gantelets", "Bouclier", "Brassards", "Cotte", "Targe", "Pansière", "Spallières", "Gorgerin", "Cuissardes", "Brassière", "Haubert", "Gambison", "Brigandine", "Camisole", "Cagoule", "Cervelière", "Cuirasse", "Garde"]
-- Accessory: ["Bague", "Amulette", "Bracelet", "Collier", "Talisman", "Médaillon", "Broche", "Pendentif", "Charme", "Gemme", "Sceau", "Diadème", "Anneau", "Bijou", "Ornement", "Chapelet"]
 
-Item qualities and their distributions:
-- Common: { attack: 0.3, defense: 0.3, health: 0.25, mana: 0.075, speed: 0.075 }
-- Uncommon: { attack: 0.28, defense: 0.28, health: 0.27, mana: 0.085, speed: 0.085 }
-- Rare: { attack: 0.26, defense: 0.26, health: 0.3, mana: 0.09, speed: 0.09 }
-- Epic: { attack: 0.24, defense: 0.24, health: 0.32, mana: 0.1, speed: 0.1 }
-- Legendary: { attack: 0.22, defense: 0.22, health: 0.34, mana: 0.11, speed: 0.11 }
+Using the rich and diverse lore of the Forest of Ancient Whispers (below), create a unique and imaginative name that reflects the item's rarity. The name should draw inspiration from various elements such as the ancient elven civilization, the magical transformations, the ongoing struggle between factions, and the mystical ambiance of the forest. Additionally, craft a vivid description of less than 140 characters that captures the item's essence, weaving in fantastical and mysterious elements from the lore.
 
-Based on the lore of the Forest of Ancient Whispers (below), assign it an evocative name that reflects its rarity and a detailed description of less than 140 characters incorporating fantastical and mysterious elements.
+Rules for naming based on rarity:
+- Uncommon: Use slightly more intriguing words. Examples: "Enhanced", "Refined", "Sturdy", "Improved", "Advanced", "Better", "Superior", "Upgraded", "Distinct", "Notable", "Special", "Unique".
+- Rare: Use words that suggest uniqueness and value. Examples: "Exquisite", "Rare", "Valuable", "Precious", "Exceptional", "Exclusive", "Select", "Elite", "Premium", "Choice", "Distinctive", "Remarkable".
+- Epic: Use grand and powerful words. Examples: "Majestic", "Mythic", "Ancient", "Heroic", "Legendary", "Noble", "Grand", "Regal", "Lofty", "Sublime", "Magnificent", "Glorious".
+- Legendary: Use words that denote extreme rarity and power. Examples: "Divine", "Ethereal", "Transcendent", "Celestial", "Heavenly", "Mythical", "Godlike", "Supreme", "Ultimate", "Unparalleled", "Peerless", "Unmatched".
+
+Rules for naming based on stats:
+- High Attack: Use words like "Fierce", "Mighty", "Dominant", "Strong", "Powerful", "Aggressive", "Forceful", "Intense", "Bold", "Vigorous", "Potent", "Ferocious".
+- High Defense: Use words like "Impenetrable", "Stalwart", "Guarded", "Secure", "Protected", "Fortified", "Resilient", "Tough", "Solid", "Stable", "Unyielding", "Defensive".
+- High Health: Use words like "Vigorous", "Robust", "Enduring", "Healthy", "Sturdy", "Hearty", "Strong", "Durable", "Resilient", "Tough", "Solid", "Sound".
+- High Mana: Use words like "Arcane", "Mystical", "Enchanted", "Magical", "Supernatural", "Otherworldly", "Mysterious", "Spiritual", "Sorcerous", "Wizardly", "Occult", "Esoteric".
+- High Speed: Use words like "Swift", "Nimble", "Agile", "Quick", "Fast", "Rapid", "Brisk", "Lively", "Fleet", "Spry", "Zippy", "Speedy".
+
+Incorporate lore elements:
+- If the item belonged to a notable character, mention their influence or legacy.
+- Use a wide variety of words to enrich the description, drawing from the lore's themes of ancient magic, elven history, and the forest's mystical nature.
+
 Forest lore:
 ${zones.forest.lore}
 `;
 
   // Call AI SDK to generate the item details using generateObject
   const result = await generateObject({
-    model: openai("gpt-4"),
+    model: openai("gpt-4o"),
     system: "You are an expert in identifying mystical items.",
     prompt,
     schema: z.object({
       name: z
         .string()
         .describe(
-          "The name of the item. It should match the rarity of the item."
+          "The name of the item. It should match the rarity of the item and be inspired by the diverse elements of the forest lore."
         ),
       description: z
         .string()

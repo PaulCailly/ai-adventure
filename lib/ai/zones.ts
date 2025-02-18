@@ -23,15 +23,30 @@ export const zones: Record<string, Zone> = {
     description: `Un marché animé où se mêlent marchands, artisans et aventuriers en quête de bonnes affaires. 
         Les stands débordent de potions, d'artefacts et d'équipements rares.`,
     level: "1-10",
-    dangers: [],
     lore: `Au cœur de la ville, le marché est le centre du commerce et des échanges. 
         Ici, les aventuriers peuvent acheter des potions réparatrices, vendre leurs butins, ou encore payer pour l'identification et l'amélioration d'objets. 
         L'ambiance chaleureuse et animée contraste avec la rudesse de la vie en pleine aventure.`,
+    dangers: [],
   },
   forest: {
     description: `Une forêt mystérieuse où les arbres anciens murmurent des secrets oubliés.
         Les ombres dansent entre les branches et des lueurs étranges attirent les voyageurs dans les profondeurs boisées.`,
     level: "11-15",
+    lore: `On dit que la Forêt des Murmures Anciens était autrefois le royaume d'une civilisation elfique disparue.
+    Les arbres auraient absorbé la magie et la mémoire de ce peuple, créant un endroit où la frontière entre les mondes matériel et spirituel s'estompe.
+    
+    Il y a longtemps, la reine elfe Elaria régnait sur cette forêt avec sagesse et grâce. Elle était connue pour sa profonde connexion avec la nature et sa capacité à communiquer avec les esprits de la forêt. Cependant, un sombre sorcier nommé Malakar chercha à corrompre la magie de la forêt pour son propre profit. Il libéra une malédiction qui transforma les créatures de la forêt en formes monstrueuses et transforma les esprits autrefois paisibles en entités vengeresses.
+
+    Elaria, dans une tentative désespérée de sauver son peuple, réalisa un puissant rituel qui lia son esprit au cœur de la forêt. Cet acte arrêta la malédiction de Malakar mais à un grand coût. La forêt devint un lieu de crépuscule éternel, où les esprits des elfes et les créatures corrompues sont enfermés dans une lutte sans fin.
+
+    Les voyageurs qui entrent dans la Forêt des Murmures Anciens parlent souvent d'entendre la voix d'Elaria dans le bruissement des feuilles, les guidant loin du danger. Certains disent que la forêt ne sera restaurée dans sa gloire d'antan que lorsqu'un héros émergera pour briser la malédiction et vaincre Malakar une fois pour toutes.
+
+    La forêt abrite également diverses factions, chacune avec ses propres objectifs. Les Gardiens Sylvestres, un groupe de druides et de rangers, cherchent à protéger la forêt et ses secrets. La Confrérie de l'Ombre, une bande de voleurs et d'assassins, exploite les dangers de la forêt pour leur propre profit. Et l'Ordre de la Flamme Éternelle, un culte dédié à Malakar, travaille à étendre sa corruption.
+
+    Au cœur de la forêt se trouve l'ancienne cité elfique d'Eldoria, maintenant en ruines. On dit que la bibliothèque de la ville détient la clé pour briser la malédiction, mais elle est gardée par une magie puissante et des créatures dangereuses. Seuls les aventuriers les plus courageux et les plus rusés osent la chercher.
+
+    La Forêt des Murmures Anciens est un lieu de beauté et de danger, où la ligne entre la réalité et le mythe est floue. C'est une terre d'intrigues profondes, où chaque ombre cache un secret et chaque murmure raconte une histoire.`,
+
     dangers: [
       {
         name: "Sylvestre",
@@ -117,19 +132,5 @@ export const zones: Record<string, Zone> = {
         isBoss: true,
       },
     ],
-    lore: `On dit que la Forêt des Murmures Anciens était autrefois le royaume d'une civilisation elfique disparue.
-        Les arbres auraient absorbé la magie et la mémoire de ce peuple, créant un endroit où la frontière entre les mondes matériel et spirituel s'estompe.
-        
-        Il y a longtemps, la reine elfe Elaria régnait sur cette forêt avec sagesse et grâce. Elle était connue pour sa profonde connexion avec la nature et sa capacité à communiquer avec les esprits de la forêt. Cependant, un sombre sorcier nommé Malakar chercha à corrompre la magie de la forêt pour son propre profit. Il libéra une malédiction qui transforma les créatures de la forêt en formes monstrueuses et transforma les esprits autrefois paisibles en entités vengeresses.
-
-        Elaria, dans une tentative désespérée de sauver son peuple, réalisa un puissant rituel qui lia son esprit au cœur de la forêt. Cet acte arrêta la malédiction de Malakar mais à un grand coût. La forêt devint un lieu de crépuscule éternel, où les esprits des elfes et les créatures corrompues sont enfermés dans une lutte sans fin.
-
-        Les voyageurs qui entrent dans la Forêt des Murmures Anciens parlent souvent d'entendre la voix d'Elaria dans le bruissement des feuilles, les guidant loin du danger. Certains disent que la forêt ne sera restaurée dans sa gloire d'antan que lorsqu'un héros émergera pour briser la malédiction et vaincre Malakar une fois pour toutes.
-
-        La forêt abrite également diverses factions, chacune avec ses propres objectifs. Les Gardiens Sylvestres, un groupe de druides et de rangers, cherchent à protéger la forêt et ses secrets. La Confrérie de l'Ombre, une bande de voleurs et d'assassins, exploite les dangers de la forêt pour leur propre profit. Et l'Ordre de la Flamme Éternelle, un culte dédié à Malakar, travaille à étendre sa corruption.
-
-        Au cœur de la forêt se trouve l'ancienne cité elfique d'Eldoria, maintenant en ruines. On dit que la bibliothèque de la ville détient la clé pour briser la malédiction, mais elle est gardée par une magie puissante et des créatures dangereuses. Seuls les aventuriers les plus courageux et les plus rusés osent la chercher.
-
-        La Forêt des Murmures Anciens est un lieu de beauté et de danger, où la ligne entre la réalité et le mythe est floue. C'est une terre d'intrigues profondes, où chaque ombre cache un secret et chaque murmure raconte une histoire.`,
   },
 };
