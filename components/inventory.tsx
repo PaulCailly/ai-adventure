@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Loader2, Box, Trash2, BadgeSwissFranc } from "lucide-react";
+import { Loader2, Trash2, BadgeSwissFranc } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { InventoryItem } from "@/lib/db/schema";
+import Image from "next/image";
 
 interface InventoryProps {
   characterId: string;
@@ -158,7 +159,13 @@ export default function Inventory({ characterId }: InventoryProps) {
                 >
                   <CardContent className="p-2">
                     <div className="flex justify-center items-center h-8 w-8">
-                      <Box className="h-8 w-8 text-muted-foreground" />
+                      <Image
+                        src={`/weapon/${item.name.toLowerCase()}.jpg`}
+                        alt={item.name}
+                        width={32}
+                        height={32}
+                        className="object-contain"
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -167,7 +174,13 @@ export default function Inventory({ characterId }: InventoryProps) {
             <DropdownMenuContent className="w-64">
               <div className="p-4 border-b flex flex-col gap-4">
                 <div className="flex items-center space-x-4">
-                  <Box className="h-12 w-12 text-muted-foreground flex-shrink-0" />
+                  <Image
+                    src={`/weapon/${item.name.toLowerCase()}.jpg`}
+                    alt={item.name}
+                    width={48}
+                    height={48}
+                    className="object-contain flex-shrink-0"
+                  />
                   <div className="flex flex-col gap-1">
                     <h3 className="text-lg font-semibold">{item.name}</h3>
                     <Badge
@@ -197,10 +210,6 @@ export default function Inventory({ characterId }: InventoryProps) {
                   </p>
                 )}
               </div>
-              <DropdownMenuItem onClick={() => handleSell(item.id)}>
-                <BadgeSwissFranc className="mr-2 h-4 w-4" />
-                Vendre
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDiscard(item.id)}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Jeter
