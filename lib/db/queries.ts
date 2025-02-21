@@ -719,4 +719,55 @@ ${zones.forest.lore}
   return { name: newName, description: newDescription };
 }
 
+export async function consumeConsumableItem({
+  heroId,
+  itemId,
+}: {
+  heroId: string;
+  itemId: string;
+}) {
+  // Retrieve the item from the database.
+  const [item] = await db
+    .select()
+    .from(inventoryItem)
+    .where(eq(inventoryItem.id, itemId));
+
+  if (!item) {
+    throw new Error("Item not found");
+  }
+
+  // Ensure this item is a consumable.
+  if (item.itemType !== "consumable") {
+    throw new Error("This item is not consumable");
+  }
+
+  // Retrieve the hero to apply buffs.
+  const heroData = await getCharacterById({ id: heroId });
+  if (!heroData) {
+    throw new Error("Hero not found");
+  }
+
+  // Extract stats for easy reading. Adjust the keys to match your typical buff usage.
+  const currentHealth = heroData.health;
+  const currentMana = heroData.mana;
+  const healthBuff = (item.buffs as { health?: number })?.health ?? 0;
+  const manaBuff = (item.buffs as { mana?: number })?.mana ?? 0;
+
+  // Apply new stats. Adjust logic as needed for your game.
+  const newHealth = Math.min(100, currentHealth + healthBuff);
+  const newMana = Math.min(100, currentMana + manaBuff);
+
+  // Update hero with buffed stats (this function already exists in queries).
+  await updateHero({
+    heroId,
+    health: newHealth - currentHealth, // net change in health
+    mana: newMana - currentMana, // net change in mana
+  });
+
+  // Remove the item from the inventory.
+  await db.delete(inventoryItem).where(eq(inventoryItem.id, itemId));
+
+  return { message: "Consumable item used successfully." };
+}
+
 export { db };

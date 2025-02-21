@@ -389,7 +389,7 @@ function CharacterCard({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={handleReforgeAvatar}>
-                    Reforge Avatar
+                    Reforger l&apos;avatar
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
