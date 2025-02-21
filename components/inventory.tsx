@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Loader2, Trash2, BadgeSwissFranc } from "lucide-react";
+import {
+  Loader2,
+  Trash2,
+  BadgeSwissFranc,
+  Sword,
+  Shield,
+  Diamond,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -145,6 +152,16 @@ export default function Inventory({ characterId }: InventoryProps) {
   const totalSlots = 24;
   const emptySlots = totalSlots - items.length;
 
+  const getItemIcon = (item: InventoryItem) => {
+    if (item.itemType === "weapon") {
+      return <Sword className="h-8 w-8" />;
+    } else if (item.itemType === "armor") {
+      return <Shield className="h-8 w-8" />;
+    } else if (item.itemType === "accessory") {
+      return <Diamond className="h-8 w-8" />;
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
@@ -159,13 +176,7 @@ export default function Inventory({ characterId }: InventoryProps) {
                 >
                   <CardContent className="p-2">
                     <div className="flex justify-center items-center h-8 w-8">
-                      <Image
-                        src={`/weapon/${item.name.toLowerCase()}.jpg`}
-                        alt={item.name}
-                        width={32}
-                        height={32}
-                        className="object-contain"
-                      />
+                      {getItemIcon(item)}
                     </div>
                   </CardContent>
                 </Card>
@@ -174,13 +185,9 @@ export default function Inventory({ characterId }: InventoryProps) {
             <DropdownMenuContent className="w-64">
               <div className="p-4 border-b flex flex-col gap-4">
                 <div className="flex items-center space-x-4">
-                  <Image
-                    src={`/weapon/${item.name.toLowerCase()}.jpg`}
-                    alt={item.name}
-                    width={48}
-                    height={48}
-                    className="object-contain flex-shrink-0"
-                  />
+                  <div className="h-12 w-12 flex items-center justify-center">
+                    {getItemIcon(item)}
+                  </div>
                   <div className="flex flex-col gap-1">
                     <h3 className="text-lg font-semibold">{item.name}</h3>
                     <Badge
