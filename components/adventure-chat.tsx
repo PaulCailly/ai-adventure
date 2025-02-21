@@ -3,7 +3,6 @@
 import type { Message } from "ai";
 import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
-import { useEffect, useRef, useState } from "react";
 
 import { Messages } from "./adventure-messages";
 
