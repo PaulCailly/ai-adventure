@@ -10,6 +10,8 @@ import {
   Sword,
   Shield,
   Diamond,
+  Beer,
+  Box,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -159,7 +161,10 @@ export default function Inventory({ characterId }: InventoryProps) {
       return <Shield className="h-8 w-8" />;
     } else if (item.itemType === "accessory") {
       return <Diamond className="h-8 w-8" />;
+    } else if (item.itemType === "consumable") {
+      return <Beer className="h-8 w-8" />;
     }
+    return <Box className="h-8 w-8" />;
   };
 
   return (
