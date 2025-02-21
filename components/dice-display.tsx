@@ -1,6 +1,7 @@
 import { Message } from "ai";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
+import { Shield, Sword } from "lucide-react";
 
 // Component to display a dice with enhanced animation effects.
 function DiceRoll({
@@ -25,11 +26,6 @@ function DiceRoll({
   const randomRotateY = useMemo(() => Math.random() * 90 - 45, []); // between -45 and 45°
 
   const diceColor = type === "red" ? "#ff4444" : "#4444ff";
-  const glossGradient = `linear-gradient(135deg, ${
-    type === "red" ? "rgba(255,100,100,0.9)" : "rgba(100,100,255,0.9)"
-  } 0%, ${diceColor} 50%, ${
-    type === "red" ? "rgba(200,0,0,0.9)" : "rgba(0,0,200,0.9)"
-  } 100%)`;
 
   return (
     // Add a parent container with perspective for a 3D view
@@ -66,15 +62,13 @@ function DiceRoll({
           position: "relative",
           width: "70px",
           height: "70px",
-          background: glossGradient,
+          background: "white",
           borderRadius: "10px",
-          boxShadow: `0 4px 10px ${
-            type === "red" ? "rgba(255,0,0,0.3)" : "rgba(0,0,255,0.3)"
-          }`,
+          boxShadow: `0 4px 10px rgba(0,0,0,0.2)`,
         }}
       >
         <svg
-          fill="#ffffff"
+          fill={diceColor}
           width="70"
           height="70"
           viewBox="-16 0 512 512"
@@ -95,8 +89,8 @@ function DiceRoll({
             transform: "translate(-50%, -50%)",
             fontSize: "16px",
             fontWeight: "bold",
-            color: "white",
-            textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+            color: diceColor,
+            textShadow: "0 1px 2px rgba(0,0,0,0.1)",
           }}
         >
           {value}
@@ -122,7 +116,7 @@ export function DiceDisplay({ message }: DiceDisplayProps) {
   return (
     <div className="flex flex-col items-center gap-4 my-8">
       <div className="p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="dice-rolls flex gap-4 justify-center">
+        <div className="dice-rolls flex flex-col items-center gap-4">
           {diceRolls.map((dice, index) => {
             const result = (dice as any).result;
             if (
@@ -132,27 +126,46 @@ export function DiceDisplay({ message }: DiceDisplayProps) {
               result.roll2 !== undefined
             ) {
               return (
-                <div key={index} className="flex gap-2">
-                  <DiceRoll
-                    value={result.roll1}
-                    sides={(dice.args && (dice.args as any).sides) || 20}
-                    type="red"
-                  />
-                  <DiceRoll
-                    value={result.roll2}
-                    sides={(dice.args && (dice.args as any).sides) || 20}
-                    type="blue"
-                  />
+                <div key={index} className="flex flex-col items-center gap-4">
+                  <div className="flex gap-8">
+                    <div className="flex flex-col items-center gap-2">
+                      <DiceRoll
+                        value={result.roll1}
+                        sides={(dice.args && (dice.args as any).sides) || 20}
+                        type="red"
+                      />
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Sword className="h-4 w-4" />
+                        <span>Attaquant</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <DiceRoll
+                        value={result.roll2}
+                        sides={(dice.args && (dice.args as any).sides) || 20}
+                        type="blue"
+                      />
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Shield className="h-4 w-4" />
+                        <span>Défenseur</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               );
             }
             return (
-              <DiceRoll
-                key={index}
-                value={result as number}
-                sides={(dice.args && (dice.args as any).sides) || 20}
-                type="red"
-              />
+              <div key={index} className="flex flex-col items-center gap-2">
+                <DiceRoll
+                  value={result as number}
+                  sides={(dice.args && (dice.args as any).sides) || 20}
+                  type="red"
+                />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Sword className="h-4 w-4" />
+                  <span>Attaquant</span>
+                </div>
+              </div>
             );
           })}
         </div>
