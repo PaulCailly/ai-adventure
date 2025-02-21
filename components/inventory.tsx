@@ -6,12 +6,11 @@ import { Badge } from "./ui/badge";
 import {
   Loader2,
   Trash2,
-  BadgeSwissFranc,
   Sword,
-  Shield,
   Gem,
   Beer,
   Box,
+  ShieldHalf,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -158,7 +157,7 @@ export default function Inventory({ characterId }: InventoryProps) {
     if (item.itemType === "weapon") {
       return <Sword className="h-8 w-8" />;
     } else if (item.itemType === "armor") {
-      return <Shield className="h-8 w-8" />;
+      return <ShieldHalf className="h-8 w-8" />;
     } else if (item.itemType === "accessory") {
       return <Gem className="h-8 w-8" />;
     } else if (item.itemType === "consumable") {
