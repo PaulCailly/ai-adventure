@@ -527,7 +527,7 @@ function CharacterCard({
                     <Swords className="h-5 w-5 text-primary flex-shrink-0" />
                     <div className="min-w-0">
                       <h3 className="text-sm font-medium text-foreground truncate">
-                        Forêt des Murmures Anciens
+                        La Tombe du Dragon
                       </h3>
                     </div>
                   </div>

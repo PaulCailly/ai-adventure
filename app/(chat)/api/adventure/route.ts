@@ -145,7 +145,7 @@ export async function POST(request: Request) {
           speed: character.speed,
           companion: character.companion,
           symbol: character.symbol,
-          zone: "forest", // Default zone for now
+          zone: "tombe_dragon",
           inventoryItems: formattedInventoryItems,
         }),
         messages: coreMessages,
