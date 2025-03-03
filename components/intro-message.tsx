@@ -87,7 +87,11 @@ const PurePreviewMessage = ({
                       variant="outline"
                       onClick={() =>
                         append(
-                          { content: "<continuer la narration>", role: "user" },
+                          {
+                            content:
+                              "<continuer la narration, passer a l'action suivante>",
+                            role: "user",
+                          },
                           {}
                         )
                       }
