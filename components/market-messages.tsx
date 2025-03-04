@@ -5,6 +5,13 @@ import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { zones } from "@/lib/ai/zones";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 
 interface MessagesProps {
   isLoading: boolean;
@@ -21,24 +28,54 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
 
+  // Get market zone data
+  const marketZone = zones["market"];
+
   if (!messages.length) {
     return (
-      <div className="py-8 h-screen flex flex-col items-center justify-between gap-4">
-        <div />
-        <Button
-          variant="default"
-          onClick={() =>
-            append({
-              role: "user",
-              content: `start`,
-            })
-          }
-        >
-          Entrer dans le marché
-        </Button>
-        <Button variant="ghost" onClick={() => router.push("/")}>
-          Quitter le marché
-        </Button>
+      <div className="flex flex-col h-screen bg-background">
+        <div className="relative w-full h-[60vh]">
+          <img
+            src="/images/market.jpg"
+            alt="Marché de Luneterne"
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
+        </div>
+
+        <Card className="mx-4 -mt-6 relative z-10 border-none shadow-lg">
+          <CardHeader className="pb-2">
+            <h2 className="text-xl font-bold">{marketZone.name}</h2>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <p className="text-sm text-muted-foreground">
+              {marketZone.description}
+            </p>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3 pt-0">
+            <Button
+              variant="default"
+              size="lg"
+              className="w-full"
+              onClick={() =>
+                append({
+                  role: "user",
+                  content: `start`,
+                })
+              }
+            >
+              Entrer dans le marché
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-muted-foreground"
+              onClick={() => router.push("/")}
+            >
+              Retour à la Taverne
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }

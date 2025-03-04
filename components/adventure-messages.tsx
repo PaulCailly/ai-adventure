@@ -5,6 +5,15 @@ import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { zones } from "@/lib/ai/zones";
+import { Badge } from "./ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface MessagesProps {
   isLoading: boolean;
@@ -14,31 +23,68 @@ interface MessagesProps {
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
+  zone?: string;
 }
 
-function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
+function PureMessages({
+  isLoading,
+  messages,
+  append,
+  id,
+  zone = "tombe_dragon",
+}: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
 
+  // Use the zone from props or default to tombe_dragon
+  const currentZone = zones[zone];
+
   if (!messages.length) {
     return (
-      <div className="py-8 h-screen flex flex-col items-center justify-between gap-4">
-        <div />
-        <Button
-          variant="default"
-          onClick={() =>
-            append({
-              role: "user",
-              content: `start`,
-            })
-          }
-        >
-          Commencer l&apos;aventure
-        </Button>
-        <Button variant="ghost" onClick={() => router.push("/")}>
-          Retour à la Taverne
-        </Button>
+      <div className="flex flex-col h-screen bg-background">
+        <div className="relative w-full h-[60vh]">
+          <img
+            src={`/images/${currentZone.image}`}
+            alt={zone}
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
+        </div>
+
+        <Card className="mx-4 -mt-6 relative z-10 border-none shadow-lg">
+          <CardHeader className="pb-2">
+            <h2 className="text-xl font-bold">{currentZone.name}</h2>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <p className="text-sm text-muted-foreground">
+              {currentZone.description}
+            </p>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3 pt-0">
+            <Button
+              variant="default"
+              size="lg"
+              className="w-full"
+              onClick={() =>
+                append({
+                  role: "user",
+                  content: `start`,
+                })
+              }
+            >
+              Commencer l&apos;aventure
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-muted-foreground"
+              onClick={() => router.push("/")}
+            >
+              Retour à la Taverne
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }

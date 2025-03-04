@@ -10,6 +10,8 @@ interface Danger {
 }
 
 interface Zone {
+  name: string;
+  image: string;
   description: string;
   level: string;
   dangers: Danger[];
@@ -18,6 +20,8 @@ interface Zone {
 
 export const zones: Record<string, Zone> = {
   market: {
+    name: "Marché de Luneterne",
+    image: "market.jpg",
     description: `Un marché animé où se mêlent marchands, artisans et aventuriers en quête de bonnes affaires. 
         Les stands débordent de potions, d'artefacts et d'équipements rares.`,
     level: "1-10",
@@ -27,6 +31,8 @@ export const zones: Record<string, Zone> = {
     dangers: [],
   },
   tombe_dragon: {
+    name: "Tombe du Dragon Perdu",
+    image: "tombe-dragon.jpg",
     description: `Une crypte ancienne et oubliée, cachée sous les ruines d'un temple draconique.
         L'air y est lourd et imprégné d'une magie ancienne. Des murmures résonnent entre les murs de pierre,
         vestiges des âmes tourmentées qui y sont piégées.`,
@@ -110,6 +116,8 @@ export const zones: Record<string, Zone> = {
   },
 
   monastre_trahi: {
+    name: "Monastère Trahi",
+    image: "monastère-trahi.jpg",
     description: `Un monastère en ruines, perché sur une falaise escarpée, balayé par des vents froids.
         Des runes brisées parsèment le sol, témoins d'un passé oublié. Des ombres hantent les couloirs,
         murmures des anciens moines tombés en disgrâce.`,
@@ -183,6 +191,8 @@ export const zones: Record<string, Zone> = {
     ],
   },
   voie_errants: {
+    name: "Voie des Errants",
+    image: "voie-errants.jpg",
     description: `Un passage spectral entre réalité et illusion, où le temps se distord et les âmes perdues murmurent leurs regrets.
       La Voie des Errants est un lieu où les vérités oubliées sont révélées, mais au prix d'un lourd tribut.`,
     level: "18-22",
