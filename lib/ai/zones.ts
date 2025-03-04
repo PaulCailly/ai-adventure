@@ -14,7 +14,7 @@ interface Zone {
   level: string;
   dangers: Danger[];
   lore: string;
-  } 
+}
 
 export const zones: Record<string, Zone> = {
   market: {
@@ -48,7 +48,7 @@ export const zones: Record<string, Zone> = {
     
     Selon les légendes, celui qui percera le secret de cette crypte sera récompensé par une relique ancienne,
     où est gravé le premier mot de la Formule Secrète : "joliment".`,
-    
+
     dangers: [
       {
         name: "Spectres du Culte Draconique",
@@ -93,7 +93,7 @@ export const zones: Record<string, Zone> = {
         attack: 40,
         defense: 35,
         speed: 8,
-        spawnChance: 0.05,
+        spawnChance: 0.1,
         isBoss: true,
       },
       {
@@ -103,9 +103,9 @@ export const zones: Record<string, Zone> = {
         attack: 50,
         defense: 40,
         speed: 10,
-        spawnChance: 0.01,
+        spawnChance: 0.1,
         isBoss: true,
-      }
+      },
     ],
   },
 
@@ -123,7 +123,7 @@ export const zones: Record<string, Zone> = {
     errent sous forme de spectres et de créatures cauchemardesques, empêchant quiconque d'accéder aux vérités qu'ils ont voulu cacher.
     
     Celui qui percera le mystère de cet endroit découvrira une relique contenant le second mot de la Formule Secrète : "valoir".`,
-    
+
     dangers: [
       {
         name: "Moines Damnés",
@@ -179,7 +179,7 @@ export const zones: Record<string, Zone> = {
         speed: 12,
         spawnChance: 0.08,
         isBoss: true,
-      }
+      },
     ],
   },
   voie_errants: {
@@ -208,7 +208,7 @@ export const zones: Record<string, Zone> = {
         spawnChance: 0.2,
       },
       {
-        name: "Les Ombres Mnésiques", 
+        name: "Les Ombres Mnésiques",
         health: 140,
         mana: 120,
         attack: 55,
@@ -243,7 +243,7 @@ export const zones: Record<string, Zone> = {
         speed: 16,
         spawnChance: 0.05,
         isBoss: true,
-      }
+      },
     ],
   },
 };
