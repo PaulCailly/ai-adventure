@@ -55,7 +55,7 @@ export const zones: Record<string, Zone> = {
     
     Seule la défaite du spectre permettra aux aventuriers de progresser. Une fois vaincu, son essence se dissipera dans un dernier rugissement,
     révélant une relique ancienne, flottant au centre du sanctuaire draconique. Sur cette relique sera gravé le premier mot de la Formule Secrète : "joliment".`,
-    
+
     dangers: [
       {
         name: "Spectres du Culte Draconique",
@@ -112,11 +112,9 @@ export const zones: Record<string, Zone> = {
         speed: 12,
         spawnChance: 1.0,
         isBoss: true,
-      }
+      },
     ],
-  }
-
-
+  },
   monastre_trahi: {
     name: "Monastère Trahi",
     image: "monastère-trahi.jpg",
