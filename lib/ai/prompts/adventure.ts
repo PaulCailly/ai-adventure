@@ -34,6 +34,13 @@ export function generateAdventurePrompt(params: {
     ? zones[params.zone as keyof typeof zones]
     : zones["forest"];
 
+  // Assurez-vous que le boss est le dernier danger rencontré
+  const boss = currentZone.dangers.find(danger => danger.isBoss);
+  if (boss) {
+    currentZone.dangers = currentZone.dangers.filter(danger => !danger.isBoss);
+    currentZone.dangers.push(boss);
+  }
+
   // Calculate total buffs from inventory items
   const buffTotals = {
     health: 0,
@@ -117,7 +124,7 @@ Stats (Base → Effective with Equipment):
 </Hero>
 
 <ZoneDetails>
-Zone: ${params.zone || "forest"}
+Zone: ${params.zone || "Tombe du Dragon Perdu"}
 Description: ${currentZone.description}
 Level Range: ${currentZone.level}
 Dangers:
