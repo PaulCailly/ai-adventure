@@ -5,6 +5,9 @@ import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
 
 import { Messages } from "./adventure-messages";
+import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 type ChatProps = {
   id: string;
@@ -26,7 +29,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
     },
   });
 
-  /*   const [audio] = useState(
+  const [audio] = useState(
     typeof Audio !== "undefined" ? new Audio("/forest.mp3") : null
   );
 
@@ -60,9 +63,9 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
           console.error("Adventure audio playback failed:", e);
         });
     }
-  }, [audio, messages.length]); */
+  }, [audio, messages.length]);
 
-  /*   // When the component unmounts, stop the audio.
+  // When the component unmounts, stop the audio.
   useEffect(() => {
     return () => {
       if (audio) {
@@ -72,7 +75,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
         isPlayingRef.current = false;
       }
     };
-  }, [audio]); */
+  }, [audio]);
 
   return (
     <div className="flex flex-col min-w-0 h-dvh bg-background overflow-y-scroll">
