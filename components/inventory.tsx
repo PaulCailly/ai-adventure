@@ -73,6 +73,54 @@ export default function Inventory({ characterId }: InventoryProps) {
       .replace(/[^a-z0-9]/g, "");
   }
 
+  function findImageKeyword(itemName: string): string | null {
+    const keywords = [
+      "amulette",
+      "anneau",
+      "arc",
+      "bague",
+      "baton",
+      "botte",
+      "bouclier",
+      "bracelet",
+      "brassards",
+      "brassiere",
+      "broche",
+      "cape",
+      "casque",
+      "ceinture",
+      "chapelet",
+      "collier",
+      "cuirasse",
+      "cuissardes",
+      "dague",
+      "epee",
+      "faux",
+      "gantelets",
+      "gemme",
+      "greves",
+      "hache",
+      "heaume",
+      "jambieres",
+      "katana",
+      "lance",
+      "masse",
+      "medaillon",
+      "pendentif",
+      "plastron",
+      "sabre",
+      "sceau",
+      "talisman",
+    ];
+
+    const normalizedName = normalizeString(itemName);
+    return (
+      keywords.find((keyword) =>
+        normalizedName.includes(normalizeString(keyword))
+      ) || null
+    );
+  }
+
   useEffect(() => {
     async function fetchInventory() {
       try {
@@ -163,27 +211,32 @@ export default function Inventory({ characterId }: InventoryProps) {
 
   const getItemIcon = (item: InventoryItem) => {
     try {
-      const normalizedName = normalizeString(item.name);
+      const keyword = findImageKeyword(item.name);
+      if (!keyword) {
+        return <div className="h-full w-full bg-muted rounded-sm" />;
+      }
+
       return (
-        <div className="relative h-8 w-8">
+        <div className="relative w-full h-full">
           <Image
-            src={`/images/inventory/${normalizedName}.jpg`}
+            src={`/images/inventory/${normalizeString(keyword)}.jpg`}
             alt={item.name}
             fill
-            className="object-contain"
+            className="object-cover"
             onError={(e) => {
               // Fallback to .png if .jpg doesn't exist
               const imgElement = e.target as HTMLImageElement;
               if (imgElement.src.endsWith(".jpg")) {
-                imgElement.src = `/images/inventory/${normalizedName}.png`;
+                imgElement.src = `/images/inventory/${normalizeString(
+                  keyword
+                )}.png`;
               }
             }}
           />
         </div>
       );
     } catch (error) {
-      // Fallback to a generic box if image loading fails
-      return <div className="h-8 w-8 bg-muted rounded-sm" />;
+      return <div className="h-full w-full bg-muted rounded-sm" />;
     }
   };
 
@@ -199,10 +252,8 @@ export default function Inventory({ characterId }: InventoryProps) {
                     item.rarity
                   )}`}
                 >
-                  <CardContent className="p-2">
-                    <div className="flex justify-center items-center h-8 w-8">
-                      {getItemIcon(item)}
-                    </div>
+                  <CardContent className="p-0 h-full w-full">
+                    {getItemIcon(item)}
                   </CardContent>
                 </Card>
               </div>
