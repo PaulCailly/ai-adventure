@@ -358,12 +358,8 @@ export async function updateHero({
       })
       .where(eq(character.id, heroId));
 
-    console.log(
-      `Updated stats for hero ${heroId}: Health=${updatedHealth}, Mana=${updatedMana}, Gold=${updatedGold}`
-    );
     return `Stats updated successfully.`;
   } catch (error) {
-    console.error("Error updating hero", error);
     throw error;
   }
 }
@@ -613,8 +609,6 @@ export async function identifyItem({
 }: {
   itemId: string;
 }): Promise<{ name: string; description: string }> {
-  console.log(`Starting identification process for item ID: ${itemId}`);
-
   // Retrieve the item from the database
   const [item] = await db
     .select()
@@ -645,7 +639,6 @@ export async function identifyItem({
     legendary: 200,
   };
   const cost = identificationCosts[item.rarity.toLowerCase()] || 50;
-  console.log(`Identification cost for item ID ${itemId} is ${cost} gold`);
 
   if (character.gold < cost) {
     console.error(
@@ -661,9 +654,6 @@ export async function identifyItem({
     health: 0,
     mana: 0,
   });
-  console.log(
-    `Deducted ${cost} gold from character ID ${character.id} for item ID ${itemId}`
-  );
 
   // Build a prompt for item identification using all characteristics of the item
   const prompt = `
@@ -699,7 +689,6 @@ ${zones["tombe_dragon"].lore}
 `;
 
   // Call AI SDK to generate the item details using generateObject
-  console.log(`Generating item details for item ID ${itemId} using AI SDK`);
   const result = await generateObject({
     model: openai("gpt-4o"),
     system: "You are an expert in identifying mystical items.",
@@ -718,9 +707,6 @@ ${zones["tombe_dragon"].lore}
     }),
   });
   const { name: newName, description: newDescription } = result.object;
-  console.log(
-    `Generated name: ${newName}, description: ${newDescription} for item ID ${itemId}`
-  );
 
   // Update the item record to mark it as identified and update its details
   await db
@@ -731,9 +717,6 @@ ${zones["tombe_dragon"].lore}
       description: newDescription,
     })
     .where(eq(inventoryItem.id, itemId));
-  console.log(
-    `Item ID ${itemId} marked as identified with new name and description`
-  );
 
   return { name: newName, description: newDescription };
 }

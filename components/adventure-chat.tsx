@@ -41,27 +41,18 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
     if (audio) {
       audio.loop = true;
       audio.volume = 0.5; // Adjust volume as needed
-      console.log("Audio is setup with loop and volume.");
     }
   }, [audio]);
 
   // Manage audio playback
   useEffect(() => {
-    console.log(
-      "Adventure audio effect triggered, messages length:",
-      messages.length
-    );
     if (audio && messages.length > 0 && !isPlayingRef.current) {
-      console.log("Attempting to start audio playback for adventure chat.");
       audio
         .play()
         .then(() => {
           isPlayingRef.current = true;
-          console.log("Adventure audio playback started successfully.");
         })
-        .catch((e) => {
-          console.error("Adventure audio playback failed:", e);
-        });
+        .catch((e) => {});
     }
   }, [audio, messages.length]);
 
@@ -69,7 +60,6 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
   useEffect(() => {
     return () => {
       if (audio) {
-        console.log("Adventure component unmounting, pausing audio.");
         audio.pause();
         audio.currentTime = 0;
         isPlayingRef.current = false;
