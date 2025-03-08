@@ -213,7 +213,7 @@ export default function Inventory({ characterId }: InventoryProps) {
     try {
       const keyword = findImageKeyword(item.name);
       if (!keyword) {
-        return <div className="h-full w-full bg-muted rounded-sm" />;
+        return <div className="h-full w-full bg-muted rounded-md" />;
       }
 
       return (
@@ -222,7 +222,7 @@ export default function Inventory({ characterId }: InventoryProps) {
             src={`/images/inventory/${normalizeString(keyword)}.jpg`}
             alt={item.name}
             fill
-            className="object-cover"
+            className="object-cover rounded-md"
             onError={(e) => {
               // Fallback to .png if .jpg doesn't exist
               const imgElement = e.target as HTMLImageElement;
@@ -236,7 +236,7 @@ export default function Inventory({ characterId }: InventoryProps) {
         </div>
       );
     } catch (error) {
-      return <div className="h-full w-full bg-muted rounded-sm" />;
+      return <div className="h-full w-full bg-muted rounded-md" />;
     }
   };
 
