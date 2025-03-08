@@ -65,6 +65,14 @@ export default function Inventory({ characterId }: InventoryProps) {
     return i18nRarity[rarity.toLowerCase()] || rarity;
   }
 
+  function normalizeString(str: string): string {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "");
+  }
+
   useEffect(() => {
     async function fetchInventory() {
       try {
@@ -154,16 +162,29 @@ export default function Inventory({ characterId }: InventoryProps) {
   const emptySlots = totalSlots - items.length;
 
   const getItemIcon = (item: InventoryItem) => {
-    if (item.itemType === "weapon") {
-      return <Sword className="h-8 w-8" />;
-    } else if (item.itemType === "armor") {
-      return <ShieldHalf className="h-8 w-8" />;
-    } else if (item.itemType === "accessory") {
-      return <Gem className="h-8 w-8" />;
-    } else if (item.itemType === "consumable") {
-      return <Beer className="h-8 w-8" />;
+    try {
+      const normalizedName = normalizeString(item.name);
+      return (
+        <div className="relative h-8 w-8">
+          <Image
+            src={`/images/inventory/${normalizedName}.jpg`}
+            alt={item.name}
+            fill
+            className="object-contain"
+            onError={(e) => {
+              // Fallback to .png if .jpg doesn't exist
+              const imgElement = e.target as HTMLImageElement;
+              if (imgElement.src.endsWith(".jpg")) {
+                imgElement.src = `/images/inventory/${normalizedName}.png`;
+              }
+            }}
+          />
+        </div>
+      );
+    } catch (error) {
+      // Fallback to a generic box if image loading fails
+      return <div className="h-8 w-8 bg-muted rounded-sm" />;
     }
-    return <Box className="h-8 w-8" />;
   };
 
   return (

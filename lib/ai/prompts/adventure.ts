@@ -140,7 +140,7 @@ ${inventorySection}
 <Instructions>
 These instructions and tool descriptions are in English.
 
-1. Guide the adventure over multiple turns and only end when the hero is no longer alive.
+1. Guide the adventure over 6 turns and ensure it ends with a boss fight. If the player defeats the boss, they are rewarded with the word indicated in the Zone's lore.
 2. You must propose 4 choices to advance in the story in a numbered list format to the player.
 3. In combat scenarios and during rest:
    - Compute the primary damage using the following steps:
