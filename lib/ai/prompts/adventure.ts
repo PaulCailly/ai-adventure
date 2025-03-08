@@ -32,7 +32,7 @@ export function generateAdventurePrompt(params: {
 }): string {
   const currentZone = params.zone
     ? zones[params.zone as keyof typeof zones]
-    : zones["forest"];
+    : zones["tombe_dragon"];
 
   // Calculate total buffs from inventory items
   const buffTotals = {
