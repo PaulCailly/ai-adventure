@@ -16,6 +16,7 @@ export function generateAdventurePrompt(params: {
   speed: number;
   zone?: string;
   inventoryItems?: Array<{
+    id: string;
     name: string;
     identified: boolean;
     rarity: string;
@@ -78,7 +79,9 @@ export function generateAdventurePrompt(params: {
               : "Aucun bonus";
             return `- ${item.name} (${item.itemType}) [${item.rarity}]
   Description: ${item.description}
-  Buffs: ${buffsText}`;
+  Buffs: ${buffsText}
+  Item ID: ${item.id}
+  `;
           })
           .join("\n")
       : "Aucun objet n'est actuellement présent dans l'inventaire.";
