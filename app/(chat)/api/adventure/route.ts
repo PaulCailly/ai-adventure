@@ -34,6 +34,7 @@ import {
 } from "zod";
 import chalk from "chalk";
 import { generateAndAddLootItem, ItemSlot } from "@/lib/loot";
+import { zones } from "@/lib/ai/zones";
 
 export async function POST(request: Request) {
   const {
@@ -278,8 +279,9 @@ export async function POST(request: Request) {
               health: number(),
               mana: number(),
               gold: number(),
+              zone: string(),
             }),
-            execute: async ({ health, mana, gold }) => {
+            execute: async ({ health, mana, gold, zone }) => {
               try {
                 console.log(
                   `🛡 updateHero invoked for heroId: ${characterId} with changes: Health=${health}, Mana=${mana}, Gold=${gold}`
@@ -290,6 +292,13 @@ export async function POST(request: Request) {
                   mana,
                   gold,
                 });
+
+                // Check if health is 0 or below after update
+                const character = await getCharacterById({ id: characterId });
+                if (character && character.health <= 0) {
+                  return `Votre aventure se termine ici. Rendez-vous à la taverne pour reprendre des forces...`;
+                }
+
                 console.log(`🛡 updateHero result: ${resultMessage}`);
                 return resultMessage;
               } catch (error) {
@@ -350,7 +359,10 @@ export async function POST(request: Request) {
                   heroId: characterId,
                   itemId,
                 });
-                return result;
+                return {
+                  result,
+                  message: `You have consumed the potion`,
+                };
               } catch (error) {
                 console.error("Error in useConsumable tool:", error);
                 throw new Error("Failed to use consumable item");

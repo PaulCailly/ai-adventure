@@ -325,10 +325,8 @@ function CharacterCard({
 
   const handleForestClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (currentHealth < 0) {
-      toast.error("Votre santé est insuffisante pour l'aventure.", {
-        position: "bottom-center",
-      });
+    if (currentHealth <= 0) {
+      toast.error("Votre santé est insuffisante pour l'aventure.");
       return;
     }
     router.push(`/adventure`);
