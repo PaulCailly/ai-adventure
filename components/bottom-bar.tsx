@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Character } from "@/lib/db/schema";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Trophy, Box, Users, ChevronRight, Share2 } from "lucide-react";
 import Link from "next/link";
 import Inventory from "@/components/inventory";
@@ -100,39 +100,41 @@ export function BottomBar({ characters, character }: BottomBarProps) {
               </SheetTitle>
             </SheetHeader>
             <ScrollArea className="h-[400px] mt-4">
-              <ul className="space-y-2">
-                {characters
-                  .filter((c) => c.id !== character.id)
-                  .map((char: Character) => (
-                    <Link
-                      key={char.id}
-                      href={`/character/${char.id}`}
-                      className="w-full text-white font-semibold flex items-center"
-                    >
-                      <li className="w-full flex items-center p-2 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors">
-                        <img
-                          src={char.avatar || "/images/default-avatar.png"}
-                          alt={char.name}
-                          className="w-16 h-16 rounded-full mr-3 object-cover object-[center_40%]"
-                        />
-                        <div className="flex-1">
-                          {char.name}
-                          <div className="text-xs text-muted-foreground">
-                            {char.race} - {char.class}
+              <ScrollAreaViewport>
+                <ul className="space-y-2">
+                  {characters
+                    .filter((c) => c.id !== character.id)
+                    .map((char: Character) => (
+                      <Link
+                        key={char.id}
+                        href={`/character/${char.id}`}
+                        className="w-full text-white font-semibold flex items-center"
+                      >
+                        <li className="w-full flex items-center p-2 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors">
+                          <img
+                            src={char.avatar || "/images/default-avatar.png"}
+                            alt={char.name}
+                            className="w-16 h-16 rounded-full mr-3 object-cover object-[center_40%]"
+                          />
+                          <div className="flex-1">
+                            {char.name}
+                            <div className="text-xs text-muted-foreground">
+                              {char.race} - {char.class}
+                            </div>
                           </div>
-                        </div>
-                        <ChevronRight className="ml-2 text-white" />
-                      </li>
-                    </Link>
-                  ))}
-              </ul>
-              <button
-                onClick={handleShare}
-                className="w-full mt-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors flex items-center justify-center gap-2 text-white"
-              >
-                <Share2 className="size-5" />
-                <span>Inviter des amis</span>
-              </button>
+                          <ChevronRight className="ml-2 text-white" />
+                        </li>
+                      </Link>
+                    ))}
+                </ul>
+                <button
+                  onClick={handleShare}
+                  className="w-full mt-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors flex items-center justify-center gap-2 text-white"
+                >
+                  <Share2 className="size-5" />
+                  <span>Inviter des amis</span>
+                </button>
+              </ScrollAreaViewport>
             </ScrollArea>
           </SheetContent>
         </Sheet>
