@@ -92,7 +92,7 @@ export function BottomBar({ characters, character }: BottomBarProps) {
           </SheetTrigger>
           <SheetContent
             side="bottom"
-            className="max-w-[430px] mx-auto inset-x-0 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur-md"
+            className="overflow-scroll max-w-[430px] mx-auto inset-x-0 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur-md"
           >
             <SheetHeader className="border-b border-muted pb-4">
               <SheetTitle className="text-lg font-bold text-white">
