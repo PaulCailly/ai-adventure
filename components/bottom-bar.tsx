@@ -61,7 +61,7 @@ export function BottomBar() {
             <SheetHeader>
               <SheetTitle>Friends</SheetTitle>
               <SheetDescription>
-                Your character's friends:
+                Your character&apos;s friends:
                 <ul className="mt-4 space-y-2">
                   <li>Sir Galahad</li>
                   <li>Merlin the Wise</li>
