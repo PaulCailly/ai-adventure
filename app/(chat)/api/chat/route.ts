@@ -103,6 +103,13 @@ export async function POST(request: Request) {
               weakness: z.string(),
               companion: z.string(),
               symbol: z.string(),
+              stats: z.object({
+                health: z.number(),
+                mana: z.number(),
+                attack: z.number(),
+                defense: z.number(),
+                speed: z.number(),
+              }),
             }),
             execute: async ({
               name,
@@ -114,17 +121,10 @@ export async function POST(request: Request) {
               weakness,
               companion,
               symbol,
+              stats,
             }) => {
-              const stats = {
-                health: Math.floor(Math.random() * 50) + 50,
-                mana: Math.floor(Math.random() * 30) + 20,
-                attack: Math.floor(Math.random() * 20) + 10,
-                defense: Math.floor(Math.random() * 15) + 5,
-                speed: Math.floor(Math.random() * 10) + 5,
-              };
-
               const openai = new OpenAI();
-              const imagePrompt = `A detailed fantasy RPG character portrait. ${race} ${heroClass} named ${name}. They wield a ${weapon} and have ${physicalTraits}. The image should reflect their ${strength} and ${weakness}. Fantasy art style, detailed, professional quality.`;
+              const imagePrompt = `Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}. They stand with ${physicalTraits}, wielding a ${weapon} with confidence. Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character. The scene features magical elements and mystical atmosphere, with soft ethereal lighting enhancing the fantasy aesthetic. The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering. Include subtle arcane symbols and wisps of magical energy surrounding the character.`;
 
               const imageResponse = await openai.images.generate({
                 model: "dall-e-3",
