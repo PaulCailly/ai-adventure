@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import {
   Heart,
-  Brain,
   Sword,
   Shield,
   Zap,
@@ -15,6 +13,7 @@ import {
   User,
   Dumbbell,
   AlertCircle,
+  Sparkle,
 } from "lucide-react";
 
 import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
@@ -76,7 +75,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground flex items-center gap-2">
-                      <Brain className="w-4 h-4" /> Mana
+                      <Sparkle className="w-4 h-4" /> Mana
                     </span>
                     <span className="font-medium">{character.mana}</span>
                   </div>
