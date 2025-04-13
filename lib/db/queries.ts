@@ -191,19 +191,6 @@ export async function getCharacterById({ id }: { id: string }) {
   }
 }
 
-export async function getCharactersByUserId({ userId }: { userId: string }) {
-  try {
-    return await db
-      .select()
-      .from(character)
-      .where(eq(character.userId, userId))
-      .orderBy(desc(character.createdAt));
-  } catch (error) {
-    console.error("Failed to get characters by user id from database");
-    throw error;
-  }
-}
-
 export async function getCharactersByChatId({ chatId }: { chatId: string }) {
   try {
     return await db
