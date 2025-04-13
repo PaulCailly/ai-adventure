@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Heart,
   Sword,
@@ -10,9 +12,6 @@ import {
   Axe,
   Cross,
   Dog,
-  User,
-  Dumbbell,
-  AlertCircle,
   Sparkle,
 } from "lucide-react";
 
@@ -36,128 +35,98 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <ScrollArea className="h-full">
-      <div className="container max-w-4xl mx-auto p-6">
-        <Card className="border-none bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <CardHeader className="flex flex-row items-center gap-6">
+      <div className="container px-4 py-8 mx-auto">
+        <Card className="max-w-[400px] mx-auto border-2 border-primary/20 bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
+          <div className="relative aspect-[3/4] w-full">
             {character.avatar && (
-              <div className="relative overflow-hidden">
-                <img
-                  src={character.avatar}
-                  alt={character.name}
-                  width="96"
-                  height="96"
-                  className="size-24 rounded-full object-cover ring-2 ring-primary/20"
-                />
-              </div>
+              <Image
+                src={character.avatar}
+                alt={character.name}
+                fill
+                className="object-cover"
+                priority
+              />
             )}
-            <div className="space-y-1">
-              <CardTitle className="text-3xl font-bold">
-                {character.name}
-              </CardTitle>
-              <div className="flex gap-2">
-                <Badge variant="secondary">{character.race}</Badge>
-                <Badge variant="secondary">{character.class}</Badge>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+            <div className="absolute top-4 left-4 right-4 flex flex-wrap gap-2">
+              <Badge
+                variant="secondary"
+                className="bg-black/50 backdrop-blur-sm"
+              >
+                {character.race}
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="bg-black/50 backdrop-blur-sm"
+              >
+                {character.class}
+              </Badge>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <h2 className="text-2xl font-bold mb-2">{character.name}</h2>
+              <div className="grid gap-2">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1">
+                      <Heart className="size-4" /> Health
+                    </span>
+                    <span>{character.health}</span>
+                  </div>
+                  <Progress
+                    value={character.health}
+                    className="h-1 bg-white/20"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1">
+                      <Sparkle className="size-4" /> Mana
+                    </span>
+                    <span>{character.mana}</span>
+                  </div>
+                  <Progress
+                    value={character.mana}
+                    className="h-1 bg-white/20"
+                  />
+                </div>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="grid gap-6 md:grid-cols-2">
-            <Card className="border-none bg-muted/50">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">Stats</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Heart className="w-4 h-4" /> Health
-                    </span>
-                    <span className="font-medium">{character.health}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Sparkle className="w-4 h-4" /> Mana
-                    </span>
-                    <span className="font-medium">{character.mana}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Sword className="w-4 h-4" /> Attack
-                    </span>
-                    <span className="font-medium">{character.attack}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Shield className="w-4 h-4" /> Defense
-                    </span>
-                    <span className="font-medium">{character.defense}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Zap className="w-4 h-4" /> Speed
-                    </span>
-                    <span className="font-medium">{character.speed}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none bg-muted/50">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  Equipment
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground flex items-center gap-2">
-                    <Axe className="w-4 h-4" /> Weapon
-                  </span>
-                  <span className="font-medium">{character.weapon}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground flex items-center gap-2">
-                    <Cross className="w-4 h-4" /> Symbol
-                  </span>
-                  <span className="font-medium">{character.symbol}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground flex items-center gap-2">
-                    <Dog className="w-4 h-4" /> Companion
-                  </span>
-                  <span className="font-medium">{character.companion}</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none bg-muted/50 md:col-span-2">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  Characteristics
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-6 md:grid-cols-3">
-                <div className="space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <User className="w-4 h-4" /> Physical Traits
-                  </h3>
-                  <p className="text-muted-foreground">
-                    {character.physicalTraits}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <Dumbbell className="w-4 h-4" /> Strength
-                  </h3>
-                  <p className="text-muted-foreground">{character.strength}</p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4" /> Weakness
-                  </h3>
-                  <p className="text-muted-foreground">{character.weakness}</p>
-                </div>
-              </CardContent>
-            </Card>
+          </div>
+          <CardContent className="p-4 space-y-4">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
+                <Sword className="size-4 mb-1" />
+                <span className="text-xs text-muted-foreground">Attack</span>
+                <span className="font-bold">{character.attack}</span>
+              </div>
+              <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
+                <Shield className="size-4 mb-1" />
+                <span className="text-xs text-muted-foreground">Defense</span>
+                <span className="font-bold">{character.defense}</span>
+              </div>
+              <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg">
+                <Zap className="size-4 mb-1" />
+                <span className="text-xs text-muted-foreground">Speed</span>
+                <span className="font-bold">{character.speed}</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <Axe className="size-4" />
+                <span className="text-muted-foreground">Weapon:</span>
+                <span className="font-medium">{character.weapon}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Cross className="size-4" />
+                <span className="text-muted-foreground">Symbol:</span>
+                <span className="font-medium">{character.symbol}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Dog className="size-4" />
+                <span className="text-muted-foreground">Companion:</span>
+                <span className="font-medium">{character.companion}</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
