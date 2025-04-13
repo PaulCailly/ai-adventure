@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
 import {
   useMediaQuery,
-  type UseMediaQueryOptions
-} from '@/hooks/use-media-query';
-import { cn } from '@/lib/utils';
+  type UseMediaQueryOptions,
+} from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
 
 export type ScrollAreaElement = React.ElementRef<
   typeof ScrollAreaPrimitive.Root
@@ -31,24 +31,14 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>(
   ) => (
     <ScrollAreaPrimitive.Root
       ref={ref}
-      className={cn('relative', className)}
+      className={cn("relative", className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport className="size-full rounded-[inherit]">
         {children}
       </ScrollAreaPrimitive.Viewport>
-      {verticalScrollBar && (
-        <ScrollBar
-          forceMount
-          orientation="vertical"
-        />
-      )}
-      {horizontalScrollBar && (
-        <ScrollBar
-          forceMount
-          orientation="horizontal"
-        />
-      )}
+      {verticalScrollBar && <ScrollBar forceMount orientation="vertical" />}
+      {horizontalScrollBar && <ScrollBar forceMount orientation="horizontal" />}
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
   )
@@ -63,16 +53,16 @@ export type ScrollBarProps = React.ComponentPropsWithoutRef<
   typeof ScrollAreaPrimitive.ScrollAreaScrollbar
 >;
 const ScrollBar = React.forwardRef<ScrollBarElement, ScrollBarProps>(
-  ({ className, orientation = 'vertical', ...props }, ref) => (
+  ({ className, orientation = "vertical", ...props }, ref) => (
     <ScrollAreaPrimitive.ScrollAreaScrollbar
       ref={ref}
       orientation={orientation}
       className={cn(
-        'relative z-20 flex touch-none select-none transition-colors',
-        orientation === 'vertical' &&
-          'h-full w-2.5 border-l border-l-transparent p-px',
-        orientation === 'horizontal' &&
-          'h-2.5 flex-col border-t border-t-transparent p-px',
+        "relative z-20 flex touch-none select-none transition-colors",
+        orientation === "vertical" &&
+          "h-full w-2.5 border-l border-l-transparent p-px",
+        orientation === "horizontal" &&
+          "h-2.5 flex-col border-t border-t-transparent p-px",
         className
       )}
       {...props}
@@ -107,25 +97,19 @@ const ResponsiveScrollArea = React.forwardRef<
 
     if (isBreakpointMatched) {
       return (
-        <ScrollArea
-          ref={ref}
-          {...scrollAreaProps}
-        >
+        <ScrollArea ref={ref} {...scrollAreaProps}>
           {children}
         </ScrollArea>
       );
     }
 
     return (
-      <div
-        ref={ref}
-        {...fallbackProps}
-      >
+      <div ref={ref} {...fallbackProps}>
         {children}
       </div>
     );
   }
 );
-ResponsiveScrollArea.displayName = 'ResponsiveScrollArea';
+ResponsiveScrollArea.displayName = "ResponsiveScrollArea";
 
 export { ResponsiveScrollArea, ScrollArea, ScrollBar };
