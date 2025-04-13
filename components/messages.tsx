@@ -6,31 +6,15 @@ import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
 
 interface MessagesProps {
-  chatId: string;
   isLoading: boolean;
   messages: Array<Message>;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[])
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  isReadonly: boolean;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
 }
 
-function PureMessages({
-  chatId,
-  isLoading,
-  messages,
-  setMessages,
-  reload,
-  isReadonly,
-  append,
-}: MessagesProps) {
+function PureMessages({ isLoading, messages, append }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
 
@@ -57,12 +41,8 @@ function PureMessages({
       {lastMessage && (
         <PreviewMessage
           key={lastMessage.id}
-          chatId={chatId}
           message={lastMessage}
           isLoading={isLoading}
-          setMessages={setMessages}
-          reload={reload}
-          isReadonly={isReadonly}
           append={append}
         />
       )}
