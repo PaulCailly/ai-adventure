@@ -12,7 +12,7 @@ import { Trophy, Star, Users } from "lucide-react";
 
 export function BottomBar() {
   return (
-    <div className="absolute bottom-0 inset-x-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="fixed bottom-0 left-0 right-0 h-16 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 max-w-[100vw] mx-auto antialiased">
       <div className="grid h-full grid-cols-3">
         <Sheet>
           <SheetTrigger className="flex flex-col items-center justify-center">
@@ -61,7 +61,7 @@ export function BottomBar() {
             <SheetHeader>
               <SheetTitle>Friends</SheetTitle>
               <SheetDescription>
-                Your character&apos;s friends:
+                Your character's friends:
                 <ul className="mt-4 space-y-2">
                   <li>Sir Galahad</li>
                   <li>Merlin the Wise</li>
