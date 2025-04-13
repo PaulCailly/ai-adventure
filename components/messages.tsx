@@ -4,19 +4,22 @@ import { useScrollToBottom } from "./use-scroll-to-bottom";
 import { memo } from "react";
 import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface MessagesProps {
   isLoading: boolean;
   messages: Array<Message>;
+  id: string;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
 }
 
-function PureMessages({ isLoading, messages, append }: MessagesProps) {
+function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
+  const router = useRouter();
 
   const lastMessage = messages[messages.length - 1];
 
@@ -27,11 +30,15 @@ function PureMessages({ isLoading, messages, append }: MessagesProps) {
           variant="outline"
           onClick={() => append({ role: "user", content: "start" })}
         >
-          Start
+          Entrer dans la Taverne
         </Button>
       </div>
     );
   }
+
+  const showCharacterButton = lastMessage?.content
+    .toLowerCase()
+    .includes("pour l'aventure");
 
   return (
     <div
@@ -45,6 +52,17 @@ function PureMessages({ isLoading, messages, append }: MessagesProps) {
           isLoading={isLoading}
           append={append}
         />
+      )}
+
+      {showCharacterButton && (
+        <div className="flex justify-center mb-4">
+          <Button
+            variant="default"
+            onClick={() => router.push(`/character/${id}`)}
+          >
+            Sortir de la Taverne
+          </Button>
+        </div>
       )}
 
       {isLoading &&
