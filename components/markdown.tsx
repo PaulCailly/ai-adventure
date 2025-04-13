@@ -7,14 +7,18 @@ import { Button } from "@/components/ui/button";
 
 const components = ({
   append,
+  isLoading,
 }: {
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
+  isLoading: boolean;
 }) => {
   const handleClick = (content: string) => {
-    append({ content, role: "user" }, {});
+    if (!isLoading) {
+      append({ content, role: "user" }, {});
+    }
   };
   const componentMap: Partial<Components> = {
     pre: ({ children }) => <>{children}</>,
@@ -33,6 +37,7 @@ const components = ({
           onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
             handleClick(children as string)
           }
+          disabled={isLoading}
           className="py-1 w-full justify-start"
           {...props}
         >
@@ -121,17 +126,19 @@ const remarkPlugins = [remarkGfm];
 export const Markdown = ({
   children,
   append,
+  isLoading = false,
 }: {
   children: string;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
+  isLoading?: boolean;
 }) => {
   return (
     <ReactMarkdown
       remarkPlugins={remarkPlugins}
-      components={components({ append })}
+      components={components({ append, isLoading })}
     >
       {children}
     </ReactMarkdown>
