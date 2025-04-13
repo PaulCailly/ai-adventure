@@ -7,7 +7,7 @@ export default async function Layout({
 }) {
   return (
     <>
-      <body>{children}</body>
+      <body className="max-w-[430px] mx-auto overflow-hidden">{children}</body>
     </>
   );
 }
