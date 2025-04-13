@@ -17,6 +17,10 @@ import {
 
 import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
 
+const customImgLoader = ({ src }: { src: string }) => {
+  return `${src}`;
+};
+
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
@@ -40,15 +44,17 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <div className="relative aspect-[3/4] w-full">
             {character.avatar && (
               <Image
+                loader={customImgLoader}
                 src={character.avatar}
                 alt={character.name}
                 fill
+                unoptimized={false}
                 className="object-cover"
                 priority
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-            <div className="absolute top-4 left-4 right-4 flex flex-wrap gap-2">
+            <div className="absolute top-4 inset-x-4 flex flex-wrap gap-2">
               <Badge
                 variant="secondary"
                 className="bg-black/50 backdrop-blur-sm"
@@ -62,34 +68,18 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 {character.class}
               </Badge>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-              <h2 className="text-2xl font-bold mb-2">{character.name}</h2>
-              <div className="grid gap-2">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-1">
-                      <Heart className="size-4" /> Health
-                    </span>
-                    <span>{character.health}</span>
-                  </div>
-                  <Progress
-                    value={character.health}
-                    className="h-1 bg-white/20"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-1">
-                      <Sparkle className="size-4" /> Mana
-                    </span>
-                    <span>{character.mana}</span>
-                  </div>
-                  <Progress
-                    value={character.mana}
-                    className="h-1 bg-white/20"
-                  />
-                </div>
+            <div className="absolute bottom-4 inset-x-4 flex justify-between">
+              <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                <Heart className="size-4 text-red-500" />
+                <span className="text-white font-bold">{character.health}</span>
               </div>
+              <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                <Sparkle className="size-4 text-blue-500" />
+                <span className="text-white font-bold">{character.mana}</span>
+              </div>
+            </div>
+            <div className="absolute bottom-0 inset-x-0 p-4 text-white">
+              <h2 className="text-2xl font-bold">{character.name}</h2>
             </div>
           </div>
           <CardContent className="p-4 space-y-4">
@@ -108,23 +98,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 <Zap className="size-4 mb-1" />
                 <span className="text-xs text-muted-foreground">Speed</span>
                 <span className="font-bold">{character.speed}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <Axe className="size-4" />
-                <span className="text-muted-foreground">Weapon:</span>
-                <span className="font-medium">{character.weapon}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Cross className="size-4" />
-                <span className="text-muted-foreground">Symbol:</span>
-                <span className="font-medium">{character.symbol}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Dog className="size-4" />
-                <span className="text-muted-foreground">Companion:</span>
-                <span className="font-medium">{character.companion}</span>
               </div>
             </div>
           </CardContent>
