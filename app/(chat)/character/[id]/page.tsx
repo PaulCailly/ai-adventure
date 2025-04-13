@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { getChatById, getCharactersByChatId } from "@/lib/db/queries";
 
@@ -15,7 +15,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const character = characters[0];
 
   if (!character) {
-    return <div>No character found for this chat</div>;
+    return redirect("/");
   }
 
   return (
