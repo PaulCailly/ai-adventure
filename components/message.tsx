@@ -34,7 +34,9 @@ const PurePreviewMessage = ({
     // If no content is immediately available, wait 2 seconds, then show a placeholder
     if (!message.content || !message.content.trim()) {
       timer = setTimeout(() => {
-        setMessageContent("Hmm.. Attends un instant..."); // Or "Hmm.. let me see..."
+        setMessageContent(
+          "Hmm.. Attends un instant... Je vais chercher dans la réserve... Ah, où ai-je mis ce miroir magique ? Laisse-moi voir..."
+        );
       }, 2000);
     } else {
       setMessageContent(message.content);
