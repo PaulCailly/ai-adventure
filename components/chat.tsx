@@ -46,7 +46,7 @@ export function Chat({ id, initialMessages }: ChatProps) {
         audio.currentTime = 0;
       }
     };
-  }, [audio, messages]);
+  }, [audio, messages.length]);
 
   return (
     <>
