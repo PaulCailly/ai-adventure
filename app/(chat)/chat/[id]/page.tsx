@@ -18,10 +18,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = params;
   const chat = await getChatById({ id });
 
-  if (chat.userId !== session.user.id) {
-    return redirect("/");
-  }
-
   const messagesFromDb = await getMessagesByChatId({
     id,
   });

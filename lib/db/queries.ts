@@ -183,14 +183,10 @@ export async function createCharacter(
   characterData: Omit<Character, "id" | "createdAt">
 ) {
   try {
-    const [result] = await db
-      .insert(character)
-      .values({
-        ...characterData,
-        createdAt: new Date(),
-      })
-      .returning({ id: character.id });
-    return result;
+    return await db.insert(character).values({
+      ...characterData,
+      createdAt: new Date(),
+    });
   } catch (error) {
     console.error("Failed to create character in database");
     throw error;
