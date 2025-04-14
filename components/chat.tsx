@@ -5,7 +5,6 @@ import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
 
 import { Messages } from "./messages";
-import { ChatHeader } from "./chat-header";
 
 type ChatProps = {
   id: string;
@@ -27,7 +26,6 @@ export function Chat({ id, initialMessages }: ChatProps) {
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader />
         <Messages
           id={id}
           isLoading={isLoading}
