@@ -72,10 +72,7 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
 
       {showCharacterButton && (
         <div className="flex justify-center mb-4">
-          <Button
-            variant="default"
-            onClick={() => router.push(`/character/${id}`)}
-          >
+          <Button variant="default" onClick={() => router.refresh()}>
             Sortir de la Taverne
           </Button>
         </div>
