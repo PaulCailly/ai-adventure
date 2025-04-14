@@ -123,7 +123,18 @@ export async function POST(request: Request) {
               stats,
             }) => {
               const openai = new OpenAI();
-              const imagePrompt = `Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}. They stand with ${physicalTraits}, wielding a ${weapon} with confidence. Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character. The scene features magical elements and mystical atmosphere, with soft ethereal lighting enhancing the fantasy aesthetic. The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering. Include subtle arcane symbols and wisps of magical energy surrounding the character.`;
+              const imagePrompt = `
+              Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
+              They stand with ${physicalTraits}, wielding a ${weapon} with confidence.
+              Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
+              The scene features magical elements and mystical atmosphere, with soft ethereal lighting enhancing the fantasy aesthetic.
+              The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
+              Include subtle arcane symbols and wisps of magical energy surrounding the character.
+              Focus on specific, visually representable elements.
+              Avoid ambiguous language that could be interpreted as including text.
+              Do not use any character on image.
+              Do not use any User Interface elements on image.
+              `;
 
               const imageResponse = await openai.images.generate({
                 model: "dall-e-3",
