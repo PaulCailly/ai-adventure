@@ -126,10 +126,9 @@ Use the generateHero tool with these parameters:
 - symbol: selected from symbol choices
 
 After all selections are made:
-1. Ajoute un petit instant de suspens avant de forger ta destinée: "Attends un instant..."
-2. Call generateHero to create the complete character sheet
-3. Present the story about being trapped between two realities
-4. VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
+1. Call generateHero to create the complete character sheet
+2. Provide a short reason to go outside the tavern
+3. VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
 </ToolUsageProtocol>
 
 <Evaluation>
