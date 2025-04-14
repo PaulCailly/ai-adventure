@@ -1,11 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+// Start of Selection
+import { memo, useState, useEffect } from "react";
 import type { ChatRequestOptions, Message, CreateMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
-import { memo } from "react";
 import Image from "next/image";
 
-import { Markdown } from "./markdown";
-
 import equal from "fast-deep-equal";
+import { Markdown } from "./markdown";
 
 type PreviewMessageProps = {
   message: Message;
@@ -21,6 +22,31 @@ const PurePreviewMessage = ({
   append,
   isLoading,
 }: PreviewMessageProps) => {
+  // For handling potential "thinking" content after 2 seconds
+  const [messageContent, setMessageContent] = useState<string>(message.content);
+
+  useEffect(() => {
+    // Only applies if the speaker is the assistant
+    if (message.role !== "assistant") return;
+
+    let timer: NodeJS.Timeout | null = null;
+
+    // If no content is immediately available, wait 2 seconds, then show a placeholder
+    if (!message.content || !message.content.trim()) {
+      timer = setTimeout(() => {
+        setMessageContent("Hmm.. Attends un instant..."); // Or "Hmm.. let me see..."
+      }, 2000);
+    } else {
+      setMessageContent(message.content);
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [message]);
+
   if (message.role === "user") return null;
 
   return (
@@ -45,11 +71,11 @@ const PurePreviewMessage = ({
           )}
 
           <div className="flex flex-col gap-2 w-full">
-            {message.content && (
+            {messageContent && (
               <div className="flex flex-row gap-2 items-start">
                 <div className="flex flex-col gap-4 text-xl">
                   <Markdown append={append} isLoading={isLoading}>
-                    {message.content as string}
+                    {messageContent}
                   </Markdown>
                 </div>
               </div>
