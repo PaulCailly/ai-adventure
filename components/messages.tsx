@@ -2,7 +2,7 @@
 import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -22,20 +22,15 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
   const [playerName, setPlayerName] = useState("");
-  const [audio] = useState(
+  const audioRef = useRef<HTMLAudioElement | null>(
     typeof Audio !== "undefined" ? new Audio("/bg.mp3") : null
   );
 
   // Set up audio loop when component mounts
   useEffect(() => {
+    const audio = audioRef.current;
     if (audio) {
       audio.loop = true;
-    }
-  }, [audio]);
-
-  // Play/pause audio based on messages existence
-  useEffect(() => {
-    if (messages.length > 0 && audio) {
       audio.play().catch((e) => console.log("Audio playback failed:", e));
     }
     return () => {
@@ -44,7 +39,7 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
         audio.currentTime = 0;
       }
     };
-  }, [messages.length, audio]);
+  }, []);
 
   const lastMessage = messages[messages.length - 1];
 
