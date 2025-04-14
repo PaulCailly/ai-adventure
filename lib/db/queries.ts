@@ -193,6 +193,15 @@ export async function createCharacter(
   }
 }
 
+export async function listCharacters() {
+  try {
+    return await db.select().from(character);
+  } catch (error) {
+    console.error("Failed to list characters from database");
+    throw error;
+  }
+}
+
 export async function getCharacterById({ id }: { id: string }) {
   try {
     const [selectedCharacter] = await db
@@ -206,15 +215,15 @@ export async function getCharacterById({ id }: { id: string }) {
   }
 }
 
-export async function getCharactersByChatId({ chatId }: { chatId: string }) {
+export async function getCharactersByUserId({ userId }: { userId: string }) {
   try {
     return await db
       .select()
       .from(character)
-      .where(eq(character.chatId, chatId))
+      .where(eq(character.userId, userId))
       .orderBy(desc(character.createdAt));
   } catch (error) {
-    console.error("Failed to get characters by chat id from database");
+    console.error("Failed to get characters by user id from database");
     throw error;
   }
 }

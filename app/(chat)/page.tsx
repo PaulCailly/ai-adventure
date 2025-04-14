@@ -3,26 +3,22 @@ import { Chat } from "@/components/chat";
 
 import { generateUUID } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
-import { getMostRecentChat, getCharactersByChatId } from "@/lib/db/queries";
+import { getCharactersByUserId, getMostRecentChat } from "@/lib/db/queries";
 import { auth } from "@/app/(auth)/auth";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Page() {
   const session = await auth();
-
   if (!session?.user?.id) {
     return redirect("/login");
   }
 
-  const mostRecentChat = await getMostRecentChat({ userId: session.user.id });
+  const characters = await getCharactersByUserId({
+    userId: session.user.id,
+  });
 
-  if (mostRecentChat) {
-    const characters = await getCharactersByChatId({
-      chatId: mostRecentChat.id,
-    });
-    if (characters && characters.length > 0) {
-      return redirect(`/character/${mostRecentChat.id}`);
-    }
+  if (characters && characters.length > 0) {
+    return redirect(`/character/${characters[0].id}`);
   }
 
   const id = generateUUID();
