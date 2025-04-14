@@ -28,20 +28,34 @@ export function Chat({ id, initialMessages }: ChatProps) {
     typeof Audio !== "undefined" ? new Audio("/bg.mp3") : null
   );
 
-  // Set up audio loop when component mounts
+  // Separate useEffect for initial audio setup
   useEffect(() => {
     if (audio) {
       audio.loop = true;
+      audio.volume = 0.5; // Adjust volume as needed
     }
   }, [audio]);
 
-  // Play/pause audio based on first message arrival
+  // Separate useEffect for audio playback
   useEffect(() => {
-    if (audio && messages.length === 1) {
-      audio.play().catch((e) => console.log("Audio playback failed:", e));
+    let isPlaying = false;
+
+    if (audio && messages.length === 1 && !isPlaying) {
+      const playAttempt = async () => {
+        try {
+          await audio.play();
+          isPlaying = true;
+        } catch (e) {
+          console.log("Audio playback failed:", e);
+        }
+      };
+      playAttempt();
     }
+
+    // Only stop audio when component unmounts, not on every message update
     return () => {
-      if (audio) {
+      if (audio && !messages.length) {
+        // Only cleanup when there are no messages
         audio.pause();
         audio.currentTime = 0;
       }
