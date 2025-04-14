@@ -3,6 +3,7 @@
 import type { Message } from "ai";
 import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
+import { useEffect, useState } from "react";
 
 import { Messages } from "./messages";
 
@@ -22,6 +23,30 @@ export function Chat({ id, initialMessages }: ChatProps) {
       mutate("/api/history");
     },
   });
+
+  const [audio] = useState(
+    typeof Audio !== "undefined" ? new Audio("/bg.mp3") : null
+  );
+
+  // Set up audio loop when component mounts
+  useEffect(() => {
+    if (audio) {
+      audio.loop = true;
+    }
+  }, [audio]);
+
+  // Play/pause audio based on messages existence
+  useEffect(() => {
+    if (audio) {
+      audio.play().catch((e) => console.log("Audio playback failed:", e));
+    }
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    };
+  }, [audio]);
 
   return (
     <>
