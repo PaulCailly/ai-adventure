@@ -10,24 +10,9 @@ import {
 } from "@/components/ui/sheet";
 import { Character } from "@/lib/db/schema";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import {
-  Trophy,
-  Star,
-  Users,
-  Activity,
-  Clover,
-  Smile,
-  Cross,
-  Dumbbell,
-  Brain,
-  Crown,
-  Target,
-  Heart,
-  Sparkles,
-  ChevronRight,
-  Share2,
-} from "lucide-react";
+import { Trophy, Box, Users, ChevronRight, Share2 } from "lucide-react";
 import Link from "next/link";
+import Inventory from "@/components/inventory";
 
 const trophees = [
   { id: "lecteur-de-lettre", label: "Lecteur de Lettre", grayscale: false },
@@ -39,109 +24,6 @@ const trophees = [
     id: "aventure-fantastique",
     label: "Aventure Fantastique",
     grayscale: true,
-  },
-];
-
-const talents = [
-  {
-    id: "agilite",
-    label: "Agilité",
-    icon: Activity,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "chance",
-    label: "Chance",
-    icon: Clover,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "charisme",
-    label: "Charisme",
-    icon: Smile,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "foi",
-    label: "Foi",
-    icon: Cross,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "force",
-    label: "Force",
-    icon: Dumbbell,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "intelligence",
-    label: "Intelligence",
-    icon: Brain,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "leadership",
-    label: "Leadership",
-    icon: Crown,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "magie",
-    label: "Magie",
-    icon: Sparkles,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "precision",
-    label: "Précision",
-    icon: Target,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
-  },
-  {
-    id: "vitalite",
-    label: "Vitalité",
-    icon: Heart,
-    levels: {
-      bronze: false,
-      silver: true,
-      gold: true,
-    },
   },
 ];
 
@@ -220,61 +102,14 @@ export function BottomBar({ characters, character }: BottomBarProps) {
         </Sheet>
         <Sheet>
           <SheetTrigger className="flex flex-col items-center justify-center">
-            <Star className="size-6" />
-            <span className="text-xs">Talents</span>
+            <Box className="size-6" />
+            <span className="text-xs">Inventaire</span>
           </SheetTrigger>
           <SheetContent
             side="bottom"
             className="max-w-[430px] mx-auto inset-x-0 overflow-auto"
           >
-            <ScrollArea className="h-[500px]">
-              <SheetHeader>
-                <SheetTitle>Talents</SheetTitle>
-                <SheetDescription>
-                  <div className="grid grid-cols-1 gap-6">
-                    {talents.map(({ id, label, icon: Icon, levels }) => (
-                      <div key={id} className="p-4 border rounded-lg shadow-sm">
-                        <div className="font-semibold mb-3 flex gap-2 items-center text-white">
-                          <span>{label}</span>
-                        </div>
-                        <div className="flex flex-row items-center justify-between">
-                          <div className="flex flex-col items-center">
-                            <img
-                              src={`/images/talents/bronze-${id}.jpg`}
-                              alt={`Bronze ${label}`}
-                              className={`w-20 h-20 ${
-                                levels.bronze ? "grayscale" : ""
-                              }`}
-                            />
-                            <span className="text-sm mt-1">Bronze</span>
-                          </div>
-                          <div className="flex flex-col items-center">
-                            <img
-                              src={`/images/talents/silver-${id}.jpg`}
-                              alt={`Silver ${label}`}
-                              className={`w-20 h-20 ${
-                                levels.silver ? "grayscale" : ""
-                              }`}
-                            />
-                            <span className="text-sm mt-1">Argent</span>
-                          </div>
-                          <div className="flex flex-col items-center">
-                            <img
-                              src={`/images/talents/gold-${id}.jpg`}
-                              alt={`Gold ${label}`}
-                              className={`w-20 h-20 ${
-                                levels.gold ? "grayscale" : ""
-                              }`}
-                            />
-                            <span className="text-sm mt-1">Or</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </SheetDescription>
-              </SheetHeader>
-            </ScrollArea>
+            <Inventory characterId={character.id} />
           </SheetContent>
         </Sheet>
         <Sheet>
@@ -318,7 +153,6 @@ export function BottomBar({ characters, character }: BottomBarProps) {
                     </Link>
                   ))}
               </ul>
-
               <button
                 onClick={handleShare}
                 className="w-full mt-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors flex items-center justify-center gap-2 text-white"

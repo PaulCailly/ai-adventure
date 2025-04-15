@@ -7,7 +7,7 @@ import {
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
 import { models } from "@/lib/ai/models";
-import { generateAdventurePrompt } from "@/lib/ai/prompts";
+import { generateAdventurePrompt } from "@/lib/ai/prompts/adventure";
 import {
   deleteChatById,
   getChatById,
@@ -16,6 +16,7 @@ import {
   getCharacterById,
   updateHero,
   addInventoryItem,
+  getInventoryItemsByCharacterId,
 } from "@/lib/db/queries";
 import {
   generateUUID,
@@ -70,6 +71,11 @@ export async function POST(request: Request) {
     return new Response("Character not found", { status: 404 });
   }
 
+  // Retrieve the hero's current inventory.
+  const inventoryItems = await getInventoryItemsByCharacterId({
+    characterId,
+  });
+
   // Save the incoming user message to associate it with this chat.
   const userMessageId = generateUUID();
   await saveMessages({
@@ -102,6 +108,7 @@ export async function POST(request: Request) {
           companion: character.companion,
           symbol: character.symbol,
           zone: "forest", // Default zone for now
+          inventoryItems,
         }),
         messages: coreMessages,
         maxSteps: 5,

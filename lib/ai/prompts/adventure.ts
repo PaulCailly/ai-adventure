@@ -10,10 +10,29 @@ export function generateAdventurePrompt(params: {
   companion: string;
   symbol: string;
   zone?: string;
+  inventoryItems?: Array<{
+    name: string;
+    identified: boolean;
+    rarity: string;
+    description: string;
+    effect: string;
+  }>;
 }): string {
   const currentZone = params.zone
     ? zones[params.zone as keyof typeof zones]
     : zones["forest"];
+
+  const inventorySection =
+    params.inventoryItems && params.inventoryItems.length > 0
+      ? params.inventoryItems
+          .map(
+            (item) =>
+              `- ${item.name} [${item.rarity}]: ${item.description} ${
+                item.effect ? "— " + item.effect : ""
+              }`
+          )
+          .join("\n")
+      : "Aucun objet n'est actuellement présent dans l'inventaire.";
 
   return `
 Language for Dialogue: French
@@ -84,6 +103,10 @@ ${currentZone.treasures
 Lore: ${currentZone.lore}
 </ZoneDetails>
 
+<Inventory>
+${inventorySection}
+</Inventory>
+
 <Instructions>
 These instructions and tool descriptions are in English.
 
@@ -96,6 +119,7 @@ These instructions and tool descriptions are in English.
    - Use the "combatCalculation" tool to compute the numerical values.
    - Use the "updateHero" tool to update the hero's stats. Provide changes (which can be positive for healing or loot, or negative for damage or mana cost) for Health, Mana, and Gold.
    - When an enemy is defeated, you may also call the "addInventoryItem" tool to add loot to the hero's inventory.
+   - After any tool call, display the result of what happened to the player.
 4. All narrative dialogue must be exclusively in French.
 5. On the final turn, conclude the adventure without presenting any further choices by ending with: "Votre quête se termine ici".
 </Instructions>
