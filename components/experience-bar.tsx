@@ -152,8 +152,8 @@ export default function ExperienceBar() {
           <span className="text-lg font-bold text-yellow-400">+1</span>
         </div>
       ))}
-      <Card className="bg-black/50 backdrop-blur-sm border-0">
-        <CardContent className="p-4">
+      <div className="border-0">
+        <div className="p-0">
           <div className="flex justify-between items-center text-white mb-2">
             <span className="font-semibold">Niveau {level}</span>
             <span className="tabular-nums">
@@ -161,8 +161,8 @@ export default function ExperienceBar() {
             </span>
           </div>
           <Progress value={progressPercent} className="h-3 w-full" />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
       <style jsx>{`
         @keyframes floatUp {
           0% {
