@@ -98,28 +98,30 @@ function CharacterCard({
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
           <div className="absolute top-4 inset-x-4 flex justify-between items-start">
-            <div className="flex flex-row gap-2">
-              <h2 className="h-fit text-xl font-bold text-white px-4 py-1.5 bg-black/50 backdrop-blur-md rounded-lg inline-block">
+            <div className="flex flex-col gap-2 min-w-0">
+              <Badge className="w-fit text-xs font-bold text-white bg-black/50 backdrop-blur-md rounded-lg inline-block truncate">
                 {character.name}
-              </h2>
-              <div className="h-fit flex flex-row gap-1">
-                <Badge
-                  variant="secondary"
-                  className="bg-black/50 backdrop-blur-sm"
-                >
-                  {character.race}
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="bg-black/50 backdrop-blur-sm w-fit"
-                >
-                  {character.class}
-                </Badge>
+              </Badge>
+              <div className="flex flex-row gap-2">
+                <div className="h-fit flex-shrink-0 flex flex-row gap-1">
+                  <Badge
+                    variant="secondary"
+                    className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
+                  >
+                    {character.race}
+                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="bg-black/50 backdrop-blur-sm text-xs whitespace-nowrap"
+                  >
+                    {character.class}
+                  </Badge>
+                </div>
               </div>
             </div>
             {isSelf && (
               <DropdownMenu>
-                <DropdownMenuTrigger className="bg-black/50 backdrop-blur-sm p-2 rounded-lg">
+                <DropdownMenuTrigger className="bg-black/50 backdrop-blur-sm p-2 rounded-lg flex-shrink-0">
                   <MoreVertical className="size-5 text-white" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -184,17 +186,20 @@ function CharacterCard({
       <Link href="#" onClick={handleForestClick} className="w-full">
         <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
           <CardContent className="py-4 px-5">
-            <div className="flex justify-between items-center gap-3">
-              <div className="flex flex-row gap-2">
-                <Swords className="h-5 w-5 text-primary" />
-                <div className="flex flex-row gap-2">
-                  <h3 className="text-sm font-medium text-foreground">
+            <div className="flex justify-between items-center gap-3 min-w-0">
+              <div className="flex flex-row gap-2 min-w-0">
+                <Swords className="h-5 w-5 text-primary flex-shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-foreground truncate">
                     Forêt des Murmures Anciens
                   </h3>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs font-normal">
-                Niveaux 11-15
+              <Badge
+                variant="outline"
+                className="text-xs font-normal flex-shrink-0"
+              >
+                Niv. 11-15
               </Badge>
             </div>
           </CardContent>
