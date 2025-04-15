@@ -129,12 +129,15 @@ export const Markdown = ({
   ) => Promise<string | null | undefined>;
   isLoading?: boolean;
 }) => {
+  // Sanitize out "**" to prevent button bugs
+  const sanitizedContent = children.replace(/\*\*/g, "");
+
   return (
     <ReactMarkdown
       remarkPlugins={remarkPlugins}
       components={components({ append, isLoading })}
     >
-      {children}
+      {sanitizedContent}
     </ReactMarkdown>
   );
 };
