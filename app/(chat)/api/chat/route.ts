@@ -96,7 +96,6 @@ export async function POST(request: Request) {
               name: z.string(),
               race: z.string(),
               class: z.string(),
-              physicalTraits: z.string(),
               weapon: z.string(),
               strength: z.string(),
               weakness: z.string(),
@@ -114,7 +113,6 @@ export async function POST(request: Request) {
               name,
               race,
               class: heroClass,
-              physicalTraits,
               weapon,
               strength,
               weakness,
@@ -125,7 +123,7 @@ export async function POST(request: Request) {
               const openai = new OpenAI();
               const imagePrompt = `
               Create a captivating fantasy portrait of a ${race} ${heroClass} named ${name}.
-              They stand with ${physicalTraits}, wielding a ${weapon} with confidence.
+              Welding a ${weapon} with confidence.
               Their ${strength} radiates through their pose, while hints of their ${weakness} add depth to their character.
               The scene features magical elements and mystical atmosphere, with soft ethereal lighting enhancing the fantasy aesthetic.
               The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
@@ -159,7 +157,6 @@ export async function POST(request: Request) {
                   name,
                   race,
                   class: heroClass,
-                  physicalTraits,
                   weapon,
                   strength,
                   weakness,

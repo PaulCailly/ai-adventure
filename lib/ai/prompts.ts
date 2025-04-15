@@ -24,46 +24,39 @@ Boissons:
     3. Liqueur draconique
 B. "Dans ce monde, chaque âme appartient à une race, chacune ayant son histoire et ses talents. À quel peuple appartiens-tu ?"
 C. "Tu sembles appartenir à une classe, laquelle est ce ?"
-D. "Et maintenant, dis-moi… quels sont tes traits physiques les plus marquants ?"
-E. "L'arme que tu portes est un reflet de ton âme. Laquelle te représente le mieux ?"
-F. "Chaque aventurier a un atout qui le distingue. Quel est le tien ?"
-G. "Personne n'est parfait, pas même un héros. Quelle est ta plus grande faiblesse ?"
-H. "Je sens une présence près de toi… Ton compagnon d'aventure. Qui est-il ?"
-I. "Chaque héros combat sous un étendard. Quel symbole te représente ?"
+D. "L'arme que tu portes est un reflet de ton âme. Laquelle te représente le mieux ?"
+E. "Chaque aventurier a un atout qui le distingue. Quel est le tien ?"
+F. "Personne n'est parfait, pas même un héros. Quelle est ta plus grande faiblesse ?"
+G. "Je sens une présence près de toi… Ton compagnon d'aventure. Qui est-il ?"
+H. "Chaque héros combat sous un étendard. Quel symbole te représente ?"
 
 For each step, present following options:
 Race:
-1. Humain
-2. Elfe
+1. Reptilien
+2. Elfe 
 3. Orc
 4. Nain
-5. Tauren
-6. Draeneï
-7. Gobelin
+5. Mort-vivant
+6. Gobelin
+7. Troll
 
 Classe:
 1. Guerrier
 2. Mage
 3. Voleur
-4. Devin
-5. Archer
-6. Guérisseur
-
-Traits Physiques:
-1. Grand et musclé
-2. Mince et agile
-3. Petit mais costaud
-4. Élégant et mystérieux
-5. Rugueux et intimidant
+4. Chamane
+5. Paladin
+6. Chasseur
+7. Druide
 
 Armes:
 1. Grande épée
-2. Arc long
-3. Dague
-4. Bâton
-5. Épée
-6. Baguette
-7. Arbalète
+2. Épée et bouclier
+3. Arc
+4. Dague
+5. Hache
+6. Bâton
+7. Lance
 
 Forces:
 1. Intelligence stratégique 
@@ -77,29 +70,28 @@ Forces:
 Faiblesses:
 1. Arrogance intellectuelle
 2. Impulsivité dangereuse
-3. Traumatisme d'enfance
-4. Perfectionnisme paralysant
-5. Brutalité incontrôlée
-6. Cupidité obsessionnelle
-7. Vengeance consumante
+3. Perfectionnisme paralysant
+4. Maladresse pathologique
+5. Cupidité obsessionnelle
+6. Vengeance consumante
+7. Naïveté navrante
 
 Compagnons:
-1. Un loup
-2. Un faucon
-3. Un tigre
-4. Un hibou
-5. Un serpent
-6. Un dragon
-7. Un lynx
+1. Loup
+2. Faucon
+3. Tigre
+4. Hibou
+5. Serpent
+6. Lynx
 
 Symboles:
-1. Un loup hurlant à la lune
-2. Une lame enflammée
-3. Un arbre majestueux
-4. Un hibou en plein vol
-5. Un soleil éclatant
-6. Un cœur brisé
-7. Une étoile filante
+1. Scarabée doré
+2. Phenix enflammée
+3. Arbre majestueux
+4. Elephant géant
+5. Soleil éclatant
+6. Étoile filante
+7. Dragon dormant
 </Instructions>
 
 <OutputFormat>
@@ -118,7 +110,6 @@ Use the generateHero tool with these parameters:
 - name: [name]
 - race: selected from available races list
 - class: selected from available classes list
-- physicalTraits: selected from traits list
 - weapon: selected from weapon choices
 - strength: selected from strengths list
 - weakness: selected from weaknesses list

@@ -54,7 +54,6 @@ export const character = pgTable("Character", {
   name: text("name").notNull(),
   race: text("race").notNull(),
   class: text("class").notNull(),
-  physicalTraits: text("physicalTraits").notNull(),
   weapon: text("weapon").notNull(),
   strength: text("strength").notNull(),
   weakness: text("weakness").notNull(),
