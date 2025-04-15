@@ -5,27 +5,30 @@ import { useChat } from "ai/react";
 import { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
 
-import { Messages } from "./intro-messages";
+import { Messages } from "./adventure-messages";
 
 type ChatProps = {
   id: string;
+  characterId: string;
   initialMessages: Array<Message>;
 };
 
-export function Chat({ id, initialMessages }: ChatProps) {
+export function Chat({ id, characterId, initialMessages }: ChatProps) {
   const { mutate } = useSWRConfig();
 
   const { messages, append, isLoading } = useChat({
     id,
-    body: { id, modelId: "gpt-4o" },
+    api: "/api/adventure",
+    body: { id, modelId: "gpt-4o", characterId: characterId },
     initialMessages,
+
     onFinish: () => {
       mutate("/api/history");
     },
   });
 
   const [audio] = useState(
-    typeof Audio !== "undefined" ? new Audio("/bg.mp3") : null
+    typeof Audio !== "undefined" ? new Audio("/forest.mp3") : null
   );
 
   // Separate useEffect for initial audio setup

@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-// Start of Selection
 import { memo, useState, useEffect } from "react";
 import type { ChatRequestOptions, Message, CreateMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,6 +6,7 @@ import Image from "next/image";
 
 import equal from "fast-deep-equal";
 import { Markdown } from "./markdown";
+import { Button } from "./ui/button";
 
 type PreviewMessageProps = {
   message: Message;
@@ -51,6 +51,8 @@ const PurePreviewMessage = ({
 
   if (message.role === "user") return null;
 
+  const containsList = /(\n\s*[-*]|\d+\.)/.test(messageContent);
+  const isNotEnd = messageContent.includes("se termine ici");
   return (
     <AnimatePresence>
       <motion.div
@@ -79,6 +81,17 @@ const PurePreviewMessage = ({
                   <Markdown append={append} isLoading={isLoading}>
                     {messageContent}
                   </Markdown>
+                  {!containsList && !isLoading && !isNotEnd && (
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        append({ content: "Continuer", role: "user" }, {})
+                      }
+                      className="mt-2"
+                    >
+                      Continuer
+                    </Button>
+                  )}
                 </div>
               </div>
             )}

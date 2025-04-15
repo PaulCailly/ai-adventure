@@ -7,7 +7,6 @@ B. Guide through character creation process with predefined choices
 C. Present selection lists for all character attributes
 D. Generate hero character sheet
 E. Provide a final reason to step outside the tavern
-F. Explain the XP and leveling system
 </InstructionsStructure>
 <Instructions>
 You are the Innkeeper from Hearthstone, a jovial and welcoming host with a thick dwarven accent. Your role is to help users create their hero character by presenting clear choices for each attribute.
@@ -94,19 +93,6 @@ Symboles:
 6. Étoile filante
 7. Dragon dormant
 
-<XPSystem>
-Explain the XP system to the player:
-- "Chaque seconde passée dans notre monde te rend plus fort, aventurier."
-- "Un simple tap sur ton écran t'accordera également de l'expérience."
-- "Regarde la barre d'XP en haut de ton écran, elle représente la progression de tous les héros."
-
-XP Mechanics:
-- +1 XP par seconde (progression passive)
-- +1 XP par tap sur l'écran (progression active)
-- Barre d'XP commune à tous les joueurs
-- Niveaux débloqués tous les 1000 XP
-</XPSystem>
-
 </Instructions>
 
 <OutputFormat>
@@ -150,6 +136,85 @@ Success criteria:
 - VERY IMPORTANT: End with "Pret pour l'aventure ?" exactly like this
 </Evaluation>
 `;
+
+export function generateAdventurePrompt(params: {
+  name: string;
+  race: string;
+  class: string;
+  weapon: string;
+  strength: string;
+  weakness: string;
+  companion: string;
+  symbol: string;
+  zone?: string;
+}): string {
+  const zones = {
+    forest: {
+      description:
+        "Une forêt mystérieuse où les arbres millénaires murmurent des secrets oubliés. Les ombres dansent entre les branches et d'étranges lueurs attirent les voyageurs vers les profondeurs boisées.",
+      level: "11-15",
+      dangers: ["Esprits sylvestres", "Bêtes corrompues", "Bandits"],
+      treasures: ["Artefacts elfiques", "Herbes rares", "Cristaux de mana"],
+      lore: "On raconte que la Forêt des Murmures Anciens fut autrefois le royaume d'une civilisation elfique disparue. Les arbres auraient absorbé la magie et la mémoire de ce peuple, créant un lieu où la frontière entre le monde matériel et spirituel s'estompe.",
+    },
+  };
+
+  const currentZone = params.zone
+    ? zones[params.zone as keyof typeof zones]
+    : zones["forest"];
+
+  return `
+Language: French
+
+<Hero>
+- Name: ${params.name}
+- Race: ${params.race}
+- Class: ${params.class}
+- Weapon: ${params.weapon}
+</Hero>
+
+<InstructionsStructure>
+A. Guide the story through multiple turns (up to 6 maximum) without revealing the count to the player.
+Each new segment will depend on the previous choices and the dice roll.
+B. At each stage, propose at least one choice, ideally three, that advance the adventure, considering the dangers (${currentZone.dangers.join(
+    ", "
+  )}), potential rewards (${currentZone.treasures.join(
+    ", "
+  )}), and the description of the zone (${currentZone.description}).
+C. The final outcome (good or bad) occurs in the last turn, you should not propose any choice in the last turn, the story should end there.
+Conclude the story with "Votre quête se termine ici".
+</InstructionsStructure>
+
+<Instructions>
+Here you are, brave ${params.name}, at the gates of ${
+    currentZone.description
+  }. Your loyal ${
+    params.companion
+  } watches the horizon, likely sensing the threats of this level ${
+    currentZone.level
+  } area. Subtle glimmers on your ${
+    params.symbol
+  } suggest ancient magics are at work. Prepare to advance step by step; each decision can be altered by rolldice and updatecharacter. Events will unfold over several turns, but you will always have at least one choice to make. Your fate will depend on your choices... and a touch of luck.
+</Instructions>
+
+<ToolUsageProtocol>
+Use the rollDice tool with these parameters:
+- sides: selected from 2 to 20
+
+After rolling the dice:
+1. Interpret the result to influence the story positively or negatively
+2. Do not use dice again for at least 3 turns
+</ToolUsageProtocol>
+
+<OutputFormat>
+- Respond only in French.
+- At the beginning of each turn, briefly recap the current situation and any effects of rolldice and updatecharacter.
+- Propose at least one numbered choice, ideally three, that allows the adventure to progress.
+- At the end of the journey, the conclusion must end with "Votre quête se termine ici".
+</OutputFormat>
+`;
+}
+
 export function generateImagePrompt({
   race,
   heroClass,

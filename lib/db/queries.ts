@@ -295,4 +295,29 @@ export async function updateGlobalProgress({
   }
 }
 
+export async function updateCharacterStats({
+  heroId,
+  stats,
+}: {
+  heroId: string;
+  stats: {
+    health: number;
+    mana: number;
+    attack: number;
+    defense: number;
+    speed: number;
+  };
+}) {
+  await db
+    .update(character)
+    .set({
+      health: stats.health,
+      mana: stats.mana,
+      attack: stats.attack,
+      defense: stats.defense,
+      speed: stats.speed,
+    })
+    .where(eq(character.id, heroId));
+}
+
 export { db };
