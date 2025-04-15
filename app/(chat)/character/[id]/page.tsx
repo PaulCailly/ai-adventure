@@ -54,7 +54,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <CharacterCard
             character={character}
             isSelf={isMainCharacter}
-            guildCount={userCharacters.length}
+            guildCount={allCharacters.length}
           />
         </ScrollArea>
         <BottomBar characters={allCharacters} character={userCharacters[0]} />
