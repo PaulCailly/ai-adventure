@@ -83,6 +83,9 @@ importers:
       bcrypt-ts:
         specifier: ^5.0.2
         version: 5.0.3
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -216,6 +219,9 @@ importers:
       '@tailwindcss/typography':
         specifier: ^0.5.15
         version: 0.5.16(tailwindcss@3.4.17)
+      '@types/chalk':
+        specifier: ^2.2.4
+        version: 2.2.4
       '@types/d3-scale':
         specifier: ^4.0.8
         version: 4.0.8
@@ -1570,6 +1576,10 @@ packages:
     resolution: {integrity: sha512-0wDLwCVF5V3x3b1SGXPCDcdsbDHMBe+lkFzBRaHeLvNi+nrrnZ1lA18u+OTWO8iSWU2GxUOCvlXtDuqftc1oiA==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
+
+  '@types/chalk@2.2.4':
+    resolution: {integrity: sha512-pb/QoGqtCpH2famSp72qEsXkNzcErlVmiXlQ/ww+5AddD8TmmYS7EWg5T20YiNCAiTgs8pMf2G8SJG5h/ER1ZQ==}
+    deprecated: This is a stub types definition. chalk provides its own type definitions, so you do not need this installed.
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -5194,6 +5204,10 @@ snapshots:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17
+
+  '@types/chalk@2.2.4':
+    dependencies:
+      chalk: 5.4.1
 
   '@types/cookie@0.6.0': {}
 

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChatRequestOptions, CreateMessage, Message } from "ai";
-import { PreviewMessage } from "./message";
+import { PreviewMessage } from "./adventure-message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -21,8 +21,7 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
 
-  const lastMessage = messages[messages.length - 1];
-
+  // If there are no messages, display the start button
   if (!messages.length) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -37,11 +36,30 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
         >
           Commencer l&apos;aventure
         </Button>
+        <Button variant="outline" onClick={() => router.push("/")}>
+          Retour à la Taverne
+        </Button>
       </div>
     );
   }
-  console.log(lastMessage?.content);
-  const showCharacterButton = lastMessage?.content
+
+  // Locate the index of the last user message
+  let lastUserIndex = -1;
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === "user") {
+      lastUserIndex = i;
+      break;
+    }
+  }
+
+  // Filter for all assistant messages that have been added after the last user message
+  const assistantMessages = messages
+    .slice(lastUserIndex + 1)
+    .filter((message) => message.role === "assistant");
+
+  // Check if the last assistant message includes a keyword to show a navigation button
+  const lastAssistantMessage = assistantMessages[assistantMessages.length - 1];
+  const showCharacterButton = lastAssistantMessage?.content
     ?.toLowerCase()
     .includes("se termine ici");
 
@@ -50,14 +68,14 @@ function PureMessages({ isLoading, messages, append, id }: MessagesProps) {
       ref={messagesContainerRef}
       className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
     >
-      {lastMessage && (
+      {assistantMessages.map((message) => (
         <PreviewMessage
-          key={lastMessage.id}
-          message={lastMessage}
+          key={message.id}
+          message={message}
           isLoading={isLoading}
           append={append}
         />
-      )}
+      ))}
 
       {showCharacterButton && (
         <div className="flex justify-center mb-4">
@@ -84,6 +102,5 @@ export const Messages = memo(PureMessages, (prevProps, nextProps) => {
   if (prevProps.isLoading !== nextProps.isLoading) return false;
   if (prevProps.isLoading && nextProps.isLoading) return false;
   if (prevProps.messages.length !== nextProps.messages.length) return false;
-
   return true;
 });
