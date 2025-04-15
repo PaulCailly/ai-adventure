@@ -22,6 +22,7 @@ import {
   sanitizeResponseMessages,
 } from "@/lib/utils";
 import { object, number, string } from "zod";
+import { AISDKExporter } from "langsmith/vercel";
 
 export async function POST(request: Request) {
   const {
@@ -171,6 +172,9 @@ export async function POST(request: Request) {
             console.error("Failed to save chat:", error);
           }
         },
+        experimental_telemetry: AISDKExporter.getSettings({
+          runName: "adventure-stream-text",
+        }),
       });
 
       result.mergeIntoDataStream(dataStream);

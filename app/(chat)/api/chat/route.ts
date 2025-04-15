@@ -7,7 +7,7 @@ import {
 import { symbol, z } from "zod";
 import { OpenAI } from "openai";
 import { put } from "@vercel/blob";
-
+import { AISDKExporter } from "langsmith/vercel";
 import { auth } from "@/app/(auth)/auth";
 import { customModel } from "@/lib/ai";
 import { models } from "@/lib/ai/models";
@@ -209,10 +209,9 @@ export async function POST(request: Request) {
             }
           }
         },
-        experimental_telemetry: {
-          isEnabled: true,
-          functionId: "stream-text",
-        },
+        experimental_telemetry: AISDKExporter.getSettings({
+          runName: "stream-text",
+        }),
       });
 
       result.mergeIntoDataStream(dataStream);
