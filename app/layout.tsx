@@ -7,25 +7,23 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://la-taverne-de-l-union.com"),
+  metadataBase: new URL("https://taverne-de-l-union.com"),
   title: "La Taverne de l'Union",
-  description:
-    "Welcome to the Taverne de l'Union, a place of adventure and camaraderie.",
+  description: "Là où l'aventure commence",
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  manifest: "https://la-taverne-de-l-union.com/manifest",
+  manifest: "https://taverne-de-l-union.com/manifest",
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "fr_FR",
     siteName: "La Taverne de l'Union",
     title: "La Taverne de l'Union",
-    description:
-      "Welcome to the Taverne de l'Union, a place of adventure and camaraderie.",
-    url: "https://la-taverne-de-l-union.com",
+    description: "Là où l'aventure commence",
+    url: "https://taverne-de-l-union.com",
     images: {
-      url: "https://la-taverne-de-l-union.com/og-image",
+      url: "https://taverne-de-l-union.com/og-image",
       width: 1200,
       height: 630,
       alt: "La Taverne de l'Union",
