@@ -5,6 +5,8 @@ import { put } from "@vercel/blob";
 import { auth } from "@/app/(auth)/auth";
 import { getChatById, deleteChatById } from "@/lib/db/queries";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
