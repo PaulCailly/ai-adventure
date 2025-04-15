@@ -69,3 +69,11 @@ export const character = pgTable("Character", {
 });
 
 export type Character = InferSelectModel<typeof character>;
+
+export const globalProgress = pgTable("GlobalProgress", {
+  id: integer("id").primaryKey().notNull().default(1),
+  xp: integer("xp").notNull().default(0),
+  lastUpdated: timestamp("lastUpdated").notNull().defaultNow(),
+});
+
+export type GlobalProgress = InferSelectModel<typeof globalProgress>;

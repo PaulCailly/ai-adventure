@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, Sword, Shield, Zap, Sparkle, ChevronLeft } from "lucide-react";
 
 import { BottomBar } from "@/components/bottom-bar";
+import ExperienceBar from "@/components/experience-bar";
 
 import {
   getCharacterById,
