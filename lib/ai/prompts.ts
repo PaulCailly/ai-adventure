@@ -163,7 +163,13 @@ export function generateImagePrompt({
   companion: string;
   symbol: string;
 }) {
-  return `
-  Create a full-length vertical portrait of a ${race} ${heroClass}, rendered in a style inspired by Akira anime featuring a vibrant color palette. The character wields a ${weapon} and is accompanied by a loyal ${companion}. Integrate a subtle, almost hidden representation of the symbol "${symbol}"—incorporated discreetly within their attire or the background details—to add an enigmatic layer to the narrative. The background should evoke a mystical, fantastical realm filled with enchanted landscapes, magical lighting, and intricate organic details reminiscent of epic fantasy tales. Ensure the final artwork is entirely free of any text, captions, or UI elements.
-    `;
+  return `Create a captivating fantasy portrait of a ${race} ${heroClass} equipped with a ${weapon}.
+  The character is accompanied by a loyal ${companion}.
+  The character is wearing a discreet necklace or a ring with a symbol of ${symbol}.
+  The scene features an environment characteristic of the ${race} race.
+  The art style should be highly detailed with rich textures, vibrant colors, and professional video game quality rendering using Unreal Engine 5.
+  Focus on specific, visually representable elements.
+  Avoid ambiguous language that could be interpreted as including text.
+  Do not use any character on image.
+  Do not use any User Interface elements on image.`;
 }
