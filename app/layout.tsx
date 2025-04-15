@@ -5,9 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
-import { registerInstrumentation } from "../instrumentation";
-
-registerInstrumentation();
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://taverne-de-l-union.com"),
