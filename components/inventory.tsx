@@ -27,19 +27,19 @@ export default function Inventory({ characterId }: InventoryProps) {
   const [loading, setLoading] = useState<boolean>(true);
 
   const rarityColors: Record<string, string> = {
-    common: "text-white",
-    uncommon: "text-green-500",
+    commun: "text-white",
+    "peu commun": "text-green-500",
     rare: "text-blue-500",
-    epic: "text-purple-500",
-    legendary: "text-orange-500",
+    épique: "text-purple-500",
+    légendaire: "text-orange-500",
   };
 
   const rarityBorderColors: Record<string, string> = {
-    common: "border-white",
-    uncommon: "border-green-500",
+    commun: "border-white",
+    "peu commun": "border-green-500",
     rare: "border-blue-500",
-    epic: "border-purple-500",
-    legendary: "border-orange-500",
+    épique: "border-purple-500",
+    légendaire: "border-orange-500",
   };
 
   function getRarityColor(rarity: string) {
@@ -134,7 +134,7 @@ export default function Inventory({ characterId }: InventoryProps) {
     );
   }
 
-  const totalSlots = 20;
+  const totalSlots = 24;
   const emptySlots = totalSlots - items.length;
 
   return (
@@ -167,7 +167,8 @@ export default function Inventory({ characterId }: InventoryProps) {
                       variant="outline"
                       className={`text-xs w-fit ${getRarityColor(item.rarity)}`}
                     >
-                      {item.rarity}
+                      {item.rarity.charAt(0).toUpperCase() +
+                        item.rarity.slice(1).toLowerCase()}
                     </Badge>
                   </div>
                 </div>
