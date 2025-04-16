@@ -97,7 +97,6 @@ const baseNames: Record<ItemSlot, string[]> = {
     "Cuissardes",
     "Brassière",
     "Haubert",
-    "Gambison",
     "Brigandine",
     "Cagoule",
     "Cervelière",

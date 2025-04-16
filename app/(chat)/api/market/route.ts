@@ -125,16 +125,15 @@ export async function POST(request: Request) {
         messages: coreMessages,
         maxSteps: 5,
         experimental_activeTools: [
-          "negocier",
-          "acheterObjet",
-          "vendreObjet",
-          "identifierObjet",
-          "ameliorerEquipement",
+          "negociate",
+          "buyItem",
+          "sellItem",
+          "identifyItem",
         ],
         tools: {
-          negocier: {
+          negociate: {
             description:
-              "Effectue une négociation avec le marchand en utilisant la mécanique de dés pour déterminer l'issue.",
+              "Conducts a negotiation with the merchant using dice mechanics to determine the outcome.",
             parameters: object({
               buyerSkill: number(),
               sellerSkill: number(),
@@ -155,7 +154,7 @@ export async function POST(request: Request) {
               if (sellerDice === undefined) {
                 sellerDice = Math.floor(Math.random() * sides) + 1;
               }
-              console.log(`💬 Début de négociation:
+              console.log(`💬 Start of negotiation:
   Buyer Skill: ${buyerSkill}, Seller Skill: ${sellerSkill}
   Dice sides: ${sides}
   Rolls -> Buyer: ${buyerDice}, Seller: ${sellerDice}`);
@@ -193,9 +192,9 @@ export async function POST(request: Request) {
               };
             },
           },
-          acheterObjet: {
+          buyItem: {
             description:
-              "Permet d'acheter un objet dans le marché. Indiquez les détails de l'objet à acheter et le coût.",
+              "Allows purchasing an item in the market. Provide the details of the item to be purchased and the cost.",
             parameters: object({
               item: object({
                 name: string(),
@@ -219,9 +218,9 @@ export async function POST(request: Request) {
               }
             },
           },
-          vendreObjet: {
+          sellItem: {
             description:
-              "Permet de vendre un objet de votre inventaire. Fournissez l'ID de l'objet à vendre.",
+              "Allows selling an item from your inventory. Provide the ID of the item to be sold.",
             parameters: object({
               itemId: string(),
             }),
@@ -234,41 +233,15 @@ export async function POST(request: Request) {
               }
             },
           },
-          identifierObjet: {
+          identifyItem: {
             description:
-              "Permet d'identifier un objet inconnu. Le coût est déduit de votre or et l'objet reçoit un nouveau nom ainsi qu'une description basée sur la lore de la Forêt des Murmures Anciens.",
+              "Allows identifying an unknown item. The cost is deducted from your gold and the item receives a new name and description based on the lore of the Forest of Ancient Whispers.",
             parameters: object({
               itemId: string(),
             }),
             execute: async ({ itemId }: { itemId: string }) => {
               try {
                 const result = await identifyItem({ itemId });
-                return result;
-              } catch (error: any) {
-                return { error: error.message };
-              }
-            },
-          },
-          ameliorerEquipement: {
-            description:
-              "Permet d'améliorer un équipement existant. Fournissez l'ID de l'objet et le pourcentage d'amélioration désiré.",
-            parameters: object({
-              itemId: string(),
-              improvementPercentage: number(),
-            }),
-            execute: async ({
-              itemId,
-              improvementPercentage,
-            }: {
-              itemId: string;
-              improvementPercentage: number;
-            }) => {
-              try {
-                const result = await improveItem({
-                  itemId,
-                  improvementPercentage,
-                  character,
-                });
                 return result;
               } catch (error: any) {
                 return { error: error.message };
