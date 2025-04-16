@@ -662,7 +662,7 @@ Item characteristics: ${item.name}, Buffs - ${JSON.stringify(
   )}, Quality - ${item.rarity}
 Item types and their base names:
 - Weapon: ["Épée", "Hache", "Dague", "Lance", "Arc", "Masse", "Faux", "Bâton", "Fléau", "Glaive", "Sabre", "Katana", "Trident", "Couteau", "Marteau", "Pique", "Rapière", "Épieu", "Gourdin", "Fronde", "Arbalète", "Cimeterre", "Claymore", "Estoc", "Javelot"]
-- Armor: ["Plastron", "Heaume", "Grèves", "Cuirasse", "Casque", "Jambières", "Gantelets", "Bouclier", "Brassards", "Cotte", "Targe", "Pansière", "Spallières", "Gorgerin", "Cuissardes", "Brassière", "Vambraces", "Haubert", "Gambison", "Brigandine", "Camisole", "Cagoule", "Cervelière", "Cuirasse", "Garde"]
+- Armor: ["Plastron", "Heaume", "Grèves", "Cuirasse", "Casque", "Jambières", "Gantelets", "Bouclier", "Brassards", "Cotte", "Targe", "Pansière", "Spallières", "Gorgerin", "Cuissardes", "Brassière", "Haubert", "Gambison", "Brigandine", "Camisole", "Cagoule", "Cervelière", "Cuirasse", "Garde"]
 - Accessory: ["Bague", "Amulette", "Bracelet", "Collier", "Talisman", "Médaillon", "Broche", "Pendentif", "Charme", "Gemme", "Sceau", "Diadème", "Anneau", "Bijou", "Ornement", "Chapelet"]
 
 Item qualities and their distributions:
