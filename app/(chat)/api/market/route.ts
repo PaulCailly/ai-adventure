@@ -9,14 +9,15 @@ import { customModel } from "@/lib/ai";
 import { models } from "@/lib/ai/models";
 import { generateMarketPrompt } from "@/lib/ai/prompts/market";
 import {
-  db,
   deleteChatById,
   getChatById,
   saveChat,
   saveMessages,
   getCharacterById,
-  updateHero,
   getInventoryItemsByCharacterId,
+  buyItem,
+  sellItem,
+  improveItem,
 } from "@/lib/db/queries";
 import {
   generateUUID,
@@ -24,8 +25,7 @@ import {
   sanitizeResponseMessages,
 } from "@/lib/utils";
 import { object, number, string } from "zod";
-import { inventoryItem } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+
 import { POST as identifyItem } from "@/app/api/inventory/identify/route";
 
 export async function POST(request: Request) {
@@ -208,30 +208,16 @@ export async function POST(request: Request) {
               cost: number(),
             }),
             execute: async ({ item, cost }: { item: any; cost: number }) => {
-              if (character.gold < cost) {
-                return { error: "Not enough gold to purchase the item" };
+              try {
+                const result = await buyItem({
+                  character,
+                  cost,
+                  item,
+                });
+                return result;
+              } catch (error: any) {
+                return { error: error.message };
               }
-              await updateHero({
-                heroId: character.id,
-                gold: -cost,
-                health: 0,
-                mana: 0,
-              });
-              const newItem = {
-                id: generateUUID(),
-                characterId: character.id,
-                name: item.name,
-                identified: true,
-                rarity: item.rarity,
-                description: item.description,
-                itemType: item.itemType,
-                buffs: item.buffs || {},
-              };
-              await db.insert(inventoryItem).values(newItem);
-              return {
-                message: `Item purchased successfully for ${cost} gold`,
-                item: newItem,
-              };
             },
           },
           vendreObjet: {
@@ -241,33 +227,12 @@ export async function POST(request: Request) {
               itemId: string(),
             }),
             execute: async ({ itemId }: { itemId: string }) => {
-              const [item] = await db
-                .select()
-                .from(inventoryItem)
-                .where(eq(inventoryItem.id, itemId));
-              if (!item) {
-                return { error: "Item not found" };
+              try {
+                const result = await sellItem(itemId);
+                return result;
+              } catch (error: any) {
+                return { error: error.message };
               }
-              const sellValues: Record<string, number> = {
-                common: 10,
-                uncommon: 25,
-                rare: 50,
-                epic: 100,
-                legendary: 200,
-              };
-              const sellValue = sellValues[item.rarity.toLowerCase()] || 0;
-              await db
-                .delete(inventoryItem)
-                .where(eq(inventoryItem.id, itemId));
-              await updateHero({
-                heroId: item.characterId,
-                gold: sellValue,
-                health: 0,
-                mana: 0,
-              });
-              return {
-                message: `Item sold successfully. You received ${sellValue} gold.`,
-              };
             },
           },
           identifierObjet: {
@@ -304,42 +269,16 @@ export async function POST(request: Request) {
               itemId: string;
               improvementPercentage: number;
             }) => {
-              const [item] = await db
-                .select()
-                .from(inventoryItem)
-                .where(eq(inventoryItem.id, itemId));
-              if (!item) {
-                return { error: "Item not found" };
+              try {
+                const result = await improveItem({
+                  itemId,
+                  improvementPercentage,
+                  character,
+                });
+                return result;
+              } catch (error: any) {
+                return { error: error.message };
               }
-              if (
-                !["equipable", "weapon", "armor", "accessory"].includes(
-                  item.itemType
-                )
-              ) {
-                return { error: "This item type cannot be improved" };
-              }
-              const improvementCost = improvementPercentage * 5;
-              if (character.gold < improvementCost) {
-                return { error: "Not enough gold to improve the item" };
-              }
-              await updateHero({
-                heroId: character.id,
-                gold: -improvementCost,
-                health: 0,
-                mana: 0,
-              });
-
-              const newDescription = `${item.description} (Amélioré de ${improvementPercentage}%)`;
-              await db
-                .update(inventoryItem)
-                .set({
-                  description: newDescription,
-                })
-                .where(eq(inventoryItem.id, itemId));
-              return {
-                message: `Item improved successfully for ${improvementCost} gold`,
-                newDescription,
-              };
             },
           },
         },
