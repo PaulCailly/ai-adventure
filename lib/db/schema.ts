@@ -81,7 +81,8 @@ export const inventoryItem = pgTable("InventoryItem", {
   identified: boolean("identified").notNull().default(false),
   rarity: text("rarity").notNull(),
   description: text("description").notNull(),
-  effect: text("effect").notNull(),
+  itemType: text("itemType").notNull(),
+  buffs: json("buffs").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 });
 

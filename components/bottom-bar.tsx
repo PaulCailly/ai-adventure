@@ -13,19 +13,8 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Trophy, Box, Users, ChevronRight, Share2 } from "lucide-react";
 import Link from "next/link";
 import Inventory from "@/components/inventory";
-
-const trophees = [
-  { id: "lecteur-de-lettre", label: "Lecteur de Lettre", grayscale: false },
-  { id: "taverne-debloquee", label: "Taverne Débloquée", grayscale: false },
-  { id: "balade-en-foret", label: "Balade en Forêt", grayscale: true },
-  { id: "habit-de-heros", label: "Habit de Héros", grayscale: true },
-  { id: "saut-de-l-ange", label: "Saut de l'Ange", grayscale: true },
-  {
-    id: "aventure-fantastique",
-    label: "Aventure Fantastique",
-    grayscale: true,
-  },
-];
+import Trophies from "@/components/trophies";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 interface BottomBarProps {
   characters: Character[];
@@ -67,34 +56,11 @@ export function BottomBar({ characters, character }: BottomBarProps) {
             side="bottom"
             className="max-w-[430px] mx-auto inset-x-0 overflow-auto"
           >
-            <ScrollArea className="h-[500px]">
+            <ScrollArea>
               <SheetHeader>
                 <SheetTitle>Trophées</SheetTitle>
                 <SheetDescription>
-                  <div className="grid grid-cols-3 gap-6">
-                    {trophees.map(({ id, label, grayscale }) => (
-                      <div key={id} className="p-4 border rounded-lg shadow-sm">
-                        <div className="flex flex-col items-center">
-                          <div
-                            className={`h-20 w-20 bg-center bg-cover rounded-lg ${
-                              grayscale ? "grayscale" : ""
-                            }`}
-                            style={{
-                              backgroundImage: `url(/images/trophees/${id}.png)`,
-                              backgroundSize: "cover",
-                            }}
-                          />
-                          <span
-                            className={`mt-2 text-xs text-center ${
-                              !grayscale ? "text-white" : ""
-                            }`}
-                          >
-                            {label}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <Trophies />
                 </SheetDescription>
               </SheetHeader>
             </ScrollArea>
@@ -109,7 +75,14 @@ export function BottomBar({ characters, character }: BottomBarProps) {
             side="bottom"
             className="max-w-[430px] mx-auto inset-x-0 overflow-auto"
           >
-            <Inventory characterId={character.id} />
+            <ScrollArea>
+              <SheetHeader>
+                <VisuallyHidden>
+                  <SheetTitle>Inventaire</SheetTitle>
+                </VisuallyHidden>
+              </SheetHeader>
+              <Inventory characterId={character.id} />
+            </ScrollArea>
           </SheetContent>
         </Sheet>
         <Sheet>
@@ -130,22 +103,22 @@ export function BottomBar({ characters, character }: BottomBarProps) {
               <ul className="space-y-2">
                 {characters
                   .filter((c) => c.id !== character.id)
-                  .map((character: Character) => (
+                  .map((char: Character) => (
                     <Link
-                      key={character.id}
-                      href={`/character/${character.id}`}
+                      key={char.id}
+                      href={`/character/${char.id}`}
                       className="w-full text-white font-semibold flex items-center"
                     >
                       <li className="w-full flex items-center p-2 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors">
                         <img
-                          src={character.avatar || "/images/default-avatar.png"}
-                          alt={character.name}
+                          src={char.avatar || "/images/default-avatar.png"}
+                          alt={char.name}
                           className="w-16 h-16 rounded-full mr-3 object-cover object-[center_40%]"
                         />
                         <div className="flex-1">
-                          {character.name}
+                          {char.name}
                           <div className="text-xs text-muted-foreground">
-                            {character.race} - {character.class}
+                            {char.race} - {char.class}
                           </div>
                         </div>
                         <ChevronRight className="ml-2 text-white" />

@@ -6,6 +6,7 @@ import { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
 
 import { Messages } from "./adventure-messages";
+import { Button } from "@/components/ui/button"; // Import Button component
 
 type ChatProps = {
   id: string;
@@ -65,6 +66,22 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
     };
   }, [audio, messages.length]);
 
+  // Check if the last message has no content
+  const lastMessage = messages[messages.length - 1];
+  const [showContinueButton, setShowContinueButton] = useState(false);
+
+  useEffect(() => {
+    if (lastMessage && !lastMessage.content) {
+      const timer = setTimeout(() => {
+        setShowContinueButton(true);
+      }, 3000); // Show button after 3 seconds
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowContinueButton(false);
+    }
+  }, [lastMessage]);
+
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
@@ -74,6 +91,18 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
           messages={messages}
           append={append}
         />
+        {showContinueButton && (
+          <div className="flex flex-col justify-center items-center h-full">
+            <Button
+              variant="default"
+              onClick={() => append({ role: "user", content: "continuer" })}
+            >
+              Continuer
+            </Button>
+            <div className="w-32 h-32 bg-gray-300 mt-4"></div>{" "}
+            {/* Skeleton placeholder */}
+          </div>
+        )}
       </div>
     </>
   );
