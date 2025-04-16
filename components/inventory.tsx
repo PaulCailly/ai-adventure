@@ -9,7 +9,7 @@ import {
   BadgeSwissFranc,
   Sword,
   Shield,
-  Diamond,
+  Gem,
   Beer,
   Box,
 } from "lucide-react";
@@ -160,7 +160,7 @@ export default function Inventory({ characterId }: InventoryProps) {
     } else if (item.itemType === "armor") {
       return <Shield className="h-8 w-8" />;
     } else if (item.itemType === "accessory") {
-      return <Diamond className="h-8 w-8" />;
+      return <Gem className="h-8 w-8" />;
     } else if (item.itemType === "consumable") {
       return <Beer className="h-8 w-8" />;
     }
