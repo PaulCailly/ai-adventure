@@ -52,7 +52,20 @@ export async function POST(request: Request) {
     return new Response("Model not found", { status: 404 });
   }
 
-  const coreMessages = convertToCoreMessages(messages);
+  // Before converting messages, sanitize out any incomplete tool invocations.
+  const sanitizedMessages = messages.map((message) => {
+    if (message.toolInvocations) {
+      return {
+        ...message,
+        toolInvocations: message.toolInvocations.filter(
+          (invocation) => invocation.state === "result"
+        ),
+      };
+    }
+    return message;
+  });
+
+  const coreMessages = convertToCoreMessages(sanitizedMessages);
   const userMessage = getMostRecentUserMessage(coreMessages);
 
   if (!userMessage) {
