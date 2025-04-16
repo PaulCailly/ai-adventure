@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/app/(auth)/auth";
-
-// Use a global in-memory store for cooldown timestamps.
-// This ensures the same object is used across multiple endpoints.
-globalThis.healTimestamps = globalThis.healTimestamps || {};
-const healTimestamps: { [characterId: string]: number } =
-  globalThis.healTimestamps;
+import { getHealTimestamp } from "@/lib/db/queries";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -22,12 +17,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const cooldownMs = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  const lastHeal = healTimestamps[characterId] || 0;
+  const cooldownMs = 24 * 60 * 60 * 1000;
+  const healRecord = await getHealTimestamp({ characterId });
+  const lastHeal = healRecord ? new Date(healRecord.lastHeal).getTime() : 0;
   const now = Date.now();
+
   let remaining = 0;
   if (now - lastHeal < cooldownMs) {
-    remaining = Math.ceil((cooldownMs - (now - lastHeal)) / 1000); // remaining seconds
+    remaining = Math.ceil((cooldownMs - (now - lastHeal)) / 1000);
   }
 
   return NextResponse.json({ cooldownRemaining: remaining });
