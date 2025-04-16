@@ -86,7 +86,10 @@ const PurePreviewMessage = ({
                     <Button
                       variant="outline"
                       onClick={() =>
-                        append({ content: "Continuer", role: "user" }, {})
+                        append(
+                          { content: "<continuer la narration>", role: "user" },
+                          {}
+                        )
                       }
                       className="mt-2"
                     >

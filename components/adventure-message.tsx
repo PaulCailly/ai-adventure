@@ -73,7 +73,7 @@ const PurePreviewMessage = ({
               onClick={() =>
                 append({
                   role: "user",
-                  content: "continuer",
+                  content: "<continuer la narration>",
                 })
               }
             >
@@ -93,7 +93,54 @@ const PurePreviewMessage = ({
             onClick={() =>
               append({
                 role: "user",
-                content: "continuer",
+                content: "<continuer la narration>",
+              })
+            }
+          >
+            Continuer
+          </Button>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  if (message.toolInvocations && message.toolInvocations.length > 0) {
+    const hasUpdateHero = message.toolInvocations.some(
+      (invocation) =>
+        invocation.toolName === "updateHero" && invocation.state === "result"
+    );
+
+    if (hasUpdateHero) {
+      return (
+        <div className="flex flex-col items-center gap-4">
+          {showContinueButton && (
+            <Button
+              variant="default"
+              onClick={() =>
+                append({
+                  role: "user",
+                  content: "<continuer la narration>",
+                })
+              }
+            >
+              Continuer
+            </Button>
+          )}
+        </div>
+      );
+    }
+
+    // You can add more tool-specific displays here
+    if (showContinueButton) {
+      return (
+        <div className="flex justify-center">
+          <Button
+            variant="default"
+            onClick={() =>
+              append({
+                role: "user",
+                content: "<continuer la narration>",
               })
             }
           >
@@ -141,7 +188,10 @@ const PurePreviewMessage = ({
                     <Button
                       variant="outline"
                       onClick={() =>
-                        append({ content: "Continuer", role: "user" }, {})
+                        append(
+                          { content: "<continuer la narration>", role: "user" },
+                          {}
+                        )
                       }
                       className="mt-2"
                     >
