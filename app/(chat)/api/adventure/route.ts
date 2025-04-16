@@ -17,6 +17,7 @@ import {
   updateHero,
   addInventoryItem,
   getInventoryItemsByCharacterId,
+  consumeConsumableItem,
 } from "@/lib/db/queries";
 import {
   generateUUID,
@@ -153,6 +154,7 @@ export async function POST(request: Request) {
           "combatCalculation",
           "updateHero",
           "generateAndAddLoot",
+          "useConsumable",
         ],
         tools: {
           combatCalculation: {
@@ -331,6 +333,26 @@ export async function POST(request: Request) {
               } catch (error) {
                 console.error("Error in generateAndAddLoot tool:", error);
                 throw new Error("Failed to add loot item to inventory.");
+              }
+            },
+          },
+          useConsumable: {
+            description:
+              "Uses a consumable item (e.g., potion) from the hero's inventory by providing its itemId.",
+            parameters: object({
+              itemId: string(),
+            }),
+            execute: async ({ itemId }: { itemId: string }) => {
+              try {
+                console.log(`Using consumable item with itemId: ${itemId}`);
+                const result = await consumeConsumableItem({
+                  heroId: characterId,
+                  itemId,
+                });
+                return result;
+              } catch (error) {
+                console.error("Error in useConsumable tool:", error);
+                throw new Error("Failed to use consumable item");
               }
             },
           },

@@ -1,5 +1,3 @@
-import { InventoryItem } from "@/lib/db/schema";
-
 interface Danger {
   name: string;
   health: number;
@@ -45,7 +43,10 @@ export const zones: Record<string, Zone> = {
 
     Au cœur de la forêt se trouve l'ancienne cité elfique d'Eldoria, maintenant en ruines. On dit que la bibliothèque de la ville détient la clé pour briser la malédiction, mais elle est gardée par une magie puissante et des créatures dangereuses. Seuls les aventuriers les plus courageux et les plus rusés osent la chercher.
 
-    La Forêt des Murmures Anciens est un lieu de beauté et de danger, où la ligne entre la réalité et le mythe est floue. C'est une terre d'intrigues profondes, où chaque ombre cache un secret et chaque murmure raconte une histoire.`,
+    La Forêt des Murmures Anciens est un lieu de beauté et de danger, où la ligne entre la réalité et le mythe est floue. C'est une terre d'intrigues profondes, où chaque ombre cache un secret et chaque murmure raconte une histoire.
+    
+    Selon la légende le héro qui sauvera la forêt d'Elaria sera recompensé d'une la première partie de la Formule Secrète: "Pomme de terre".
+    `,
 
     dangers: [
       {
