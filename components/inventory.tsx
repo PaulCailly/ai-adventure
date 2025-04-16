@@ -7,7 +7,6 @@ import {
   Loader2,
   Box,
   Trash2,
-  CheckCircle,
   BadgeSwissFranc,
 } from "lucide-react";
 import {
@@ -27,19 +26,27 @@ export default function Inventory({ characterId }: InventoryProps) {
   const [loading, setLoading] = useState<boolean>(true);
 
   const rarityColors: Record<string, string> = {
-    commun: "text-white",
-    "peu commun": "text-green-500",
+    common: "text-white",
+    uncommon: "text-green-500",
     rare: "text-blue-500",
-    épique: "text-purple-500",
-    légendaire: "text-orange-500",
+    epic: "text-purple-500",
+    legendary: "text-orange-500",
   };
 
   const rarityBorderColors: Record<string, string> = {
-    commun: "border-white",
-    "peu commun": "border-green-500",
+    common: "border-white",
+    uncommon: "border-green-500",
     rare: "border-blue-500",
-    épique: "border-purple-500",
-    légendaire: "border-orange-500",
+    epic: "border-purple-500",
+    legendary: "border-orange-500",
+  };
+
+  const i18nRarity: Record<string, string> = {
+    common: "Commun",
+    uncommon: "Peu commun",
+    rare: "Rare",
+    epic: "Épique",
+    legendary: "Légendaire",
   };
 
   function getRarityColor(rarity: string) {
@@ -48,6 +55,10 @@ export default function Inventory({ characterId }: InventoryProps) {
 
   function getRarityBorderColor(rarity: string) {
     return rarityBorderColors[rarity.toLowerCase()] || "border-white";
+  }
+
+  function getRarityDisplay(rarity: string) {
+    return i18nRarity[rarity.toLowerCase()] || rarity;
   }
 
   useEffect(() => {
@@ -168,8 +179,7 @@ export default function Inventory({ characterId }: InventoryProps) {
                       variant="outline"
                       className={`text-xs w-fit ${getRarityColor(item.rarity)}`}
                     >
-                      {item.rarity.charAt(0).toUpperCase() +
-                        item.rarity.slice(1).toLowerCase()}
+                      {getRarityDisplay(item.rarity)}
                     </Badge>
                   </div>
                 </div>
