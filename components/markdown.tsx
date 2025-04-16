@@ -132,12 +132,15 @@ export const Markdown = ({
   // Sanitize out "**" to prevent button bugs
   const sanitizedContent = children.replace(/\*\*/g, "");
 
+  // replace all kind of list by number list
+  const fixedContent = sanitizedContent.replace(/^(\d+)\. /gm, "$1. ");
+
   return (
     <ReactMarkdown
       remarkPlugins={remarkPlugins}
       components={components({ append, isLoading })}
     >
-      {sanitizedContent}
+      {fixedContent}
     </ReactMarkdown>
   );
 };

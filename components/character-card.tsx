@@ -11,6 +11,7 @@ import {
   Users,
   Swords,
   PlusCircle,
+  ShoppingCart,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -342,6 +343,21 @@ function CharacterCard({
     router.push(`/adventure`);
   };
 
+  // New handler for the Market button with opening hours check
+  const handleMarketClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const currentHour = new Date().getHours();
+    const marketOpenHour = 9; // Market opens at 9 AM
+    const marketCloseHour = 23; // Market closes at 5 PM
+
+    if (currentHour < marketOpenHour || currentHour >= marketCloseHour) {
+      toast.error(`Le marché est fermé. Revenez plus tard !`);
+      return;
+    }
+
+    router.push(`/market`);
+  };
+
   return (
     <div className="px-4 py-6 flex flex-col gap-4 pb-48">
       <Card className="w-full border bg-gradient-to-b from-background/95 to-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden">
@@ -482,6 +498,32 @@ function CharacterCard({
           </CardContent>
         </Card>
       </Link>
+
+      {/* Market button */}
+      {character.name !== "Lucas" && (
+        <Link href="#" onClick={handleMarketClick} className="w-full">
+          <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+            <CardContent className="py-4 px-5">
+              <div className="flex justify-between items-center gap-3 min-w-0">
+                <div className="flex flex-row gap-2 min-w-0 items-center">
+                  <ShoppingCart className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-medium text-foreground truncate">
+                      Marché
+                    </h3>
+                  </div>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="text-xs font-normal flex-shrink-0"
+                >
+                  Ouvert de 9h à 23h
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      )}
 
       {/* Forest button */}
       <Link href="#" onClick={handleForestClick} className="w-full">

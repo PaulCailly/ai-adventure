@@ -19,6 +19,15 @@ interface Zone {
 }
 
 export const zones: Record<string, Zone> = {
+  market: {
+    description: `Un marché animé où se mêlent marchands, artisans et aventuriers en quête de bonnes affaires. 
+        Les stands débordent de potions, d'artefacts et d'équipements rares.`,
+    level: "1-10",
+    dangers: [],
+    lore: `Au cœur de la ville, le marché est le centre du commerce et des échanges. 
+        Ici, les aventuriers peuvent acheter des potions réparatrices, vendre leurs butins, ou encore payer pour l'identification et l'amélioration d'objets. 
+        L'ambiance chaleureuse et animée contraste avec la rudesse de la vie en pleine aventure.`,
+  },
   forest: {
     description: `Une forêt mystérieuse où les arbres anciens murmurent des secrets oubliés.
         Les ombres dansent entre les branches et des lueurs étranges attirent les voyageurs dans les profondeurs boisées.`,
