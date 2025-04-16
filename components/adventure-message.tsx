@@ -59,7 +59,8 @@ const PurePreviewMessage = ({
   if (message.toolInvocations && message.toolInvocations.length > 0) {
     const hasDiceRolls = message.toolInvocations.some(
       (invocation) =>
-        invocation.toolName === "rollDice" && invocation.state === "result"
+        invocation.toolName === "combatCalculation" &&
+        invocation.state === "result"
     );
 
     if (hasDiceRolls) {

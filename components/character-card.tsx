@@ -57,6 +57,10 @@ interface StatDropdownProps {
   variant?: "inline" | "grid";
 }
 
+const computeEffectiveStat = (base: number, buffPercentage: number): number => {
+  return Math.round(base * (1 + buffPercentage / 100));
+};
+
 // A small helper that wraps a stat value with a dropdown.
 // In variant "inline" it is rendered as an inline row (e.g. for health/mana overlay),
 // while in variant "grid" it shows the icon above the value and label.
@@ -68,19 +72,20 @@ const StatDropdown = ({
   icon,
   variant = "inline",
 }: StatDropdownProps) => {
+  const effectiveStat = computeEffectiveStat(base, buffTotal);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         {variant === "grid" ? (
           <div className="flex flex-col items-center p-2 bg-muted/50 rounded-lg cursor-pointer">
             {icon}
-            <span className="font-bold">{base + buffTotal}</span>
+            <span className="font-bold">{effectiveStat}</span>
             <span className="text-xs text-muted-foreground">{label}</span>
           </div>
         ) : (
           <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 cursor-pointer">
             {icon}
-            <span className="text-white font-bold">{base + buffTotal}</span>
+            <span className="text-white font-bold">{effectiveStat}</span>
           </div>
         )}
       </DropdownMenuTrigger>
@@ -90,8 +95,8 @@ const StatDropdown = ({
             <strong>{label}</strong>
           </div>
           <div>Base: {base}</div>
-          <div>Bonus: {buffTotal}</div>
-          <div>Total: {base + buffTotal}</div>
+          <div>Bonus: {buffTotal}%</div>
+          <div>Total: {effectiveStat}</div>
           {buffDetails.length > 0 && (
             <>
               <div className="mt-2">
@@ -101,7 +106,9 @@ const StatDropdown = ({
                 {buffDetails.map((detail, index) => (
                   <li key={index}>
                     {detail.name}:{" "}
-                    {detail.value > 0 ? `+${detail.value}` : detail.value}
+                    {detail.value > 0
+                      ? `+${detail.value}%`
+                      : `${detail.value}%`}
                   </li>
                 ))}
               </ul>
