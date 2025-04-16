@@ -464,81 +464,85 @@ function CharacterCard({
         </CardContent>
       </Card>
 
-      {/* Heal button */}
-      <Link href="#" onClick={handleHeal} className="w-full">
-        <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
-          <CardContent className="py-4 px-5">
-            <div className="flex justify-between items-center gap-3 min-w-0">
-              <div className="flex flex-row gap-2 min-w-0 items-center">
-                <PlusCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-foreground truncate">
-                    Se reposer
-                  </h3>
-                </div>
-              </div>
-              <Badge
-                variant="outline"
-                className="text-xs font-normal flex-shrink-0"
-              >
-                {cooldownRemaining > 0
-                  ? formatTime(cooldownRemaining)
-                  : "Disponible"}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </Link>
-
-      {/* Market button */}
-      {character.name !== "Lucas" && (
-        <Link href="#" onClick={handleMarketClick} className="w-full">
-          <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
-            <CardContent className="py-4 px-5">
-              <div className="flex justify-between items-center gap-3 min-w-0">
-                <div className="flex flex-row gap-2 min-w-0 items-center">
-                  <ShoppingCart className="h-5 w-5 text-primary flex-shrink-0" />
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-medium text-foreground truncate">
-                      Marché
-                    </h3>
+      {isSelf && (
+        <>
+          {/* Heal button */}
+          <Link href="#" onClick={handleHeal} className="w-full">
+            <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+              <CardContent className="py-4 px-5">
+                <div className="flex justify-between items-center gap-3 min-w-0">
+                  <div className="flex flex-row gap-2 min-w-0 items-center">
+                    <PlusCircle className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-medium text-foreground truncate">
+                        Se reposer
+                      </h3>
+                    </div>
                   </div>
+                  <Badge
+                    variant="outline"
+                    className="text-xs font-normal flex-shrink-0"
+                  >
+                    {cooldownRemaining > 0
+                      ? formatTime(cooldownRemaining)
+                      : "Disponible"}
+                  </Badge>
                 </div>
-                <Badge
-                  variant="outline"
-                  className="text-xs font-normal flex-shrink-0"
-                >
-                  Ouvert
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      )}
+              </CardContent>
+            </Card>
+          </Link>
 
-      {/* Forest button */}
-      <Link href="#" onClick={handleForestClick} className="w-full">
-        <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
-          <CardContent className="py-4 px-5">
-            <div className="flex justify-between items-center gap-3 min-w-0">
-              <div className="flex flex-row gap-2 min-w-0 items-center">
-                <Swords className="h-5 w-5 text-primary flex-shrink-0" />
-                <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-foreground truncate">
-                    Forêt des Murmures Anciens
-                  </h3>
+          {/* Market button */}
+          {character.name !== "Lucas" && (
+            <Link href="#" onClick={handleMarketClick} className="w-full">
+              <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+                <CardContent className="py-4 px-5">
+                  <div className="flex justify-between items-center gap-3 min-w-0">
+                    <div className="flex flex-row gap-2 min-w-0 items-center">
+                      <ShoppingCart className="h-5 w-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-medium text-foreground truncate">
+                          Marché
+                        </h3>
+                      </div>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className="text-xs font-normal flex-shrink-0"
+                    >
+                      Ouvert
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
+
+          {/* Forest button */}
+          <Link href="#" onClick={handleForestClick} className="w-full">
+            <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+              <CardContent className="py-4 px-5">
+                <div className="flex justify-between items-center gap-3 min-w-0">
+                  <div className="flex flex-row gap-2 min-w-0 items-center">
+                    <Swords className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-medium text-foreground truncate">
+                        Forêt des Murmures Anciens
+                      </h3>
+                    </div>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className="text-xs font-normal flex-shrink-0"
+                  >
+                    Niv. 11-15
+                  </Badge>
                 </div>
-              </div>
-              <Badge
-                variant="outline"
-                className="text-xs font-normal flex-shrink-0"
-              >
-                Niv. 11-15
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </Link>
+              </CardContent>
+            </Card>
+          </Link>
+        </>
+      )}
     </div>
   );
 }
