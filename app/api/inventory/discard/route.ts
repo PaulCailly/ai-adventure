@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/app/(auth)/auth";
-import { db } from "@/lib/db/queries";
-import { inventoryItem } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { discardItem } from "@/lib/db/queries";
 
 export async function DELETE(request: Request) {
   // Ensure the user is authenticated.
@@ -18,11 +16,9 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
     }
 
-    // Delete the inventory item (for "discard" action).
-    await db.delete(inventoryItem).where(eq(inventoryItem.id, itemId));
-
-    return NextResponse.json({ message: "Item discarded successfully" });
-  } catch (error) {
+    const result = await discardItem({ itemId });
+    return NextResponse.json(result);
+  } catch (error: any) {
     console.error("Error discarding inventory item", error);
     return NextResponse.json(
       { error: "Failed to discard inventory item" },
