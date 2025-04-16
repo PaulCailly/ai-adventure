@@ -23,7 +23,7 @@ export default async function Page() {
   const id = generateUUID();
 
   return (
-    <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border">
+    <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border overflow-y-scroll">
       <ScrollArea>
         <Chat
           key={id}

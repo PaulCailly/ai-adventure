@@ -76,7 +76,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
   }, [audio]); */
 
   return (
-    <div className="flex flex-col min-w-0 h-dvh bg-background">
+    <div className="flex flex-col min-w-0 h-dvh bg-background overflow-y-scroll">
       <Messages
         id={id}
         isLoading={isLoading}
