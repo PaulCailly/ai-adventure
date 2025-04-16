@@ -655,6 +655,8 @@ export async function identifyItem({
 
   // Build a prompt for item identification using all characteristics of the item
   const prompt = `
+Output must be in French language. This is a very important rule.
+
 You are an expert in identifying mystical items.
 The player presents you with an unidentified item of rarity "${item.rarity}".
 Item characteristics: ${item.name}, Buffs - ${JSON.stringify(
