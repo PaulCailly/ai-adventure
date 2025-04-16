@@ -25,8 +25,6 @@ function DiceRoll({
   const randomRotateX = useMemo(() => Math.random() * 90 - 45, []); // between -45 and 45°
   const randomRotateY = useMemo(() => Math.random() * 90 - 45, []); // between -45 and 45°
 
-  const diceColor = type === "red" ? "#ff4444" : "#4444ff";
-
   return (
     // Add a parent container with perspective for a 3D view
     <div className="dice-roll-wrapper" style={{ perspective: "800px" }}>
@@ -68,7 +66,7 @@ function DiceRoll({
         }}
       >
         <svg
-          fill={diceColor}
+          fill="white"
           width="70"
           height="70"
           viewBox="-16 0 512 512"
@@ -89,7 +87,7 @@ function DiceRoll({
             transform: "translate(-50%, -50%)",
             fontSize: "16px",
             fontWeight: "bold",
-            color: diceColor,
+            color: "black",
             textShadow: "0 1px 2px rgba(0,0,0,0.1)",
           }}
         >

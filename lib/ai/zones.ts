@@ -45,7 +45,7 @@ export const zones: Record<string, Zone> = {
 
     La Forêt des Murmures Anciens est un lieu de beauté et de danger, où la ligne entre la réalité et le mythe est floue. C'est une terre d'intrigues profondes, où chaque ombre cache un secret et chaque murmure raconte une histoire.
     
-    Selon la légende le héro qui sauvera la forêt d'Elaria sera recompensé d'une la première partie de la Formule Secrète: "Pomme de terre".
+    Selon la légende le héro qui sauvera la forêt d'Elaria sera recompensé d'une la première partie de la Formule Secrète: "Joliement".
     `,
 
     dangers: [
