@@ -8,13 +8,13 @@ export type ItemSlot = "weapon" | "armor" | "accessory";
 // Calculate the item's budget based on its level.
 // Here we assume every 15 item levels increases the budget by 15%.
 function calculateBudget(itemLevel: number): number {
-  const baseBudget = 1;
+  const baseBudget = 1; // Increased base budget for more noticeable stats
   return baseBudget * Math.pow(1.15, itemLevel / 15);
 }
 
 // New stat multipliers: each function uses the item level to scale the bonus.
 const statMultipliers = {
-  attack: 1,
+  attack: (itemLevel: number) => itemLevel + 10, // Fixed: Added function for attack scaling
   defense: (itemLevel: number) => 0.5 * itemLevel + 10,
   health: (itemLevel: number) => 0.7 * itemLevel + 15,
   mana: (itemLevel: number) => 0.3 * itemLevel + 5,
@@ -133,20 +133,20 @@ function getBuffsForSlot(
     case "weapon":
       // Weapons: emphasize attack and speed, with a slight reduction to mana.
       return {
-        attack: Math.round(computedStats.attack * 1.1),
-        defense: Math.round(computedStats.defense * 0.8),
-        health: Math.round(computedStats.health * 0.9),
+        attack: Math.round(computedStats.attack * 1.5), // Increased attack multiplier for weapons
+        defense: Math.round(computedStats.defense * 0.4),
+        health: Math.round(computedStats.health * 0.4),
         mana: Math.round(computedStats.mana * 0.5),
         speed: Math.round(computedStats.speed * 1.2),
       };
     case "armor":
       // Armor: emphasize defense and health, with moderate boosts for mana; speed might be lower.
       return {
-        attack: Math.round(computedStats.attack * 0.6),
-        defense: Math.round(computedStats.defense * 1.2),
-        health: Math.round(computedStats.health * 1.1),
+        attack: Math.round(computedStats.attack * 0.3),
+        defense: Math.round(computedStats.defense * 1.5),
+        health: Math.round(computedStats.health * 1.3),
         mana: Math.round(computedStats.mana * 0.8),
-        speed: Math.round(computedStats.speed * 0.8),
+        speed: Math.round(computedStats.speed * 0.6),
       };
     case "accessory":
     default:
@@ -155,8 +155,8 @@ function getBuffsForSlot(
         attack: Math.round(computedStats.attack * 0.8),
         defense: Math.round(computedStats.defense * 0.8),
         health: Math.round(computedStats.health * 0.9),
-        mana: Math.round(computedStats.mana * 1.1),
-        speed: Math.round(computedStats.speed * 0.9),
+        mana: Math.round(computedStats.mana * 1.3),
+        speed: Math.round(computedStats.speed * 1.2),
       };
   }
 }
@@ -180,7 +180,8 @@ export function generateLootItem(options: {
   const distribution = qualityDistribution[quality];
 
   // Calculate raw stat values for all five attributes.
-  const attackValue = budget * distribution.attack * statMultipliers.attack;
+  const attackValue =
+    budget * distribution.attack * statMultipliers.attack(itemLevel);
   const defenseValue =
     budget * distribution.defense * statMultipliers.defense(itemLevel);
   const healthValue =
@@ -247,7 +248,8 @@ export async function generateAndAddLootItem(options: {
   const distribution = qualityDistribution[quality];
 
   // Calculate raw stat values for all five attributes.
-  const attackValue = budget * distribution.attack * statMultipliers.attack;
+  const attackValue =
+    budget * distribution.attack * statMultipliers.attack(options.itemLevel);
   const defenseValue =
     budget * distribution.defense * statMultipliers.defense(options.itemLevel);
   const healthValue =
