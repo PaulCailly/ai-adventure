@@ -1,13 +1,5 @@
 import { InventoryItem } from "@/lib/db/schema";
 
-interface Buffs {
-  health?: number;
-  mana?: number;
-  attack?: number;
-  defense?: number;
-  speed?: number;
-}
-
 interface Danger {
   name: string;
   health: number;
@@ -15,6 +7,8 @@ interface Danger {
   attack: number;
   defense: number;
   speed: number;
+  spawnChance?: number;
+  isBoss?: boolean;
 }
 
 interface Zone {
@@ -32,20 +26,31 @@ export const zones: Record<string, Zone> = {
     level: "11-15",
     dangers: [
       {
-        name: "Esprits Sylvestres",
+        name: "Sylvestre",
         health: 50,
         mana: 30,
         attack: 15,
         defense: 10,
         speed: 12,
+        spawnChance: 0.15,
       },
       {
-        name: "Bêtes Corrompues",
+        name: "Cerf corrompu",
         health: 80,
         mana: 40,
         attack: 20,
         defense: 15,
-        speed: 10,
+        speed: 25,
+        spawnChance: 0.12,
+      },
+      {
+        name: "Renard corrompu",
+        health: 40,
+        mana: 20,
+        attack: 10,
+        defense: 7,
+        speed: 20,
+        spawnChance: 0.18,
       },
       {
         name: "Bandits",
@@ -54,22 +59,25 @@ export const zones: Record<string, Zone> = {
         attack: 18,
         defense: 12,
         speed: 14,
+        spawnChance: 0.17,
       },
       {
-        name: "Trolls de la Forêt",
+        name: "Troll de la Forêt",
         health: 100,
         mana: 20,
         attack: 25,
         defense: 20,
         speed: 8,
+        spawnChance: 0.1,
       },
       {
-        name: "Loups de l'Ombre",
+        name: "Sombre-Loup",
         health: 70,
         mana: 50,
         attack: 22,
         defense: 18,
         speed: 20,
+        spawnChance: 0.16,
       },
       {
         name: "Vignes Enchantées",
@@ -78,24 +86,45 @@ export const zones: Record<string, Zone> = {
         attack: 10,
         defense: 25,
         speed: 5,
+        spawnChance: 0.2,
+      },
+      {
+        name: "Ancien Gardien",
+        health: 250,
+        mana: 200,
+        attack: 35,
+        defense: 30,
+        speed: 10,
+        spawnChance: 0.02,
+        isBoss: true,
+      },
+      {
+        name: "Sylva, l'esprit de la forêt",
+        health: 300,
+        mana: 250,
+        attack: 40,
+        defense: 35,
+        speed: 12,
+        spawnChance: 0.01,
+        isBoss: true,
       },
     ],
     items: [
       {
         id: "1",
         characterId: "0",
-        name: "Artefacts Elfes",
+        name: "Lame Eldorienne",
         identified: true,
         rarity: "épique",
-        description: "Artefacts anciens des elfes, imprégnés de magie.",
+        description: "Une arme redoutable en acier forgée",
         itemType: "équipable",
-        buffs: { attack: 10, defense: 5 },
+        buffs: { attack: 15, defense: 5 },
         createdAt: new Date(),
       },
       {
         id: "2",
         characterId: "0",
-        name: "Herbes Rares",
+        name: "Herbes variées",
         identified: true,
         rarity: "rare",
         description: "Herbes aux propriétés curatives puissantes.",
@@ -106,10 +135,11 @@ export const zones: Record<string, Zone> = {
       {
         id: "3",
         characterId: "0",
-        name: "Cristaux de Mana",
+        name: "Joyaux Eldoriens",
         identified: true,
         rarity: "légendaire",
-        description: "Cristaux qui restaurent le mana et améliorent les sorts.",
+        description:
+          "Ces cristaux appartiennent à la reine elfe Elaria. Ils sont d'une incroyable pureté.",
         itemType: "consommable",
         buffs: { mana: 30 },
         createdAt: new Date(),
@@ -117,10 +147,10 @@ export const zones: Record<string, Zone> = {
       {
         id: "4",
         characterId: "0",
-        name: "Feuilles Murmurantes",
+        name: "Murmu-feuilles",
         identified: true,
         rarity: "commun",
-        description: "Feuilles qui bruissent avec les secrets de la forêt.",
+        description: "Feuilles qui bruissent des paroles inintelligibles.",
         itemType: "consommable",
         buffs: { mana: 5 },
         createdAt: new Date(),
@@ -128,10 +158,11 @@ export const zones: Record<string, Zone> = {
       {
         id: "5",
         characterId: "0",
-        name: "Écorce Mystique",
+        name: "Écorce mystique",
         identified: true,
         rarity: "peu commun",
-        description: "Écorce qui renforce la peau comme une armure.",
+        description:
+          "Écorce qui renforce la peau comme une armure. Peut etre consommé sous forme d'infusion (3 minutes à 90 C°).",
         itemType: "équipable",
         buffs: { defense: 3 },
         createdAt: new Date(),
@@ -139,10 +170,11 @@ export const zones: Record<string, Zone> = {
       {
         id: "6",
         characterId: "0",
-        name: "Rosée Scintillante",
+        name: "Rosée scintillante",
         identified: true,
         rarity: "rare",
-        description: "Rosée qui améliore l'agilité et la vitesse.",
+        description:
+          "Rosée rafraîchissante qui améliore l'agilité et la vitesse",
         itemType: "consommable",
         buffs: { speed: 4 },
         createdAt: new Date(),
@@ -150,11 +182,11 @@ export const zones: Record<string, Zone> = {
       {
         id: "7",
         characterId: "0",
-        name: "Pierre Runique Ancienne",
+        name: "Pierre runique",
         identified: true,
         rarity: "épique",
         description:
-          "Une pierre gravée de runes qui booste le pouvoir magique.",
+          "Une pierre gravée de runes indéchiffrables mais doté d'une certaine aura.",
         itemType: "équipable",
         buffs: { mana: 20, attack: 5 },
         createdAt: new Date(),
@@ -162,7 +194,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "8",
         characterId: "0",
-        name: "Cape Fantôme",
+        name: "Foulard d'Elaria",
         identified: true,
         rarity: "légendaire",
         description:
@@ -174,7 +206,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "9",
         characterId: "0",
-        name: "Glands Enchantés",
+        name: "Glands",
         identified: true,
         rarity: "commun",
         description:
@@ -186,7 +218,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "10",
         characterId: "0",
-        name: "Lanterne Spirituelle",
+        name: "Lanterne",
         identified: true,
         rarity: "peu commun",
         description: "Une lanterne qui révèle des chemins cachés.",
@@ -197,7 +229,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "11",
         characterId: "0",
-        name: "Élixir de la Forêt",
+        name: "Élixir de Luneterne",
         identified: true,
         rarity: "rare",
         description:
@@ -209,7 +241,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "12",
         characterId: "0",
-        name: "Flèche au Clair de Lune",
+        name: "Flèche en Iridium",
         identified: true,
         rarity: "épique",
         description: "Une flèche qui ne manque jamais sa cible.",
@@ -220,7 +252,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "13",
         characterId: "0",
-        name: "Montre Intemporelle",
+        name: "Montre intemporelle",
         identified: true,
         rarity: "légendaire",
         description: "Une montre qui arrête le temps pendant un bref instant.",
@@ -231,10 +263,11 @@ export const zones: Record<string, Zone> = {
       {
         id: "14",
         characterId: "0",
-        name: "Champignon Rieur",
+        name: "Amanite rieuse",
         identified: true,
         rarity: "commun",
-        description: "Un champignon qui provoque un rire incontrôlable.",
+        description:
+          "Un champignon toxique qui provoque un rire incontrôlable.",
         itemType: "consommable",
         buffs: {},
         createdAt: new Date(),
@@ -242,7 +275,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "15",
         characterId: "0",
-        name: "Pierre Écho",
+        name: "Pierre échonomique",
         identified: true,
         rarity: "peu commun",
         description: "Une pierre qui répercute les sons de la forêt.",
@@ -253,7 +286,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "16",
         characterId: "0",
-        name: "Poussière de Fée",
+        name: "Poussière d'arcane",
         identified: true,
         rarity: "rare",
         description: "Poussière qui améliore les capacités magiques.",
@@ -275,7 +308,7 @@ export const zones: Record<string, Zone> = {
       {
         id: "18",
         characterId: "0",
-        name: "Boussole Céleste",
+        name: "Boussole d'Elaria",
         identified: true,
         rarity: "légendaire",
         description: "Une boussole qui pointe toujours vers le désir du cœur.",
@@ -286,23 +319,23 @@ export const zones: Record<string, Zone> = {
       {
         id: "19",
         characterId: "0",
-        name: "Baguette Fantaisiste",
+        name: "Baguette fantaisiste",
         identified: true,
         rarity: "peu commun",
-        description: "A wand that creates harmless illusions.",
-        itemType: "consumable",
+        description: "Une baguette qui crée des illusions sans danger.",
+        itemType: "consommable",
         buffs: {},
         createdAt: new Date(),
       },
       {
         id: "20",
         characterId: "0",
-        name: "Flamme Éternelle",
+        name: "Torche sans fin",
         identified: true,
-        rarity: "legendary",
+        rarity: "légendaire",
         description:
-          "A flame that never extinguishes, providing warmth and light.",
-        itemType: "equipable",
+          "Une torche qui ne s'éteint jamais, offrant chaleur et lumière.",
+        itemType: "équipable",
         buffs: { attack: 5, defense: 5 },
         createdAt: new Date(),
       },
