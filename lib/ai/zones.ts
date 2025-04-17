@@ -45,16 +45,17 @@ export const zones: Record<string, Zone> = {
     
     La Tombe du Dragon Perdu est le dernier sanctuaire de Leprestrix le Pointilleux, un dragon légendaire trahi par ses propres fidèles.
     Jadis, cette crypte était un lieu de culte où un ordre draconique vénérait leur maître ancestral. Mais un jour, dans leur soif de pouvoir,
-    ils volèrent son œuf et tentèrent d'utiliser sa magie pour leurs propres desseins. Enragé par cette trahison, Sarthoryx maudit la crypte
-    avant d'y trouver la mort, enfermant à jamais les âmes de ses traîtres disciples.
+    ils volèrent son œuf et tentèrent d'utiliser sa magie pour leurs propres desseins. Enragé par cette trahison, Leprestrix maudit la crypte
+    avant de mourir, laissant derrière lui un esprit vengeur errant dans l'obscurité.
     
     Aujourd'hui, l'endroit est hanté par ces âmes perdues, gardé par des sentinelles de pierre et des ombres rampantes qui s'accrochent
-    aux voyageurs imprudents. Ceux qui parviennent à traverser ces épreuves découvriront peut-être la vérité sur la trahison du dragon
-    et trouveront un indice sur l'œuf disparu.
+    aux voyageurs imprudents. Ceux qui parviennent à traverser ces épreuves devront affronter le **Spectre du dragon Leprestrix le Pointilleux**,
+    la dernière épreuve incontournable de la crypte. Le dragon spectral, rongé par la rancune et les souvenirs de sa trahison, se dresse lors de la dernière épreuve, 
+    contre quiconque cherche à percer les secrets de la crypte.
     
-    Selon les légendes, celui qui percera le secret de cette crypte sera récompensé par une relique ancienne,
-    où est gravé le premier mot de la Formule Secrète : "joliment".`,
-
+    Seule la défaite du spectre permettra aux aventuriers de progresser. Une fois vaincu, son essence se dissipera dans un dernier rugissement,
+    révélant une relique ancienne, flottant au centre du sanctuaire draconique. Sur cette relique sera gravé le premier mot de la Formule Secrète : "joliment".`,
+    
     dangers: [
       {
         name: "Spectres du Culte Draconique",
@@ -100,20 +101,21 @@ export const zones: Record<string, Zone> = {
         defense: 35,
         speed: 8,
         spawnChance: 0.1,
-        isBoss: true,
+        isBoss: false,
       },
       {
-        name: "Leprestrix le Pointilleux",
-        health: 350,
-        mana: 300,
-        attack: 50,
-        defense: 40,
-        speed: 10,
-        spawnChance: 0.1,
+        name: "Spectre de Leprestrix le Pointilleux",
+        health: 300,
+        mana: 350,
+        attack: 60,
+        defense: 45,
+        speed: 12,
+        spawnChance: 1.0,
         isBoss: true,
-      },
+      }
     ],
-  },
+  }
+
 
   monastre_trahi: {
     name: "Monastère Trahi",
