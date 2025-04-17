@@ -613,21 +613,26 @@ export async function identifyItem({
 }: {
   itemId: string;
 }): Promise<{ name: string; description: string }> {
+  console.log(`Starting identification process for item ID: ${itemId}`);
+
   // Retrieve the item from the database
   const [item] = await db
     .select()
     .from(inventoryItem)
     .where(eq(inventoryItem.id, itemId));
   if (!item) {
+    console.error(`Item with ID ${itemId} not found`);
     throw new Error("Item not found");
   }
   if (item.identified) {
+    console.warn(`Item with ID ${itemId} is already identified`);
     throw new Error("Item is already identified");
   }
 
   // Load the character linked to the item
   const character = await getCharacterById({ id: item.characterId });
   if (!character) {
+    console.error(`Character linked to item ID ${itemId} not found`);
     throw new Error("Character not found");
   }
 
@@ -640,8 +645,12 @@ export async function identifyItem({
     legendary: 200,
   };
   const cost = identificationCosts[item.rarity.toLowerCase()] || 50;
+  console.log(`Identification cost for item ID ${itemId} is ${cost} gold`);
 
   if (character.gold < cost) {
+    console.error(
+      `Character does not have enough gold to identify item ID ${itemId}`
+    );
     throw new Error("Not enough gold to identify the item");
   }
 
@@ -652,6 +661,9 @@ export async function identifyItem({
     health: 0,
     mana: 0,
   });
+  console.log(
+    `Deducted ${cost} gold from character ID ${character.id} for item ID ${itemId}`
+  );
 
   // Build a prompt for item identification using all characteristics of the item
   const prompt = `
@@ -682,11 +694,12 @@ Incorporate lore elements:
 - If the item belonged to a notable character, mention their influence or legacy.
 - Use a wide variety of words to enrich the description, drawing from the lore's themes of ancient magic, elven history, and the forest's mystical nature.
 
-Forest lore:
-${zones.forest.lore}
+Lore:
+${zones["tombe_dragon"].lore}
 `;
 
   // Call AI SDK to generate the item details using generateObject
+  console.log(`Generating item details for item ID ${itemId} using AI SDK`);
   const result = await generateObject({
     model: openai("gpt-4o"),
     system: "You are an expert in identifying mystical items.",
@@ -705,6 +718,9 @@ ${zones.forest.lore}
     }),
   });
   const { name: newName, description: newDescription } = result.object;
+  console.log(
+    `Generated name: ${newName}, description: ${newDescription} for item ID ${itemId}`
+  );
 
   // Update the item record to mark it as identified and update its details
   await db
@@ -715,6 +731,9 @@ ${zones.forest.lore}
       description: newDescription,
     })
     .where(eq(inventoryItem.id, itemId));
+  console.log(
+    `Item ID ${itemId} marked as identified with new name and description`
+  );
 
   return { name: newName, description: newDescription };
 }

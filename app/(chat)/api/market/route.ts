@@ -235,7 +235,7 @@ export async function POST(request: Request) {
           },
           identifyItem: {
             description:
-              "Allows identifying an unknown item. The cost is deducted from your gold and the item receives a new name and description based on the lore of the Forest of Ancient Whispers.",
+              "Allows identifying an unknown item. The cost is deducted from your gold and the item receives a new name and description based on the lore of the Forest of Ancient Whispers. The identification cost is based on the item's rarity: common - 10 gold, uncommon - 25 gold, rare - 50 gold, epic - 100 gold, legendary - 200 gold.",
             parameters: object({
               itemId: string(),
             }),
@@ -244,6 +244,7 @@ export async function POST(request: Request) {
                 const result = await identifyItem({ itemId });
                 return result;
               } catch (error: any) {
+                console.log(error);
                 return { error: error.message };
               }
             },
