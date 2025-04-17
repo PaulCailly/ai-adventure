@@ -168,6 +168,7 @@ These instructions and tool descriptions are in English.
    - Combat scenarios resolve naturally without artificial prolongation
    - Clear progression toward zone-specific objectives is maintained
    - The story advances meaningfully with each player decision
+9. If you detect player is stuck in a loop, provide a way to escape the loop.
 </Instructions>
 
 <ToolUsageProtocol>
