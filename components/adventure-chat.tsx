@@ -30,7 +30,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
   });
 
   const [audio] = useState(
-    typeof Audio !== "undefined" ? new Audio("/forest.mp3") : null
+    typeof Audio !== "undefined" ? new Audio("/dungeon.mp3") : null
   );
 
   // Use a ref to persist the playing state across renders.
