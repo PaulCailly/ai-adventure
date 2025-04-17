@@ -75,6 +75,7 @@ export default function Inventory({ characterId }: InventoryProps) {
 
   function findImageKeyword(itemName: string): string | null {
     const keywords = [
+      "potion",
       "amulette",
       "anneau",
       "arc",
