@@ -248,7 +248,7 @@ export default function Inventory({ characterId }: InventoryProps) {
             <DropdownMenuTrigger asChild>
               <div>
                 <Card
-                  className={`cursor-pointer hover:bg-muted transition aspect-square flex items-center justify-center border ${getRarityBorderColor(
+                  className={`cursor-pointer hover:bg-muted transition aspect-square flex items-center justify-center border-2 ${getRarityBorderColor(
                     item.rarity
                   )}`}
                 >
@@ -260,8 +260,12 @@ export default function Inventory({ characterId }: InventoryProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64">
               <div className="p-4 border-b flex flex-col gap-4">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 flex items-center justify-center">
+                <div className="flex items-start space-x-4">
+                  <div
+                    className={`relative h-16 w-16 aspect-square border-2 rounded-md ${getRarityBorderColor(
+                      item.rarity
+                    )}`}
+                  >
                     {getItemIcon(item)}
                   </div>
                   <div className="flex flex-col gap-1">
