@@ -6,13 +6,17 @@ import { DataStreamHandler } from "@/components/data-stream-handler";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getCharactersByUserId } from "@/lib/db/queries";
 
-// Define PageProps interface
-interface PageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
+// Remove PageProps interface
+// interface PageProps {
+//   searchParams?: { [key: string]: string | string[] | undefined };
+// }
 
-// Use PageProps for the component
-export default async function Page({ searchParams }: PageProps) {
+// Type props directly in the function signature
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
   if (!session?.user?.id) {
     return redirect("/login");
