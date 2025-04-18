@@ -6,17 +6,19 @@ import { DataStreamHandler } from "@/components/data-stream-handler";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getCharactersByUserId } from "@/lib/db/queries";
 
-// Remove PageProps interface
+// Define standard PageProps interface
 // interface PageProps {
-//   searchParams?: { [key: string]: string | string[] | undefined };
+//   searchParams: { [key: string]: string | string[] | undefined };
 // }
 
-// Type props directly in the function signature
+// Type searchParams as a Promise and await it (Next.js 15+)
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const _searchParams = await searchParams; // Await the promise
+
   const session = await auth();
   if (!session?.user?.id) {
     return redirect("/login");
@@ -31,9 +33,10 @@ export default async function Page({
   }
 
   const id = generateUUID();
+  // Extract zoneId from the awaited searchParams
   const zoneId =
-    typeof searchParams?.zoneId === "string"
-      ? searchParams.zoneId
+    typeof _searchParams?.zoneId === "string"
+      ? _searchParams.zoneId
       : "tombe_dragon";
 
   return (
