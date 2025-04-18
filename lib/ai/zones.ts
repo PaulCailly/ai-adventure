@@ -31,34 +31,33 @@ export const zones: Record<string, Zone> = {
     dangers: [],
   },
   tombe_dragon: {
-    name: "Tombe du Dragon Perdu",
+    name: "Tombe du Dragon Leprestrix",
     image: "tombe-dragon.jpg",
-    description: `Une crypte ancienne et oubliée, cachée sous les ruines d'un temple draconique.
-        L'air y est lourd et imprégné d'une magie ancienne. Des murmures résonnent entre les murs de pierre,
-        vestiges des âmes tourmentées qui y sont piégées.`,
+    description: `Une crypte oubliée, enfouie sous les ruines moussues d'un temple draconique au cœur de la province de la Nupesse.
+        L'air y est chargé de magie ancienne et d'une tension palpable. Les murs suintent d'humidité, porteurs de murmures perdus,
+        échos de trahisons immémoriales et de l'agonie d'un dragon oublié.`,
     level: "10-14",
-    lore: `Après un combat épique, les aventuriers sont parvenus à récupérer un œuf de dragon,
-    vestige d'une époque oubliée. En étudiant l'œuf, ils découvrent qu'il provient d'un dragon perdu,
-    Leprestrix le Pointilleux, dont l'œuf fut volé il y a des siècles. Pour comprendre l'origine de l'œuf
-    et son importance, ils doivent se rendre à la Tombe du Dragon Perdu, cachée au milieu d'une forêt
-    et d'un désert, là où l'Ordre Draconique a été trahi.
-    
-    La Tombe du Dragon Perdu est le dernier sanctuaire de Leprestrix le Pointilleux, un dragon légendaire trahi par ses propres fidèles.
-    Jadis, cette crypte était un lieu de culte où un ordre draconique vénérait leur maître ancestral. Mais un jour, dans leur soif de pouvoir,
-    ils volèrent son œuf et tentèrent d'utiliser sa magie pour leurs propres desseins. Enragé par cette trahison, Leprestrix maudit la crypte
-    avant de mourir, laissant derrière lui un esprit vengeur errant dans l'obscurité.
-    
-    Aujourd'hui, l'endroit est hanté par ces âmes perdues, gardé par des sentinelles de pierre et des ombres rampantes qui s'accrochent
-    aux voyageurs imprudents. Ceux qui parviennent à traverser ces épreuves devront affronter le **Spectre du dragon Leprestrix le Pointilleux**,
-    la dernière épreuve incontournable de la crypte. Le dragon spectral, rongé par la rancune et les souvenirs de sa trahison, se dresse lors de la dernière épreuve, 
-    contre quiconque cherche à percer les secrets de la crypte.
-    
-    Seule la défaite du spectre permettra aux aventuriers de progresser. Une fois vaincu, son essence se dissipera dans un dernier rugissement,
-    révélant une relique ancienne, flottant au centre du sanctuaire draconique. Sur cette relique sera gravé le premier mot de la Formule Secrète : "joliment".`,
+    lore: `Après une aventure épique, Lucas et sa guilde ont réussi à récupérer, avant de se le refaire prendre, un œuf de dragon lors d'un affrontement contre un guerrier inconnu.
+    Cherchant à comprendre la provenance de cet artefact, ils découvrent qu'il s'agit de l'œuf de **Leprestrix le Pointilleux**, 
+    un dragon légendaire qui régnait il y a peu sur la province de la Nupesse. 
+
+    Leprestrix était un être pacifique et sage, adoré pour sa bienveillance. Il était entouré de **l'Ordre Epitechien**, 
+    un groupe de moines qui le servaient fidèlement... du moins en apparence. Car au fil du temps, des membres corrompus par la secte des Saloupiens
+    s'infiltrèrent dans l'Ordre. Ils fomentèrent un complot : voler l'œuf de Leprestrix pour en exploiter la puissance et dominer la province.
+
+    Trahi par ses plus proches alliés, Leprestrix fut abattu dans son propre sanctuaire. Son cri final maudit le lieu, 
+    transformant la crypte en un tombeau hanté, où son esprit blessé demeure prisonnier, rongé par la douleur et la trahison.
+
+    Aujourd'hui, la Tombe du Dragon est un endroit maudit, gardé par des créatures ténébreuses : spectres, sentinelles et monstres nés de la magie déformée.
+    Aucun intrus ne peut quitter ces lieux sans avoir affronté la dernière épreuve : **le Spectre de Leprestrix lui-même**, 
+    surgissant dans un rugissement spectral pour juger ceux qui osent le défier.
+
+    Sa mort ne résoudra pas la malédiction mais elle révélera **une relique ancienne**. 
+    Sur celle-ci sera gravé le **premier mot de la Formule Secrète** permettant à Lucas de tenter de percer le mystère de sa présence ici : **"joliment"**.`,
 
     dangers: [
       {
-        name: "Spectres du Culte Draconique",
+        name: "Spectres du Culte Epitechien",
         health: 45,
         mana: 60,
         attack: 18,
@@ -115,145 +114,73 @@ export const zones: Record<string, Zone> = {
       },
     ],
   },
-  monastre_trahi: {
-    name: "Monastère Trahi",
-    image: "monastère-trahi.jpg",
-    description: `Un monastère en ruines, perché sur une falaise escarpée, balayé par des vents froids.
-        Des runes brisées parsèment le sol, témoins d'un passé oublié. Des ombres hantent les couloirs,
-        murmures des anciens moines tombés en disgrâce.`,
+  fort_gaultier: {
+    name: "Fort Gaultier",
+    image: "fort-gaultier.jpg",
+    description: `Une forteresse austère et lugubre, nichée dans les hauteurs rocheuses à la frontière de la Nupesse.
+        Entourée de brumes empoisonnées et de cris lointains, elle sert désormais de prison aux opposants du régime Saloupien.`,
     level: "14-18",
-    lore: `Guidés par les indices trouvés dans la Tombe du Dragon Perdu, les aventuriers découvrent que l'œuf de Leprestrix
-    fut vendu par un ancien moine du nom d'Aedan. Fuyant la colère du dragon et les représailles de son ordre, il trouva refuge
-    dans ce monastère autrefois sacré, maintenant abandonné et maudit.
-    
-    On raconte qu'Aedan aurait tenté de se racheter en écrivant un manuscrit relatant la vérité sur la trahison du dragon.
-    Mais avant qu'il ne puisse livrer son message, une malédiction s'abattit sur lui et sur le monastère. Désormais, ses disciples
-    errent sous forme de spectres et de créatures cauchemardesques, empêchant quiconque d'accéder aux vérités qu'ils ont voulu cacher.
-    
-    Celui qui percera le mystère de cet endroit découvrira une relique contenant le second mot de la Formule Secrète : "valoir".`,
+    lore: `Lucas a reçu un message de Pierre Defoyer :
+    une âme proche de Leprestrix, **emprisonnée dans le Fort Gaultier**, détient des informations vitales sur les événements passés. Après avoir rassemblé davantage d'alliés pour renforcer sa Guilde et atteindre le fort. Il prend d'assaut le fort ! 
+
+    Ce prisonnier, dont l'identité est tenue secrète, serait un ancien membre de **l'Ordre Epitechien** et haut responsable de la **Résistance** contre la secte des Saloupiens.
+
+    Le Fort Gaultier est dirigé par un sadique tyrannique connu sous le nom de **Depardrix**, un loup-garou mégalomane, misogyne et complètement désaxé, qui règne sur ses captifs avec brutalité.
+
+    Lucas et sa guilde doivent infiltrer la prison, éviter les civils innocents, et affronter la milice du fort – composée de loups-garous sauvages et de soldats fanatiques.
+
+    Au cœur du bastion, un combat sans merci les attend contre **Depardrix**, qui garde les clés de la cellule d'un prisonnier qui se révelera, après la mort au combat de Depardrix, lors de l'ouverture de sa cellule à être : **le moine Aedan**.
+
+    Une fois délivré, Aedan révéle son fort lien avec Leprestrix et la guerre contre Trumpelanus et sa secte des Saloupiens. Il explique aussi qu'il est à l'origine de la malédiction de Lucas, qu'il a besoin de Lui pour sauver la Nupesse ! Avant de repartir
+
+    🎁 Lucas repère dans la cellule ,une nouvelle **relique**, une peau marquée du mot : **"valoir"** – le deuxième élément de la Formule Secrète.`,
 
     dangers: [
       {
-        name: "Moines Damnés",
-        health: 80,
-        mana: 70,
-        attack: 30,
+        name: "Loups-Garous du Bastion",
+        health: 90,
+        mana: 40,
+        attack: 35,
         defense: 20,
-        speed: 12,
+        speed: 14,
         spawnChance: 0.2,
       },
       {
-        name: "Gargouilles Animées",
+        name: "Chiens de Garde Déchainés",
+        health: 70,
+        mana: 20,
+        attack: 25,
+        defense: 15,
+        speed: 16,
+        spawnChance: 0.18,
+      },
+      {
+        name: "Gardes Saloupiens",
         health: 100,
-        mana: 50,
-        attack: 35,
+        mana: 30,
+        attack: 38,
+        defense: 25,
+        speed: 12,
+        spawnChance: 0.15,
+      },
+      {
+        name: "Tortionnaire de la Tour",
+        health: 120,
+        mana: 60,
+        attack: 45,
         defense: 30,
         speed: 10,
-        spawnChance: 0.15,
-      },
-      {
-        name: "Esprits Torturés",
-        health: 90,
-        mana: 80,
-        attack: 40,
-        defense: 25,
-        speed: 14,
-        spawnChance: 0.17,
-      },
-      {
-        name: "Abomination du Rituel Brisé",
-        health: 180,
-        mana: 120,
-        attack: 55,
-        defense: 40,
-        speed: 10,
-        spawnChance: 0.08,
-      },
-      {
-        name: "Gardien Spectral",
-        health: 160,
-        mana: 110,
-        attack: 45,
-        defense: 35,
-        speed: 8,
         spawnChance: 0.1,
       },
       {
-        name: "Spectre du Moine Aedan",
+        name: "Depardrix, Alpha du Fort",
         health: 300,
-        mana: 250,
-        attack: 60,
-        defense: 45,
-        speed: 12,
-        spawnChance: 0.08,
-        isBoss: true,
-      },
-    ],
-  },
-  voie_errants: {
-    name: "Voie des Errants",
-    image: "voie-errants.jpg",
-    description: `Un passage spectral entre réalité et illusion, où le temps se distord et les âmes perdues murmurent leurs regrets.
-      La Voie des Errants est un lieu où les vérités oubliées sont révélées, mais au prix d'un lourd tribut.`,
-    level: "18-22",
-    lore: `Après avoir vaincu le Spectre du Moine Aedan, les aventuriers découvrent un parchemin scellé de son propre sang.
-  Ce document n'est ni une confession, ni une prière, mais une invitation cryptique menant vers un endroit oublié.
-  
-  La Voie des Errants est un lieu de transition entre les mondes, une route où la réalité se courbe et où les souvenirs
-  deviennent tangibles. Ceux qui s'y aventurent doivent affronter leurs propres peurs et distinguer l'illusion de la vérité.
-  
-  Mais cette route est piégée. Des entités anciennes rôdent, cherchant à détourner les voyageurs de leur chemin,
-  et un mystérieux masque rieur apparaît à chaque carrefour, guidant ou trompant ceux qui osent avancer.
-  
-  Selon les écrits d'Aedan, seul celui qui comprendra le véritable sens de cette route pourra découvrir
-  l'ultime vérité… et atteindre la destination inconnue, marquée par le dernier mot de la Formule Secrète : "reliure".`,
-    dangers: [
-      {
-        name: "Les Masques Gris",
-        health: 120,
         mana: 100,
-        attack: 50,
-        defense: 35,
-        speed: 14,
-        spawnChance: 0.2,
-      },
-      {
-        name: "Les Ombres Mnésiques",
-        health: 140,
-        mana: 120,
-        attack: 55,
+        attack: 60,
         defense: 40,
-        speed: 10,
-        spawnChance: 0.15,
-      },
-      {
-        name: "Le Rieur Sans Nom",
-        health: 180,
-        mana: 150,
-        attack: 65,
-        defense: 50,
         speed: 12,
-        spawnChance: 0.12,
-      },
-      {
-        name: "Le Passeur d'Outre-Monde",
-        health: 200,
-        mana: 180,
-        attack: 70,
-        defense: 55,
-        speed: 14,
-        spawnChance: 0.1,
-      },
-      {
-        name: "Masque du Destin Oublié",
-        health: 850,
-        mana: 300,
-        attack: 100,
-        defense: 90,
-        speed: 16,
-        spawnChance: 0.05,
+        spawnChance: 1.0,
         isBoss: true,
       },
     ],
-  },
-};
+  }}
