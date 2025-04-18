@@ -21,21 +21,41 @@ AI Adventure transforms the traditional text adventure RPG by using AI agents as
   - **Inventory Management**: Tools for generating loot, using consumables, and tracking player items
   - **Economy System**: Trade negotiation with dynamic pricing based on character skills
   - **Procedural Content**: Dynamic generation of items, encounters, and narrative events
+  - **Character Generation**: `generateHero` tool creates complete character sheets with calculated stats
 
 ## 🔮 Game Features
 
-- **Character Creation**: Players can create unique characters with different races and classes
+- **Immersive Character Creation**:
+
+  - Choose from 7 unique races (Reptilien, Elfe, Orc, Nain, Mort-vivant, Gobelin, Troll)
+  - Select from 7 character classes with distinct play styles (Guerrier, Mage, Voleur, Chamane, Paladin, Chasseur, Druide)
+  - Customize with personalized weapons, strengths, weaknesses, companions, and symbols
+  - Receive a dynamically generated character avatar using AI image generation
+
+- **Dynamic Stat System**:
+
+  - Base stats (Health, Mana, Attack, Defense, Speed) calculated based on race and class
+  - Equipment and consumables provide percentage-based buffs to character attributes
+  - Effective stats automatically recalculated as inventory changes
+  - Stats influence combat success and special ability effectiveness
+
 - **Visual Inventory System**: Manage equipment, consumables, and quest items with an intuitive UI
 - **Dynamic Loot Generation**: Procedurally generated items with qualities, stats, and effects
 - **Market & Trading**: Buy, sell, and identify items with interactive merchant dialogues
 - **Dice-Based Combat**: Animated dice rolls for combat with critical success/failure system
 - **Immersive Zones**: Each area contains unique lore, enemies, and adventure opportunities
+  - **Tombe du Dragon Leprestrix**: A forgotten crypt with ancient magic and spectral enemies
+  - **Fort Gaultier**: A prison fortress guarded by werewolves and fanatic soldiers
+  - **Marché de Luneterne**: A lively market for trading and discovering new items
 
 ## 🚧 Features in Development
 
 1. **Multi-Language Support**: Currently available in French only, with plans to expand to other languages
 2. **Spell System**: Implementation of magic spells, including the ability to cast fireballs and other exciting abilities
 3. **Leaderboards**: Competitive rankings to showcase top players and their achievements
+4. **Quest Journal**: Track ongoing quests, completed adventures, and narrative progression
+5. **AI-Generated Voice Narration**: Convert text responses to atmospheric voice narration
+6. **Achievement System**: Unlock badges and rewards for in-game accomplishments
 
 ## 🏗️ Technical Architecture
 
@@ -51,8 +71,10 @@ AI Adventure transforms the traditional text adventure RPG by using AI agents as
   - `DiceDisplay`: Visualizes combat rolls with advanced animations
   - `Inventory`: Manages and displays character items with rarity-based styling
   - `Loot System`: Generates balanced items with scaling stats based on level and quality
+  - `AudioPlayer`: Provides immersive background music that adapts to game context
 
 - **AI Prompt Engineering**:
+  - Character creation system based on choices `introduction.ts`
   - Carefully crafted context in `lib/ai/prompts/` for each game scenario
   - Zone-specific narratives and enemy types defined in `lib/ai/zones.ts`
   - Market interactions guided by structured prompts in `market.ts`
@@ -92,6 +114,8 @@ Our project showcases innovative AI integration through:
 - **Memory & Persistence**: Character progress and choices impact future interactions
 - **Procedural Content**: Dynamic generation of items, encounters, and narrative sequences
 - **Balanced Game Systems**: AI-assisted calculation of stats, damage, and economy
+- **AI Image Generation**: Character avatars created based on selected attributes
+- **Emotion-Adaptive Narrative**: Story tone shifts based on player decisions and combat outcomes
 
 ---
 
