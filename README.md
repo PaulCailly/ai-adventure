@@ -6,7 +6,7 @@ _Submitted for the **Best Use of AI** category_
 
 ## 🎮 Project Overview
 
-TinyQuest transforms the traditional text adventure RPG by using AI agents as dynamic narrators that adapt to player choices. Players can create characters, explore zones, battle enemies, find loot, manage inventory, visit markets, and complete quests—all powered by conversational AI.
+ai-adventure transforms the traditional text adventure RPG by using AI agents as dynamic narrators that adapt to player choices. Players can create characters, explore zones, battle enemies, find loot, manage inventory, visit markets, and complete quests—all powered by conversational AI.
 
 ![Game Demo](path/to/your/demo.gif) <!-- Add your gameplay demo GIF here -->
 
@@ -37,6 +37,12 @@ TinyQuest transforms the traditional text adventure RPG by using AI agents as dy
 
 ![Inventory System](path/to/inventory-demo.gif) <!-- Add your inventory system GIF here -->
 
+## 🚧 Features in Development
+
+1. **Multi-Language Support**: Currently available in French only, with plans to expand to other languages
+2. **Spell System**: Implementation of magic spells, including the ability to cast fireballs and other exciting abilities
+3. **Leaderboards**: Competitive rankings to showcase top players and their achievements
+
 ## 🏗️ Technical Architecture
 
 - **Specialized API Routes**:
@@ -57,32 +63,12 @@ TinyQuest transforms the traditional text adventure RPG by using AI agents as dy
   - Zone-specific narratives and enemy types defined in `lib/ai/zones.ts`
   - Market interactions guided by structured prompts in `market.ts`
 
-![AI System Architecture](path/to/system-architecture.gif) <!-- Add your system architecture GIF here -->
-
-## 💻 Code Highlights
-
-```typescript
-// Combat calculation with dice rolls and critical hits
-const calcDamage = (attack, defense, diceRoll, role) => {
-  const randomFactor = ((diceRoll - 1) / (sides - 1)) * 0.4 + 0.8;
-  let baseDamage = attack * randomFactor;
-  baseDamage = baseDamage * (1 - defense / 100);
-
-  // Critical hit system
-  if (diceRoll === 1) {
-    return { outcome: "critical failure", damage: 0 };
-  } else if (diceRoll === sides) {
-    return { outcome: "critical success", damage: baseDamage * 2 };
-  } // ...
-};
-```
-
 ## 🚀 Getting Started
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/your-org/tinyquest.git
-   cd tinyquest
+   git clone https://github.com/your-org/ai-adventure.git
+   cd ai-adventure
    ```
 2. **Install dependencies**
    ```bash
@@ -106,13 +92,12 @@ const calcDamage = (attack, defense, diceRoll, role) => {
 
 Our project showcases innovative AI integration through:
 
+- **80% Vibe Coded**: Most of the code has been vibe coded, even this sentence has been autocompleted
 - **Context-Aware Agents**: Each AI agent maintains its own personality and narrative style
 - **Multi-Tool Framework**: AI can use specialized tools to affect the game state (combat, inventory, economy)
 - **Memory & Persistence**: Character progress and choices impact future interactions
 - **Procedural Content**: Dynamic generation of items, encounters, and narrative sequences
 - **Balanced Game Systems**: AI-assisted calculation of stats, damage, and economy
-
-![AI System Architecture](path/to/system-architecture.gif) <!-- Add your system architecture GIF here -->
 
 ---
 
