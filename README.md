@@ -1,4 +1,4 @@
-# TinyQuest: AI-Powered Text Adventure Game
+# AI Adventure: AI-Powered Text Adventure Game
 
 A fantasy RPG adventure chatbot built with Next.js and the Vercel AI SDK—created for the Next.js Global Hackathon (Apr 7–17, 2025).
 
