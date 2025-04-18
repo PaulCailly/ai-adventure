@@ -6,9 +6,7 @@ _Submitted for the **Best Use of AI** category_
 
 ## 🎮 Project Overview
 
-ai-adventure transforms the traditional text adventure RPG by using AI agents as dynamic narrators that adapt to player choices. Players can create characters, explore zones, battle enemies, find loot, manage inventory, visit markets, and complete quests—all powered by conversational AI.
-
-[![AI Adventure Game Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+AI Adventure transforms the traditional text adventure RPG by using AI agents as dynamic narrators that adapt to player choices. Players can create characters, explore zones, battle enemies, find loot, manage inventory, visit markets, and complete quests—all powered by conversational AI.
 
 ## 🧠 AI Integration
 
