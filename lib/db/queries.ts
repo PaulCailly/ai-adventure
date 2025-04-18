@@ -756,7 +756,12 @@ export async function consumeConsumableItem({
   }
 
   // Ensure this item is a consumable.
-  if (item.itemType !== "consumable") {
+  if (
+    item.itemType !== "consumable" &&
+    item.itemType !== "potion" &&
+    item.itemType !== "elixir" &&
+    item.itemType !== "antidote"
+  ) {
     throw new Error("This item is not consumable");
   }
 

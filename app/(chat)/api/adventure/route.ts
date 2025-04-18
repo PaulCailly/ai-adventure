@@ -101,6 +101,7 @@ export async function POST(request: Request) {
   // Map the DB items to the expected inventory item shape.
   // This strips out extra fields (like id, createdAt) and asserts that itemType is one of the allowed values.
   const formattedInventoryItems = inventoryItems.map((item) => ({
+    id: item.id,
     name: item.name,
     identified: item.identified,
     rarity: item.rarity,
