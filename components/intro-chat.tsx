@@ -17,7 +17,7 @@ export function Chat({ id, initialMessages }: ChatProps) {
 
   const { messages, append, isLoading } = useChat({
     id,
-    body: { id, modelId: "gpt-4o" },
+    body: { id, modelId: "gpt-4.1-2025-04-14" },
     initialMessages,
     onFinish: () => {
       mutate("/api/history");

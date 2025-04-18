@@ -8,7 +8,7 @@ _Submitted for the **Best Use of AI** category_
 
 ai-adventure transforms the traditional text adventure RPG by using AI agents as dynamic narrators that adapt to player choices. Players can create characters, explore zones, battle enemies, find loot, manage inventory, visit markets, and complete quests—all powered by conversational AI.
 
-![Game Demo](path/to/your/demo.gif) <!-- Add your gameplay demo GIF here -->
+[![AI Adventure Game Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
 
 ## 🧠 AI Integration
 
@@ -24,8 +24,6 @@ ai-adventure transforms the traditional text adventure RPG by using AI agents as
   - **Economy System**: Trade negotiation with dynamic pricing based on character skills
   - **Procedural Content**: Dynamic generation of items, encounters, and narrative events
 
-![Combat System](path/to/combat-demo.gif) <!-- Add your combat system GIF here -->
-
 ## 🔮 Game Features
 
 - **Character Creation**: Players can create unique characters with different races and classes
@@ -34,8 +32,6 @@ ai-adventure transforms the traditional text adventure RPG by using AI agents as
 - **Market & Trading**: Buy, sell, and identify items with interactive merchant dialogues
 - **Dice-Based Combat**: Animated dice rolls for combat with critical success/failure system
 - **Immersive Zones**: Each area contains unique lore, enemies, and adventure opportunities
-
-![Inventory System](path/to/inventory-demo.gif) <!-- Add your inventory system GIF here -->
 
 ## 🚧 Features in Development
 

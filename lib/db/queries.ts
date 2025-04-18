@@ -781,7 +781,7 @@ async function generateItemName(
 
   // Use AI to properly format the name in French
   const result = await generateObject({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4.1-2025-04-14"),
     system:
       "You are a French language expert specializing in item naming in fantasy games.",
     prompt: `

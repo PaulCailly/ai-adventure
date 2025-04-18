@@ -19,7 +19,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
   const { messages, append, isLoading } = useChat({
     id,
     api: "/api/market",
-    body: { id, modelId: "gpt-4o", characterId },
+    body: { id, modelId: "gpt-4.1-2025-04-14", characterId },
     initialMessages,
 
     onFinish: () => {
