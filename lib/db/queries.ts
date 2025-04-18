@@ -604,6 +604,212 @@ export async function discardItem({ itemId }: { itemId: string }) {
   return { message: "Item discarded successfully" };
 }
 
+// Item generation helper types and constants
+type ItemAdjective = {
+  word: string;
+  weight: number;
+  minRarity: number; // 1 = common, 5 = legendary
+  statPreference?: "attack" | "defense" | "health" | "mana" | "speed";
+};
+
+type NameComponent = {
+  text: string;
+  source: string;
+  weight: number;
+  type: "character" | "location" | "concept";
+};
+
+type Rarity = keyof typeof RARITY_LEVELS;
+
+const RARITY_LEVELS = {
+  common: 1,
+  uncommon: 2,
+  rare: 3,
+  epic: 4,
+  legendary: 5,
+};
+
+const ADJECTIVES: ItemAdjective[] = [
+  // Attack-focused adjectives
+  { word: "Féroce", weight: 1, minRarity: 1, statPreference: "attack" },
+  { word: "Brutal", weight: 1, minRarity: 2, statPreference: "attack" },
+  { word: "Impitoyable", weight: 1, minRarity: 3, statPreference: "attack" },
+  { word: "Dévastateur", weight: 1, minRarity: 4, statPreference: "attack" },
+  { word: "Titanesque", weight: 0.7, minRarity: 5, statPreference: "attack" },
+
+  // Defense-focused adjectives
+  { word: "Robuste", weight: 1, minRarity: 1, statPreference: "defense" },
+  { word: "Fortifié", weight: 1, minRarity: 2, statPreference: "defense" },
+  { word: "Inébranlable", weight: 1, minRarity: 3, statPreference: "defense" },
+  { word: "Impénétrable", weight: 1, minRarity: 4, statPreference: "defense" },
+  { word: "Adamantin", weight: 0.7, minRarity: 5, statPreference: "defense" },
+
+  // Health-focused adjectives
+  { word: "Vital", weight: 1, minRarity: 1, statPreference: "health" },
+  { word: "Vigoureux", weight: 1, minRarity: 2, statPreference: "health" },
+  { word: "Régénérateur", weight: 1, minRarity: 3, statPreference: "health" },
+  { word: "Immortel", weight: 1, minRarity: 4, statPreference: "health" },
+  { word: "Éternel", weight: 0.7, minRarity: 5, statPreference: "health" },
+
+  // Mana-focused adjectives
+  { word: "Mystique", weight: 1, minRarity: 1, statPreference: "mana" },
+  { word: "Arcanique", weight: 1, minRarity: 2, statPreference: "mana" },
+  { word: "Ésotérique", weight: 1, minRarity: 3, statPreference: "mana" },
+  { word: "Transcendant", weight: 1, minRarity: 4, statPreference: "mana" },
+  { word: "Omnipotent", weight: 0.7, minRarity: 5, statPreference: "mana" },
+
+  // Speed-focused adjectives
+  { word: "Agile", weight: 1, minRarity: 1, statPreference: "speed" },
+  { word: "Véloce", weight: 1, minRarity: 2, statPreference: "speed" },
+  { word: "Fulgurant", weight: 1, minRarity: 3, statPreference: "speed" },
+  { word: "Supersonique", weight: 1, minRarity: 4, statPreference: "speed" },
+  { word: "Célérité", weight: 0.7, minRarity: 5, statPreference: "speed" },
+
+  // Generic quality adjectives by rarity
+  { word: "Simple", weight: 1.5, minRarity: 1 },
+  { word: "Raffiné", weight: 1.2, minRarity: 2 },
+  { word: "Précieux", weight: 1, minRarity: 3 },
+  { word: "Légendaire", weight: 0.8, minRarity: 4 },
+  { word: "Divin", weight: 0.5, minRarity: 5 },
+];
+
+function extractNameComponents(): NameComponent[] {
+  const components: NameComponent[] = [];
+
+  // Process each zone
+  Object.entries(zones).forEach(([zoneKey, zone]) => {
+    // Extract character names from dangers
+    zone.dangers.forEach((danger) => {
+      if (danger.isBoss) {
+        components.push({
+          text: danger.name,
+          source: zone.name,
+          weight: 0.5, // Boss names are rarer
+          type: "character",
+        });
+      } else {
+        components.push({
+          text: danger.name,
+          source: zone.name,
+          weight: 1,
+          type: "character",
+        });
+      }
+    });
+
+    // Extract location names and concepts from lore
+    const loreWords = zone.lore.split(/\s+/);
+    const conceptRegex = /[A-Z][a-zéèêëîïôöûüç]{5,}/g;
+    const concepts = zone.lore.match(conceptRegex) || [];
+
+    concepts.forEach((concept) => {
+      components.push({
+        text: concept,
+        source: zone.name,
+        weight: 0.8,
+        type: "concept",
+      });
+    });
+
+    components.push({
+      text: zone.name,
+      source: zone.name,
+      weight: 0.7,
+      type: "location",
+    });
+  });
+
+  return components;
+}
+
+const NAME_COMPONENTS = extractNameComponents();
+
+function getHighestStat(buffs: Record<string, number>): string | undefined {
+  const stats = ["attack", "defense", "health", "mana", "speed"];
+  let maxStat: string | undefined;
+  let maxValue = -Infinity;
+
+  for (const stat of stats) {
+    if (buffs[stat] && buffs[stat] > maxValue) {
+      maxValue = buffs[stat];
+      maxStat = stat;
+    }
+  }
+
+  return maxStat;
+}
+
+function weightedRandom<T extends { weight: number }>(items: T[]): T {
+  const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
+  let random = Math.random() * totalWeight;
+
+  for (const item of items) {
+    random -= item.weight;
+    if (random <= 0) {
+      return item;
+    }
+  }
+
+  return items[0];
+}
+
+async function generateItemName(
+  rarity: string,
+  buffs: Record<string, number>,
+  itemType: string
+): Promise<{ name: string; description: string }> {
+  const rarityLevel = RARITY_LEVELS[rarity.toLowerCase() as Rarity] || 1;
+  const dominantStat = getHighestStat(buffs);
+
+  // Filter adjectives by rarity and stat preference
+  const validAdjectives = ADJECTIVES.filter(
+    (adj) =>
+      adj.minRarity <= rarityLevel &&
+      (!adj.statPreference || adj.statPreference === dominantStat)
+  );
+
+  // Filter name components based on rarity
+  const validComponents = NAME_COMPONENTS.filter((comp) => {
+    if (rarityLevel >= 4) return true; // Epic and Legendary can use any component
+    if (rarityLevel === 3) return comp.weight >= 0.7; // Rare items use medium-weight components
+    return comp.weight >= 1; // Common and uncommon use only common components
+  });
+
+  // Select random components
+  const adjective = weightedRandom(validAdjectives);
+  const nameComponent = weightedRandom(validComponents);
+
+  // Use AI to properly format the name in French
+  const result = await generateObject({
+    model: openai("gpt-4o"),
+    system:
+      "You are a French language expert specializing in item naming in fantasy games.",
+    prompt: `
+Given these components, create a grammatically correct French item name:
+- Adjective: "${adjective.word}"
+- Item Type: "${itemType}"
+- Name Component: "${nameComponent.text}" (type: ${nameComponent.type})
+- Source Location: "${nameComponent.source}"
+
+Rules:
+1. Use proper French articles and prepositions
+2. Ensure correct grammatical agreement
+3. Keep it concise and natural-sounding
+4. Return ONLY the name and a short description, nothing else
+`,
+    schema: z.object({
+      name: z.string().describe("The grammatically correct French item name"),
+      description: z
+        .string()
+        .describe(
+          "A short description in French, mentioning the source location"
+        ),
+    }),
+  });
+
+  return result.object;
+}
+
 export async function identifyItem({
   itemId,
 }: {
@@ -655,58 +861,12 @@ export async function identifyItem({
     mana: 0,
   });
 
-  // Build a prompt for item identification using all characteristics of the item
-  const prompt = `
-Output must be in French language. This is a very important rule.
-
-You are an expert in identifying mystical items.
-The player presents you with an unidentified item of rarity "${item.rarity}".
-Item characteristics: ${item.name}, Buffs - ${JSON.stringify(
-    item.buffs
-  )}, Quality - ${item.rarity}
-
-Using the rich and diverse lore of the Forest of Ancient Whispers (below), create a unique and imaginative name that reflects the item's rarity. The name should draw inspiration from various elements such as the ancient elven civilization, the magical transformations, the ongoing struggle between factions, and the mystical ambiance of the forest. Additionally, craft a vivid description of less than 140 characters that captures the item's essence, weaving in fantastical and mysterious elements from the lore.
-
-Rules for naming based on rarity:
-- Uncommon: Use slightly more intriguing words. Examples: "Enhanced", "Refined", "Sturdy", "Improved", "Advanced", "Better", "Superior", "Upgraded", "Distinct", "Notable", "Special", "Unique".
-- Rare: Use words that suggest uniqueness and value. Examples: "Exquisite", "Rare", "Valuable", "Precious", "Exceptional", "Exclusive", "Select", "Elite", "Premium", "Choice", "Distinctive", "Remarkable".
-- Epic: Use grand and powerful words. Examples: "Majestic", "Mythic", "Ancient", "Heroic", "Legendary", "Noble", "Grand", "Regal", "Lofty", "Sublime", "Magnificent", "Glorious".
-- Legendary: Use words that denote extreme rarity and power. Examples: "Divine", "Ethereal", "Transcendent", "Celestial", "Heavenly", "Mythical", "Godlike", "Supreme", "Ultimate", "Unparalleled", "Peerless", "Unmatched".
-
-Rules for naming based on stats:
-- High Attack: Use words like "Fierce", "Mighty", "Dominant", "Strong", "Powerful", "Aggressive", "Forceful", "Intense", "Bold", "Vigorous", "Potent", "Ferocious".
-- High Defense: Use words like "Impenetrable", "Stalwart", "Guarded", "Secure", "Protected", "Fortified", "Resilient", "Tough", "Solid", "Stable", "Unyielding", "Defensive".
-- High Health: Use words like "Vigorous", "Robust", "Enduring", "Healthy", "Sturdy", "Hearty", "Strong", "Durable", "Resilient", "Tough", "Solid", "Sound".
-- High Mana: Use words like "Arcane", "Mystical", "Enchanted", "Magical", "Supernatural", "Otherworldly", "Mysterious", "Spiritual", "Sorcerous", "Wizardly", "Occult", "Esoteric".
-- High Speed: Use words like "Swift", "Nimble", "Agile", "Quick", "Fast", "Rapid", "Brisk", "Lively", "Fleet", "Spry", "Zippy", "Speedy".
-
-Incorporate lore elements:
-- If the item belonged to a notable character, mention their influence or legacy.
-- Use a wide variety of words to enrich the description, drawing from the lore's themes of ancient magic, elven history, and the forest's mystical nature.
-
-Lore:
-${zones["tombe_dragon"].lore}
-`;
-
-  // Call AI SDK to generate the item details using generateObject
-  const result = await generateObject({
-    model: openai("gpt-4o"),
-    system: "You are an expert in identifying mystical items.",
-    prompt,
-    schema: z.object({
-      name: z
-        .string()
-        .describe(
-          "The name of the item. It should match the rarity of the item and be inspired by the diverse elements of the forest lore."
-        ),
-      description: z
-        .string()
-        .describe(
-          "A very short sentence about the item, it can be a formal description, a quote, an anecdote, or a funny sentence."
-        ),
-    }),
-  });
-  const { name: newName, description: newDescription } = result.object;
+  // Generate item name and description using our new system
+  const { name: newName, description: newDescription } = await generateItemName(
+    item.rarity,
+    item.buffs as Record<string, number>,
+    item.name
+  );
 
   // Update the item record to mark it as identified and update its details
   await db
