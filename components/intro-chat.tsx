@@ -45,9 +45,7 @@ export function Chat({ id, initialMessages }: ChatProps) {
         try {
           await audio.play();
           isPlaying = true;
-        } catch (e) {
-          console.log("Audio playback failed:", e);
-        }
+        } catch (e) {}
       };
       playAttempt();
     }
