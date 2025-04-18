@@ -13,15 +13,16 @@ type ChatProps = {
   id: string;
   characterId: string;
   initialMessages: Array<Message>;
+  zoneId: string;
 };
 
-export function Chat({ id, characterId, initialMessages }: ChatProps) {
+export function Chat({ id, characterId, initialMessages, zoneId }: ChatProps) {
   const { mutate } = useSWRConfig();
 
   const { messages, append, isLoading } = useChat({
     id,
     api: "/api/adventure",
-    body: { id, modelId: "gpt-4o", characterId },
+    body: { id, modelId: "gpt-4o", characterId, zoneId },
     initialMessages,
 
     onFinish: () => {
@@ -74,6 +75,7 @@ export function Chat({ id, characterId, initialMessages }: ChatProps) {
         isLoading={isLoading}
         messages={messages}
         append={append}
+        zoneId={zoneId}
       />
     </div>
   );

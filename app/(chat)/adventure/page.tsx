@@ -6,7 +6,11 @@ import { DataStreamHandler } from "@/components/data-stream-handler";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getCharactersByUserId } from "@/lib/db/queries";
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
   if (!session?.user?.id) {
     return redirect("/login");
@@ -21,6 +25,10 @@ export default async function Page() {
   }
 
   const id = generateUUID();
+  const zoneId =
+    typeof searchParams?.zoneId === "string"
+      ? searchParams.zoneId
+      : "tombe_dragon";
 
   return (
     <div className="max-w-[430px] h-screen max-h-[932px] m-auto overflow-hidden border overflow-y-scroll">
@@ -30,6 +38,7 @@ export default async function Page() {
           id={id}
           characterId={characters[0].id}
           initialMessages={[]}
+          zoneId={zoneId}
         />
         <DataStreamHandler id={id} />
       </ScrollArea>

@@ -119,7 +119,7 @@ export const zones: Record<string, Zone> = {
     image: "fort-gaultier.jpg",
     description: `Une forteresse austère et lugubre, nichée dans les hauteurs rocheuses à la frontière de la Nupesse.
         Entourée de brumes empoisonnées et de cris lointains, elle sert désormais de prison aux opposants du régime Saloupien.`,
-    level: "14-18",
+    level: "14-19",
     lore: `Lucas a reçu un message de Pierre Defoyer :
     une âme proche de Leprestrix, **emprisonnée dans le Fort Gaultier**, détient des informations vitales sur les événements passés. Après avoir rassemblé davantage d'alliés pour renforcer sa Guilde et atteindre le fort. Il prend d'assaut le fort ! 
 
@@ -183,4 +183,5 @@ export const zones: Record<string, Zone> = {
         isBoss: true,
       },
     ],
-  }}
+  },
+};

@@ -42,11 +42,13 @@ export async function POST(request: Request) {
     characterId,
     messages,
     modelId,
+    zoneId,
   }: {
     id: string;
     characterId: string;
     messages: Array<Message>;
     modelId: string;
+    zoneId: string;
   } = await request.json();
 
   const session = await auth();
@@ -60,6 +62,13 @@ export async function POST(request: Request) {
   if (!model) {
     return new Response("Model not found", { status: 404 });
   }
+
+  // --- Get Zone Data ---
+  const zone = zones[zoneId];
+  if (!zone) {
+    return new Response(`Zone with id ${zoneId} not found`, { status: 404 });
+  }
+  // ---
 
   // Before converting messages, sanitize out any incomplete tool invocations.
   const sanitizedMessages = messages.map((message) => {
@@ -147,7 +156,7 @@ export async function POST(request: Request) {
           speed: character.speed,
           companion: character.companion,
           symbol: character.symbol,
-          zone: "tombe_dragon",
+          zone: zoneId,
           inventoryItems: formattedInventoryItems,
         }),
         messages: coreMessages,
@@ -279,9 +288,8 @@ export async function POST(request: Request) {
               health: number(),
               mana: number(),
               gold: number(),
-              zone: string(),
             }),
-            execute: async ({ health, mana, gold, zone }) => {
+            execute: async ({ health, mana, gold }) => {
               try {
                 console.log(
                   `🛡 updateHero invoked for heroId: ${characterId} with changes: Health=${health}, Mana=${mana}, Gold=${gold}`
@@ -313,7 +321,7 @@ export async function POST(request: Request) {
             parameters: object({
               zone: string(),
             }),
-            execute: async ({ zone, slot }) => {
+            execute: async ({ zone }) => {
               const slots = ["weapon", "armor", "accessory"];
               const validSlot = slots[
                 Math.floor(Math.random() * slots.length)

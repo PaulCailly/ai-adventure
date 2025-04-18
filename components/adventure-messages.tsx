@@ -23,7 +23,7 @@ interface MessagesProps {
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
-  zone?: string;
+  zoneId: string;
 }
 
 function PureMessages({
@@ -31,14 +31,22 @@ function PureMessages({
   messages,
   append,
   id,
-  zone = "tombe_dragon",
+  zoneId,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
   const router = useRouter();
 
-  // Use the zone from props or default to tombe_dragon
-  const currentZone = zones[zone];
+  // Use the zoneId from props
+  const currentZone = zones[zoneId];
+
+  if (!currentZone) {
+    // Handle the case where zoneId might be invalid, maybe redirect or show an error
+    // For now, let's just log an error and potentially return null or a fallback UI
+    console.error(`Invalid zoneId provided: ${zoneId}`);
+    // You might want to redirect or show an error message here
+    return <div>Error: Zone not found.</div>;
+  }
 
   if (!messages.length) {
     return (
@@ -46,7 +54,7 @@ function PureMessages({
         <div className="relative w-full h-[60vh]">
           <img
             src={`/images/${currentZone.image}`}
-            alt={zone}
+            alt={currentZone.name}
             className="object-cover w-full h-full"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />

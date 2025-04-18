@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { zones } from "@/lib/ai/zones";
 
 // Types for the buff breakdown
 interface BuffDetail {
@@ -323,16 +324,6 @@ function CharacterCard({
     }
   };
 
-  const handleForestClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (currentHealth <= 0) {
-      toast.error("Votre santé est insuffisante pour l'aventure.");
-      return;
-    }
-    router.push(`/adventure`);
-  };
-
-  // New handler for the Market button without opening hours check
   const handleMarketClick = (e: React.MouseEvent) => {
     e.preventDefault();
     router.push(`/market`);
@@ -505,33 +496,53 @@ function CharacterCard({
             </Card>
           </Link>
 
-          {/* Forest button */}
-          <Link href="#" onClick={handleForestClick} className="w-full">
-            <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
-              <CardContent className="py-4 px-5">
-                <div className="flex justify-between items-center gap-3 min-w-0">
-                  <div className="flex flex-row gap-2 min-w-0 items-center">
-                    <Swords className="h-5 w-5 text-primary flex-shrink-0" />
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-medium text-foreground truncate">
-                        La Tombe du Dragon
-                      </h3>
+          {/* Dynamic Adventure Zone Links */}
+          {Object.entries(zones)
+            .filter(([zoneId, zone]) => zoneId !== "market") // Exclude market
+            .map(([zoneId, zone]) => (
+              <Link
+                key={zoneId}
+                href={`/adventure?zoneId=${zoneId}`}
+                onClick={(e) => checkAdventureEligibility(e, currentHealth)} // Use helper for health check
+                className="w-full"
+              >
+                <Card className="hover:opacity-90 transition-all duration-200 bg-gradient-to-r from-primary/5 to-primary/10">
+                  <CardContent className="py-4 px-5">
+                    <div className="flex justify-between items-center gap-3 min-w-0">
+                      <div className="flex flex-row gap-2 min-w-0 items-center">
+                        <Swords className="h-5 w-5 text-primary flex-shrink-0" />
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-medium text-foreground truncate">
+                            {zone.name} {/* Use dynamic zone name */}
+                          </h3>
+                        </div>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-xs font-normal flex-shrink-0"
+                      >
+                        Niv. {zone.level} {/* Use dynamic zone level */}
+                      </Badge>
                     </div>
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className="text-xs font-normal flex-shrink-0"
-                  >
-                    Niv. 11-15
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
         </>
       )}
     </div>
   );
 }
+
+// Helper function to check adventure eligibility
+const checkAdventureEligibility = (
+  e: React.MouseEvent,
+  currentHealth: number
+) => {
+  if (currentHealth <= 0) {
+    e.preventDefault();
+    toast.error("Votre santé est insuffisante pour l'aventure.");
+  }
+};
 
 export default CharacterCard;
