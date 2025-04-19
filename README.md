@@ -51,17 +51,12 @@ AI Adventure transforms the traditional text adventure RPG by using AI agents as
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.12.46.png" width="30%">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.13.01.png" width="30%">
-</p>
-<p align="center">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.13.png" width="30%">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.28.png" width="30%">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.42.png" width="30%">
-</p>
-<p align="center">
-  <img src="screenshots/Screenshot%202025-04-19%20at%2017.15.11.png" width="30%">
-  <!-- Add more images here if needed, maintaining 3 per row -->
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.12.46.png" width="15%">
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.13.01.png" width="15%">
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.13.png" width="15%">
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.28.png" width="15%">
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.14.42.png" width="15%">
+  <img src="screenshots/Screenshot%202025-04-19%20at%2017.15.11.png" width="15%">
 </p>
 
 ## 🚧 Features in Development
