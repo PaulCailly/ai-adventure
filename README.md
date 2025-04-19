@@ -48,6 +48,16 @@ AI Adventure transforms the traditional text adventure RPG by using AI agents as
   - **Fort Gaultier**: A prison fortress guarded by werewolves and fanatic soldiers
   - **Marché de Luneterne**: A lively market for trading and discovering new items
 
+## 🖼️ Screenshots
+
+![Screenshot 1](screenshots/Screenshot%202025-04-19%20at%2017.12.46.png)
+![Screenshot 2](screenshots/Screenshot%202025-04-19%20at%2017.13.01.png)
+![Screenshot 3](screenshots/Screenshot%202025-04-19%20at%2017.13.35.png)
+![Screenshot 4](screenshots/Screenshot%202025-04-19%20at%2017.14.13.png)
+![Screenshot 5](screenshots/Screenshot%202025-04-19%20at%2017.14.28.png)
+![Screenshot 6](screenshots/Screenshot%202025-04-19%20at%2017.14.42.png)
+![Screenshot 7](screenshots/Screenshot%202025-04-19%20at%2017.15.11.png)
+
 ## 🚧 Features in Development
 
 1. **Multi-Language Support**: Currently available in French only, with plans to expand to other languages
