@@ -22,7 +22,7 @@ export function Chat({ id, characterId, initialMessages, zoneId }: ChatProps) {
   const { messages, append, isLoading } = useChat({
     id,
     api: "/api/adventure",
-    body: { id, modelId: "gpt-4.1-2025-04-14", characterId, zoneId },
+    body: { id, modelId: "gpt-4o", characterId, zoneId },
     initialMessages,
 
     onFinish: () => {
