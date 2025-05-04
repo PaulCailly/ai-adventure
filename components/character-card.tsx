@@ -12,6 +12,7 @@ import {
   Swords,
   PlusCircle,
   ShoppingCart,
+  BookOpenText,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -510,7 +511,11 @@ function CharacterCard({
                   <CardContent className="py-4 px-5">
                     <div className="flex justify-between items-center gap-3 min-w-0">
                       <div className="flex flex-row gap-2 min-w-0 items-center">
-                        <Swords className="h-5 w-5 text-primary flex-shrink-0" />
+                        {zone.dangers.length === 0 ? (
+                          <BookOpenText className="h-5 w-5 text-primary flex-shrink-0" />
+                        ) : (
+                          <Swords className="h-5 w-5 text-primary flex-shrink-0" />
+                        )}
                         <div className="min-w-0">
                           <h3 className="text-sm font-medium text-foreground truncate">
                             {zone.name} {/* Use dynamic zone name */}
