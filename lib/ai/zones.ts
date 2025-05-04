@@ -184,4 +184,39 @@ export const zones: Record<string, Zone> = {
       },
     ],
   },
+  "bibliotheque-du-savoir": {
+    name: "La Bibliothèque du Savoir",
+    image: "bibliotheque-du-savoir.jpg",
+    description: `Une bibliothèque ancienne et mystérieuse, cachée dans les ruines d'un ancien temple.`,
+    level: "19-24",
+    lore: `
+ Lucas et sa guilde doivent répondre à des **épreuves de sagesse** posées par les **Sages Drouet**, pour mériter l'accès à un **livre unique** dans lequel il vont découvrir le dernier morceau de la formule secrète: "Reliure", écrit à travers les âges par les peuples libres.
+ Pour obtenir le livre, il faut répondre à toutes les questions suivantes sans faire d'erreur. Si une réponse est fausse, le joueur est expulsé de la bibliothèque avec un juron stupide et drole d'inspiration fantastique (ex: "Cervelle de Goblin", "Pas plus malin qu'un Orc", etc )et son aventure s'arrête là.
+ 
+"1. (Réponse unique) En quelle année a eu lieu la chute de la monarchie en France ? / 1788 / 1792 / 1804 / 1789 // Réponse : 1792",
+
+"2. (Réponse unique) En quelle année World of Warcraft est-il sorti ? / 1999 / 2002 / 2004 / 2006 // Réponse : 2004",
+
+"3. (Réponse unique) Qui a écrit 'Le Deuxième Sexe', ouvrage majeur du féminisme ? / Marguerite Yourcenar / Simone de Beauvoir / Virginia Woolf / Françoise Sagan // Réponse : Simone de Beauvoir",
+
+"4. (Réponse unique) Quelle ville fut la capitale de l'Empire byzantin ? / Athènes / Rome / Constantinople / Alexandrie // Réponse : Constantinople",
+
+"5. (Réponse unique) Qui est Drouet, meilleur prof (ironique) d'histoire-géo de Prévert ? / Un roi oublié / Un philosophe méconnu / Un professeur d'histoire moderne / Un prof redouté à Sartrouville // Réponse : Un prof redouté à Sartrouville",
+
+"6. (Réponse unique) Quelle est la langue la plus parlée au monde (langue maternelle) ? / Mandarin / Anglais / Espagnol / Hindi // Réponse : Mandarin",
+
+"7. (Réponse unique) Où est né Lucas, le héros de l'aventure ? / Montreuil / Paris / Bobigny / Aubervilliers // Réponse : Aubervilliers",
+
+"9. (Réponse unique) Quelle est la capitale de l'Espagne (même si certains insistent pour dire que c'est Madrid) ? / Madrid / Valence / Barcelone / Séville // Réponse : Barcelone",
+
+"11. (Réponse unique) Quelle est la capitale de la Finlande ? / Oslo / Tallinn / Helsinki / Stockholm // Réponse : Helsinki",
+
+"12. (Réponse unique) Qui est la députée actuelle de Sartrouville ? / Marlène Schiappa / Yaël Braun-Pivet / Rachida Dati / Aurélien Rousseau // Réponse : Yaël Braun-Pivet",
+
+"14. (Réponse unique) En quelle année est née Estelle? / 1992 / 1993 / 1994 / 1995 // Réponse : 1994",
+
+"15. (Réponse unique) Où se déroulera le mariage de Lucas et Estelle ? / Uzès / Sauve / Montpellier / Avignon // Réponse : Sauve"
+    `,
+    dangers: [],
+  },
 };
