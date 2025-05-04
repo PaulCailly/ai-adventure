@@ -2,120 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { Progress } from "./ui/progress";
-import { Card, CardContent } from "./ui/card";
-
-// Exponential XP curve: each level requires 100% more XP than the previous
-// and has an additional scaling factor based on level
-function getXpForLevel(level: number): number {
-  const baseXp = 1500;
-  const multiplier = Math.pow(2, level); // Double XP requirement each level
-  const levelScaling = 1 + level * 0.1; // Additional 10% scaling per level
-  return Math.floor(baseXp * multiplier * levelScaling);
-}
-
-// Calculate level based on total XP
-function getLevelFromXp(xp: number): number {
-  let level = 0;
-  let xpRequired = getXpForLevel(0);
-
-  while (xp >= xpRequired) {
-    xp -= xpRequired;
-    level++;
-    xpRequired = getXpForLevel(level);
-  }
-
-  return level;
-}
-
-// Get XP progress within current level
-function getCurrentLevelXp(totalXp: number): {
-  current: number;
-  required: number;
-} {
-  const level = getLevelFromXp(totalXp);
-  let xpInPreviousLevels = 0;
-
-  for (let i = 0; i < level; i++) {
-    xpInPreviousLevels += getXpForLevel(i);
-  }
-
-  return {
-    current: totalXp - xpInPreviousLevels,
-    required: getXpForLevel(level),
-  };
-}
 
 export default function ExperienceBar() {
-  const [serverXp, setServerXp] = useState(0);
-  const [lastUpdate, setLastUpdate] = useState(Date.now());
-  const [pending, setPending] = useState(0);
-  const [displayedXp, setDisplayedXp] = useState(0);
+  const [progress, setProgress] = useState(65); // Fake progress percentage
   const [animations, setAnimations] = useState<{ id: number; x: number }[]>([]);
-  const [lastPassiveXp, setLastPassiveXp] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const passive = Math.floor((now - lastUpdate) / 1000);
-      if (passive > lastPassiveXp) {
-        // Trigger animation for each new passive XP point
-        for (let i = lastPassiveXp + 1; i <= passive; i++) {
-          triggerAnimation(Math.random() * 100); // Random position along the bar
-        }
-        setLastPassiveXp(passive);
-      }
-      setDisplayedXp(serverXp + pending + passive);
-    }, 100);
-    return () => clearInterval(interval);
-  }, [serverXp, pending, lastUpdate, lastPassiveXp]);
-
-  useEffect(() => {
-    async function init() {
-      try {
-        const res = await fetch("/api/progress", { method: "GET" });
-        if (res.ok) {
-          const data = await res.json();
-          setServerXp(data.xp);
-          setLastUpdate(Date.now());
-        }
-      } catch (error) {
-        console.error("Error fetching initial XP:", error);
-      }
-    }
-    init();
-  }, []);
-
-  useEffect(() => {
-    const flushInterval = setInterval(() => {
-      if (pending > 0) {
-        flushPending();
-      }
-    }, 60000);
-    return () => clearInterval(flushInterval);
-  }, [pending]);
-
-  async function flushPending() {
-    const increment = pending;
-    setPending(0);
-    try {
-      const res = await fetch("/api/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ increment }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setServerXp(data.xp);
-        setLastUpdate(Date.now());
-      }
-    } catch (error) {
-      console.error("Error sending increments:", error);
-    }
-  }
+  // Fixed values for level 21
+  const level = 21;
+  const current = 42500;
+  const required = 65000;
 
   useEffect(() => {
     const handleTap = (e: MouseEvent) => {
-      setPending((prev) => prev + 1);
+      // Increment progress by a small random amount on click
+      setProgress((prev) => Math.min(100, prev + Math.random() * 2));
+
       const container = document.getElementById("xp-container");
       if (container) {
         const rect = container.getBoundingClientRect();
@@ -137,10 +38,6 @@ export default function ExperienceBar() {
       setAnimations((prev) => prev.filter((anim) => anim.id !== newAnim.id));
     }, 1000);
   }
-
-  const level = getLevelFromXp(displayedXp);
-  const { current, required } = getCurrentLevelXp(displayedXp);
-  const progressPercent = (current / required) * 100;
 
   return (
     <div id="xp-container" className="relative my-2">
@@ -164,7 +61,7 @@ export default function ExperienceBar() {
               {current.toLocaleString()}/{required.toLocaleString()} XP
             </span>
           </div>
-          <Progress value={progressPercent} className="h-3 w-full" />
+          <Progress value={progress} className="h-3 w-full" />
         </div>
       </div>
       <style jsx>{`
