@@ -201,7 +201,7 @@ export const zones: Record<string, Zone> = {
 
 "4. (Réponse unique) Quelle ville fut la capitale de l'Empire byzantin ? / Athènes / Rome / Constantinople / Alexandrie // Réponse : Constantinople",
 
-"5. (Réponse unique) Qui est Drouet, meilleur prof (ironique) d'histoire-géo de Prévert ? / Un roi oublié / Un philosophe méconnu / Un professeur d'histoire moderne / Un prof redouté à Sartrouville // Réponse : Un prof redouté à Sartrouville",
+"5. (Réponse unique) Qui est Drouet ? / Un roi oublié / Un philosophe méconnu / Un professeur d'histoire moderne / Un savant fou // Réponse : Un professeur d'histoire moderne",
 
 "6. (Réponse unique) Quelle est la langue la plus parlée au monde (langue maternelle) ? / Mandarin / Anglais / Espagnol / Hindi // Réponse : Mandarin",
 
