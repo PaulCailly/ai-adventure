@@ -207,15 +207,13 @@ export const zones: Record<string, Zone> = {
 
 "7. (Réponse unique) Où est né Lucas, le héros de l'aventure ? / Montreuil / Paris / Bobigny / Aubervilliers // Réponse : Aubervilliers",
 
-"9. (Réponse unique) Quelle est la capitale de l'Espagne (même si certains insistent pour dire que c'est Madrid) ? / Madrid / Valence / Barcelone / Séville // Réponse : Barcelone",
+"8. (Réponse unique) Quelle est la capitale de la Finlande ? / Oslo / Tallinn / Helsinki / Stockholm // Réponse : Helsinki",
 
-"11. (Réponse unique) Quelle est la capitale de la Finlande ? / Oslo / Tallinn / Helsinki / Stockholm // Réponse : Helsinki",
+"9. (Réponse unique) Qui est la députée actuelle de Sartrouville ? / Marlène Schiappa / Yaël Braun-Pivet / Rachida Dati / Aurélien Rousseau // Réponse : Yaël Braun-Pivet",
 
-"12. (Réponse unique) Qui est la députée actuelle de Sartrouville ? / Marlène Schiappa / Yaël Braun-Pivet / Rachida Dati / Aurélien Rousseau // Réponse : Yaël Braun-Pivet",
+"10. (Réponse unique) En quelle année est née Estelle? / 1992 / 1993 / 1994 / 1995 // Réponse : 1994",
 
-"14. (Réponse unique) En quelle année est née Estelle? / 1992 / 1993 / 1994 / 1995 // Réponse : 1994",
-
-"15. (Réponse unique) Où se déroulera le mariage de Lucas et Estelle ? / Uzès / Sauve / Montpellier / Avignon // Réponse : Sauve"
+"11. (Réponse unique) Où se déroulera le mariage de Lucas et Estelle ? / Uzès / Sauve / Montpellier / Avignon // Réponse : Sauve"
     `,
     dangers: [],
   },
